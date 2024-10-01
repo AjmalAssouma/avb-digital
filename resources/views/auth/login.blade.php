@@ -95,6 +95,12 @@
                         <div class="fxt-form">
                             <span id="sms_verif_view">
                                 <form action="{{ route('login') }}" method="POST" novalidate>
+                                    <!-- Message d'erreur pour mot de passe expiré -->
+                                    @if($errors->has('password_expired'))
+                                        <div class="alert alert-danger">
+                                            {{ $errors->first('password_expired') }}
+                                        </div>
+                                    @endif
                                     @csrf
                                     <div class="form-group">
                                         <div class="fxt-transformY-50 fxt-transition-delay-1">

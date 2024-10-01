@@ -199,6 +199,17 @@
                                                 <div class="text-danger">{{ $message }}</div>
                                                 @enderror
                                             </div>
+
+                                            <div class="form-group">
+                                                <label for="password">Mot de passe</label>
+                                                <input id="password" type="password" class="form-control" name="password" placeholder="********" minlength="8" required>
+                                                <i toggle="#password" class="fa fa-fw fa-eye toggle-password field-icon"></i>
+                                                @error('password')
+                                                <span class="invalid-feedback" role="alert">
+                                                    <strong>{{ $message }}</strong>
+                                                </span>
+                                                @enderror
+                                            </div>
                                         </div>
                                 
                                         <!-- Colonne de droite -->
@@ -239,7 +250,7 @@
                                             
                                             <div class="form-group">
                                                 <label for="agence" class="control-label">Agence</label>
-                                                <select name="idAgency" id="agence" class="form-control">
+                                                <select name="idAgency" id="agence" class="form-control" style="cursor: pointer">
                                                     @foreach ($agencies as $agencie)
                                                         <option class="form-control" value="{{ $agencie->id}}"> {{$agencie->name}} </option>
                                                     @endforeach
@@ -251,19 +262,26 @@
                                                 <div class="text-danger">{{ $message }}</div>
                                                 @enderror
                                             </div>
+
+                                            
+                                            
+                                            <div class="form-group">
+                                                <label for="role" class="control-label">Rôle </label>
+                                                <select name="idRole" id="role" class="form-control"  style="cursor: pointer">
+                                                    <option value="">Sélectionnez votre rôle</option>
+                                                    @foreach ($roles as $role)
+                                                        <option class="form-control" value="{{ $role->id}}"> {{$role->habilitation}} </option>
+                                                    @endforeach
+                                                </select>
+                                                @error('idRole')
+                                                <div class="text-danger">{{ $message }}</div>
+                                                @enderror
+                                            </div>
+                                            
                                             
                                         </div>
                                     </div>  
-                                    <div class="form-group">
-                                        <label for="password">Mot de passe</label>
-                                        <input id="password" type="password" class="form-control" name="password" placeholder="********" minlength="8" required>
-                                        <i toggle="#password" class="fa fa-fw fa-eye toggle-password field-icon"></i>
-                                        @error('password')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                        @enderror
-                                    </div>       
+                                   
                                     <div class="form-group">
                                         <button type="submit" class="fxt-btn-fill">S'inscrire</button>
                                     </div>

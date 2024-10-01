@@ -214,6 +214,7 @@ class ForgotPasswordController extends Controller
         // Réinitialiser le mot de passe de l'utilisateur
         $user->update([
             'password' => Hash::make($request->password),
+            'password_expires_at' => now()->addMonths(1), // Mettre à jour la date d'expiration du mot de passe
         ]);
 
          // Supprimer les sessions liées au processus de réinitialisation

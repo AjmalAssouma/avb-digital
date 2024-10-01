@@ -56,6 +56,11 @@ class LoginController extends Controller implements \Illuminate\Routing\Controll
                 return back()->withErrors(['identifier' => 'Le numéro de téléphone est incorrect.'])->onlyInput('identifier');
             }
 
+            // Vérification de l'expiration du mot de passe
+            if (!$user->password_expires_at || now()->greaterThan($user->password_expires_at)) {
+                return redirect()->route('login')->withErrors(['password_expired' => 'Votre mot de passe a expiré. Veuillez le réinitialiser.']);
+            }
+
             if (Auth::validate(['phone' => $identifier, 'password' => $request->password])) {
                 // Générer un OTP aléatoire
                 // $otp = rand(123456, 999999);
@@ -85,6 +90,11 @@ class LoginController extends Controller implements \Illuminate\Routing\Controll
 
             if (!$user) {
                 return back()->withErrors(['identifier' => 'L\'email est incorrect.'])->onlyInput('identifier');
+            }
+
+             // Vérification de l'expiration du mot de passe
+            if (!$user->password_expires_at || now()->greaterThan($user->password_expires_at)) {
+                return redirect()->route('login')->withErrors(['password_expired' => 'Votre mot de passe a expiré. Veuillez le réinitialiser.']);
             }
 
             if (Auth::validate(['email' => $request->identifier, 'password' => $request->password])) {
@@ -193,7 +203,7 @@ class LoginController extends Controller implements \Illuminate\Routing\Controll
         $fieldType = filter_var($identifier, FILTER_VALIDATE_EMAIL) ? 'email' : 'phone';
     
         // Récupérer l'utilisateur par email ou téléphone
-        $user = \App\Models\User::where($fieldType, $identifier)->first();
+        $user = User::where($fieldType, $identifier)->first();
     
         if (!$user) {
             return back()->withErrors(['otp' => 'Utilisateur introuvable.']);

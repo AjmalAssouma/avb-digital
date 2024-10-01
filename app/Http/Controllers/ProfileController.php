@@ -64,6 +64,7 @@ class ProfileController extends Controller implements \Illuminate\Routing\Contro
 
         $user->update([
             'password' => Hash::make($validated['password']),
+            'password_expires_at' => now()->addMonths(1), // Ajouter 3 mois à la date actuelle
         ]);
 
         // Utiliser session()->flash() pour garantir que le message soit affiché correctement

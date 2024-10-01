@@ -21,11 +21,13 @@ class User extends Authenticatable
         'lastname',
         'phone',
         'idAgency',
+        'idRole',
         'email',
         'gender',
         'address',
         'birthdate',
         'password',
+        'password_expires_at',
     ];
 
     /**
