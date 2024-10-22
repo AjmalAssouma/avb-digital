@@ -30,11 +30,23 @@
         });
 
         //Success Message
-        $('#sa-success').click(function () {
+        $('#sgi-success').click(function () {
             Swal.fire(
                 {
-                    title: 'Good job!',
-                    text: 'You clicked the button!',
+                    title: 'Succès',
+                    text: 'SGI créer avec succès',
+                    type: 'success',
+                    confirmButtonColor: '#4fa7f3'
+                }
+            )
+        });
+
+        //Success Message
+        $('#placement-success').click(function () {
+            Swal.fire(
+                {
+                    title: 'Succès',
+                    text: 'Le placement a été créer avec succès',
                     type: 'success',
                     confirmButtonColor: '#4fa7f3'
                 }

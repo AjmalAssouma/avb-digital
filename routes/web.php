@@ -7,7 +7,6 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Middleware\OtpVerified;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -40,7 +39,7 @@ Route::patch('/home/profile/update-info', [ProfileController::class, 'updateUser
 Route::post('/home/profile/update-photo', [ProfileController::class, 'updatePhoto'])->name('profile.update-photo');
 
 // ----------------------------------ADMIN ROUTE-------------------------------------------------------------
-Route::middleware(['auth', 'role:1'])->group(function () {
+Route::middleware(['auth', 'role:1', 'inactivity.logout'])->group(function () {
     
     Route::get('/home/admin/tous_les_utilisateurs', [AdminController::class, 'allUsers'])->name('home.admin.all.users');
 
@@ -67,6 +66,11 @@ Route::post('/forgot-password/otp-verify/resend', [ForgotPasswordController::cla
 
 Route::get('/forgot-password/otp-verify/reset-password', [ForgotPasswordController::class, 'showResetPasswordForm'])->name('password.reset');
 Route::post('/forgot-password/otp-verify/reset-password', [ForgotPasswordController::class, 'submitResetPasswordForm'])->name('password.reset.submit');
+
+// -------------------------------------------------------------------------------------------------------------------
+
+Route::get('/home/creation-sgi', [HomeController::class, 'showSgiCreationForm'])->name('creation_sgi');
+Route::get('/home/creation-placement', [HomeController::class, 'showPlacementCreationForm'])->name('creation.placement');
 
 
 

@@ -143,10 +143,10 @@
                                         </div>
                                     @endif
                                     
-                                    <p style="font-family: 'Poppins', sans-serif; text-align:center; text-justify:inter-word; font-size: 16px; color: #000000; line-height: 1.5; font-weight: 550">
-                                        Nous vous avons envoyé un code de vérification. <br>Vérifiez votre boîte de réception (e-mail ou téléphone).
+                                    <p style="font-family: 'Poppins', sans-serif; text-align:center; font-size: 16px; color: #414141; line-height: 1.5; font-weight: 550">
+                                        Nous vous avons envoyé un code de vérification à <span>{{ $email_tel }}</span>. Vérifiez votre boîte de réception.
                                     </p>
-                                    <input type="hidden" name="email" class="form-control" value="{{ $email_tel }}">
+                                    {{-- <input type="hidden" name="email" class="form-control" value="{{ $email_tel }}"> --}}
                                 </div>
 
                                 <div class="form-group">

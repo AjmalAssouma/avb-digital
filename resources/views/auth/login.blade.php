@@ -21,6 +21,18 @@
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{asset('assets/style.css')}}">
+
+    <style>
+        #identifier:focus{
+            border-color: #86f58c; 
+            box-shadow: 0 0 8px rgba(134, 200, 245, 0.5);
+        }
+
+        #password:focus{
+            border-color: #86f58c; 
+            box-shadow: 0 0 8px rgba(134, 200, 245, 0.5);
+        }
+    </style>
     
 </head>
 
@@ -93,46 +105,51 @@
                             <p style="font-size: 19px; font-weight: 500;"> Se connecter</p>
                         </div>
                         <div class="fxt-form">
-                            <span id="sms_verif_view">
-                                <form action="{{ route('login') }}" method="POST" novalidate>
-                                    <!-- Message d'erreur pour mot de passe expiré -->
-                                    @if($errors->has('password_expired'))
-                                        <div class="alert alert-danger">
-                                            {{ $errors->first('password_expired') }}
-                                        </div>
-                                    @endif
-                                    @csrf
-                                    <div class="form-group">
-                                        <div class="fxt-transformY-50 fxt-transition-delay-1">
-                                            <input type="text" id="identifier" class="form-control @error('identifier') is-invalid @enderror" name="identifier" placeholder="Téléphone ou Email" required="required" value="{{ old('identifier') }}">
-                                            <!-- Afficher les messages d'erreur pour identifier -->
-                                            @error('identifier')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                            @enderror
-                                        </div>
+                            <form action="{{ route('login') }}" method="POST" novalidate>
+                                @csrf
+                                @if (session('message'))
+                                    <div class="alert alert-warning" style="margin-top: -5%">
+                                        {{ session('message') }}
                                     </div>
-    
-                                    <div class="form-group">
-                                        <div class="fxt-transformY-50 fxt-transition-delay-2">
-                                            <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" placeholder="********" required="required">
-                                            <i toggle="#password" class="fa fa-fw fa-eye toggle-password field-icon"></i>
-                                            <!-- Afficher les messages d'erreur pour password -->
-                                            @error('password')
-                                                <span class="invalid-feedback" role="alert">
-                                                    <strong>{{ $message }}</strong>
-                                                </span>
-                                            @enderror
-                                        </div>
+                                @endif
+
+                                <!-- Message d'erreur pour mot de passe expiré -->
+                                @if($errors->has('password_expired'))
+                                    <div class="alert alert-danger">
+                                        {{ $errors->first('password_expired') }}
                                     </div>
-                                    <div class="form-group">
-                                        <div class="fxt-transformY-50 fxt-transition-delay-4">
-                                            <button type="submit" class="fxt-btn-fill">Se connecter</button>
-                                        </div>
+                                @endif
+                                
+                                <div class="form-group">
+                                    <div class="fxt-transformY-50 fxt-transition-delay-1">
+                                        <input type="text" id="identifier" class="form-control @error('identifier') is-invalid @enderror" name="identifier" placeholder="Téléphone ou Email" required="required" value="{{ old('identifier') }}">
+                                        <!-- Afficher les messages d'erreur pour identifier -->
+                                        @error('identifier')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
                                     </div>
-                                </form>
-                            </span>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="fxt-transformY-50 fxt-transition-delay-2">
+                                        <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" placeholder="********" required="required">
+                                        <i toggle="#password" class="fa fa-fw fa-eye toggle-password field-icon"></i>
+                                        <!-- Afficher les messages d'erreur pour password -->
+                                        @error('password')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="fxt-transformY-50 fxt-transition-delay-4">
+                                        <button type="submit" class="fxt-btn-fill">Se connecter</button>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                         <div class="fxt-footer">
                             <div class="fxt-transformY-50 fxt-transition-delay-9">

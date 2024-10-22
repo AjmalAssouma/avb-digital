@@ -20,6 +20,7 @@ class ProfileController extends Controller implements \Illuminate\Routing\Contro
     {
         return [
             new Middleware(middleware: 'auth'),
+            new Middleware(middleware: 'inactivity.logout'),
         ];
     }
 

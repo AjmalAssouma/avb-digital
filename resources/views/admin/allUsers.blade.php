@@ -580,5 +580,35 @@
 
         </script>
 
+        <script>
+            let timeout;
+            const logoutTime = 2 * 60 * 1000; // 2 minutes en millisecondes
+            const logoutUrl = "{{ route('login') }}";
+
+            function resetTimer() {
+                console.log("Timer reset"); // Vérifie si le timer est réinitialisé à chaque interaction
+                clearTimeout(timeout);
+                timeout = setTimeout(() => {
+                    console.log("Session expirée. Redirection vers la page de login."); // Vérifie si le timeout est atteint
+                    window.location.href = logoutUrl; // Redirection vers la page de logout
+                }, logoutTime);
+            }
+
+            // Événements qui déclenchent le reset du timer
+            const events = [
+                'mousemove', 'keypress', 'click', 
+                'scroll', 'mousedown', 'touchstart', 
+                'touchmove', 'focus', 'blur'
+            ];
+
+            // Ajouter l'écouteur d'événements pour chaque type d'événement
+            events.forEach(event => {
+                document.addEventListener(event, resetTimer);
+            });
+
+            // Initialisation du timer au chargement de la fenêtre
+            window.onload = resetTimer;
+        </script>     
+
     </body>
 </html>

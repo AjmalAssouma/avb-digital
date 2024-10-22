@@ -12,6 +12,7 @@ class AdminController extends Controller
     public static function middleware(): array
     {
         return [
+            new Middleware(middleware: 'auth'),
             new Middleware(middleware: 'role:1'),
         ];
     }

@@ -12,6 +12,7 @@ class HomeController extends Controller implements \Illuminate\Routing\Controlle
     {
         return [
             new Middleware(middleware: 'auth'),
+            // new Middleware(middleware: 'inactivity.logout'),
         ];
     }
     public function index()
@@ -22,6 +23,16 @@ class HomeController extends Controller implements \Illuminate\Routing\Controlle
             'firstname' => $user->firstname,
             'lastname' => $user->lastname,
         ]);
+    }
+
+    public function showSgiCreationForm()
+    {
+        return view('home.sgi.creationSgi');
+    }
+
+    public function showPlacementCreationForm()
+    {
+        return view('home.placement.creationPlacement');
     }
 }
 

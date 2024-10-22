@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 
 class LoginController extends Controller implements \Illuminate\Routing\Controllers\HasMiddleware
@@ -28,6 +30,79 @@ class LoginController extends Controller implements \Illuminate\Routing\Controll
     {
         return view("auth.login");
     }
+
+
+    public function sendSMS($to, $content)
+    {
+        // Replace the following values with your own
+        $prodUrl = 'https://apis.letexto.com';
+        $token = '189e8e03a8a7c98d03ecb071ea8cb35d';
+        $from = 'AAVIE';
+        // $to = '2250000000000';
+        // $content = 'Hello API!';
+        $dlrUrl = 'https://lafricaineviebenin.com:4444/dlr';
+        $customData = 'LeSensDeLEngagement';
+        $sendAt = date('Y-m-d H:i:s');
+
+        $headers = [
+            'Authorization: Bearer ' . $token,
+            'Content-Type: application/json'
+        ];
+
+        $url = $prodUrl . '/v1/messages/send?from=' . urlencode($from) .
+            '&to=' . $to .
+            '&content=' . urlencode($content) .
+            '&token=' . $token .
+            '&dlrUrl=' . urlencode($dlrUrl) .
+            '&dlrMethod=GET&customData=' . $customData .
+            '&sendAt=' . urlencode($sendAt);
+
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+        // Désactiver la vérification SSL (à ne pas faire en production)
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+
+        $response = curl_exec($ch);
+
+        // if($response === false)
+        // {
+        //     echo 'Curl error: ' . curl_error($ch);
+        // }
+        // else
+        // {
+        //     echo $response;
+        // }
+
+        // curl_close($ch);
+
+        // Vérification des erreurs
+        if ($response === false) {
+            $error = curl_error($ch);
+            Log::error('Curl error: ' . $error);  // Enregistrement de l'erreur dans les logs Laravel
+            curl_close($ch);
+            return ['status' => 'error', 'message' => 'Curl error: ' . $error];
+        }
+
+        // Fermeture de la session cURL
+        curl_close($ch);
+
+        // Traitement de la réponse
+        return ['status' => 'success', 'response' => $response];
+    }    
+    
+    public function notif($email, $otp)
+    {
+        $message = "<p style='color:#080;font-size:18px;'>Votre code de vérification est : $otp</p>";
+
+        Mail::html($message, function ($m) use ($email) {
+            $m->to($email)
+            ->subject('CODE DE CONNEXION A VOTRE COMPTE AAVIE');
+        });
+    }
+
 
     
     public function login(Request $request): RedirectResponse
@@ -75,6 +150,10 @@ class LoginController extends Controller implements \Illuminate\Routing\Controll
                     ]
                 );
 
+                // Envoyer le SMS avec l'OTP
+                // $smsContent = $otp;
+                // self::sendSMS($identifier, $smsContent);
+
                 // Stocker l'identifiant dans la session
                 Session::put('otp_identifier', $identifier);
 
@@ -102,7 +181,7 @@ class LoginController extends Controller implements \Illuminate\Routing\Controll
                 // $otp = rand(123456, 999999);
                 $otp = 123456;
 
-                // Stocker l'OTP dans la base de données avec une expiration de 5 minutes
+                // Stocker l'OTP dans la base de données avec une expiration de 1 minutes
                 UserOtp::updateOrCreate(
                     ['user_id' => $user->id],
                     [
@@ -110,6 +189,9 @@ class LoginController extends Controller implements \Illuminate\Routing\Controll
                         'expire_at' => Carbon::now()->addMinutes(1)
                     ]
                 );
+
+                // Envoi de l'email avec l'OTP
+                // $this->notif($user->email, $otp);
 
                 // Stocker l'identifiant dans la session
                 Session::put('otp_identifier', $request->identifier);
@@ -133,51 +215,6 @@ class LoginController extends Controller implements \Illuminate\Routing\Controll
 
         return view('auth.otp', ['email_tel' => $email_tel]); // Passe l'email ou le téléphone à la vue si nécessaire
     }
-
-
- // public function verifyOtp(Request $request)
-    // {
-    //     // Récupérer l'identifiant (email ou téléphone) depuis la session
-    //     $identifier = Session::get('otp_identifier');
-
-    //     // Valider le formulaire OTP
-    //     $request->validate([
-    //         'otp' => 'required|numeric',
-    //     ]);
-
-    //     // Vérifier si l'identifiant est un email ou un téléphone
-    //     $fieldType = filter_var($identifier, FILTER_VALIDATE_EMAIL) ? 'email' : 'phone';
-
-    //     // Récupérer l'utilisateur par email ou téléphone
-    //     $user = \App\Models\User::where($fieldType, $identifier)->first();
-
-    //     if (!$user) {
-    //         return back()->withErrors(['otp' => 'Utilisateur introuvable.']);
-    //     }
-
-    //     // Vérifier l'OTP
-    //     $userOtp = UserOtp::where('user_id', $user->id)
-    //                     ->where('otp', $request->otp)
-    //                     ->where('expire_at', '>', now())
-    //                     ->first();
-
-    //     if ($userOtp) {
-    //         // OTP valide, on peut maintenant authentifier l'utilisateur
-    //         Auth::login($user);
-    //         $request->session()->regenerate();
-
-    //         // Supprimer l'OTP utilisé
-    //         // $userOtp->delete();
-
-    //         // Supprimer l'identifiant de la session
-    //         Session::forget('otp_identifier');
-
-    //         return redirect()->intended('/home');
-    //     } else {
-    //         return back()->withErrors(['otp' => 'OTP invalide ou expiré.']);
-    //     }
-    // }
-
 
     public function verifyOtp(Request $request)
     {
@@ -266,43 +303,41 @@ class LoginController extends Controller implements \Illuminate\Routing\Controll
     
         // Vérifier si l'OTP a expiré en utilisant le champ expire_at
         if ($latestOtp && Carbon::now()->lessThan($latestOtp->expire_at)) {
-            return redirect()->back()->with('error', 'Veuillez attendre 5 minutes avant de demander un nouveau code.');
+            return redirect()->back()->with('error', 'Veuillez attendre une (1) minutes avant de demander un nouveau code.');
         }
     
         // Générer un nouveau code OTP (à ajuster pour la sécurité en production)
         $newOtp = 654321;
+        // $newOtp = random_int(123456, 999999);
 
         // Vérifier si un OTP existe déjà pour l'utilisateur
         if ($latestOtp) {
             // Mettre à jour seulement le code OTP et la date d'expiration
-            $latestOtp->update([
-                'user_id' => $user->id,
-                'otp' => $newOtp,
-                'expire_at' => Carbon::now()->addMinutes(1), // Renouvelle la durée de validité du code OTP
-            ]);
-            return redirect()->back()->with('success', 'Un nouveau code a été renvoyer.');
-        } else {
-            // Créer un nouvel OTP si aucun n'existe
-            UserOtp::create([
-                'user_id' => $user->id,
-                'otp' => $newOtp,
-                'expire_at' => Carbon::now()->addMinutes(5), // Durée de validité du code OTP
-            ]);
+            UserOtp::updateOrCreate(
+                ['user_id' => $user->id],
+                ['otp' => $newOtp,
+                'expire_at' => Carbon::now()->addMinutes(1)] // Renouvelle la durée de validité du code OTP
+            );
+
+             // Envoyer le code OTP par SMS ou email
+            if ($fieldType === 'phone') {
+
+                // Envoyer le SMS avec l'OTP
+                $smsContent = "Votre code de vérification est : " . $newOtp;
+                self::sendSMS($identifier, $smsContent);
+                return redirect()->back()->with('success', 'Un nouveau code de verification a été renvoyé par SMS.');
+            }elseif ($fieldType === 'email') {
+
+                // Envoi de l'email avec l'OTP
+                $this->notif($user->email, $newOtp);
+                return redirect()->back()->with('success', 'Un nouveau code de verification a été renvoyé par email.');
+            }
         }
-    
-        // // Enregistrer le nouveau OTP dans la table `user_otps` avec une nouvelle date d'expiration
-        // UserOtp::updateOrCreate([
-        //     'user_id' => $user->id,
-        //     'otp' => $newOtp,
-        //     'expire_at' => Carbon::now()->addMinutes(5),
-        // ]);
-    
+        
         // Message de confirmation de l'envoi du nouveau code
         return redirect()->back()->with('success', 'Nouveau code OTP envoyé.');
     }
-    
-    
-
+        
     public function logout(Request $request): RedirectResponse
     {
         Auth::logout();

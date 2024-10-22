@@ -9,11 +9,85 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use App\Models\PasswordResetToken;
-use App\Http\Middleware\OtpVerified;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 
 class ForgotPasswordController extends Controller
 {
+
+    public function sendSMS($to, $content)
+    {
+        // Replace the following values with your own
+        $prodUrl = 'https://apis.letexto.com';
+        $token = '189e8e03a8a7c98d03ecb071ea8cb35d';
+        $from = 'AAVIE';
+        // $to = '2250000000000';
+        // $content = 'Hello API!';
+        $dlrUrl = 'https://lafricaineviebenin.com:4444/dlr';
+        $customData = 'LeSensDeLEngagement';
+        $sendAt = date('Y-m-d H:i:s');
+
+        $headers = [
+            'Authorization: Bearer ' . $token,
+            'Content-Type: application/json'
+        ];
+
+        $url = $prodUrl . '/v1/messages/send?from=' . urlencode($from) .
+            '&to=' . $to .
+            '&content=' . urlencode($content) .
+            '&token=' . $token .
+            '&dlrUrl=' . urlencode($dlrUrl) .
+            '&dlrMethod=GET&customData=' . $customData .
+            '&sendAt=' . urlencode($sendAt);
+
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+        // Désactiver la vérification SSL (à ne pas faire en production)
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+
+        $response = curl_exec($ch);
+
+        // if($response === false)
+        // {
+        //     echo 'Curl error: ' . curl_error($ch);
+        // }
+        // else
+        // {
+        //     echo $response;
+        // }
+
+        // curl_close($ch);
+
+        // Vérification des erreurs
+        if ($response === false) {
+            $error = curl_error($ch);
+            Log::error('Curl error: ' . $error);  // Enregistrement de l'erreur dans les logs Laravel
+            curl_close($ch);
+            return ['status' => 'error', 'message' => 'Curl error: ' . $error];
+        }
+
+        // Fermeture de la session cURL
+        curl_close($ch);
+
+        // Traitement de la réponse
+        return ['status' => 'success', 'response' => $response];
+    }
+    
+    public function notif($email, $otp)
+    {
+        $message = "<p style='color:#080;font-size:18px;'>Votre code de vérification est : $otp</p>";
+
+        Mail::html($message, function ($m) use ($email) {
+            $m->to($email)
+            ->subject('CODE DE CONNEXION A VOTRE COMPTE AAVIE');
+        });
+    }
+
+
     // Affiche le formulaire pour entrer l'email ou le numéro de téléphone
     public function showForgotPasswordForm()
     {
@@ -69,6 +143,14 @@ class ForgotPasswordController extends Controller
             ]
         );
 
+        // Envoi de l'OTP
+        if ($isEmail) {
+            $this->notif($user->email, $otp);
+        } else {
+            $smsContent = "Votre code de vérification est : " . $otp;
+            $this->sendSMS($identifierWithPrefix, $smsContent);
+        }
+        
         session(['reset_identifier' => $identifierWithPrefix]);
 
         // Redirection vers la page de vérification de l'OTP
@@ -172,12 +254,20 @@ class ForgotPasswordController extends Controller
             ]
         );
 
-        // Envoyer l'OTP par email ou SMS
-        // Exemple d'envoi de l'OTP ici
+         // Envoi de l'OTP
+        if ($isEmail) {
+            $this->notif($user->email, $otp);
+            return redirect()->back()->with('success', 'Un nouveau code de verification a été renvoyé par email.');
+        } elseif($identifier) {
+            $this->sendSMS($identifier, "Votre code de vérification est : $otp");
+            return redirect()->back()->with('success', 'Un nouveau code de verification a été renvoyé par SMS.');
+        }
 
         // Redirection avec un message de succès
-        return back()->with('success', 'Code de vérification renvoyé avec succès.');
+        // return back()->with('success', 'Code de vérification renvoyé avec succès.');
     }
+
+
 // -------------------------------------------------------------------------
 
 
