@@ -15,8 +15,8 @@
                 <li>
                     <a href="javascript: void(0);"><i class="fa fa-bar-chart-o"></i><span>SGI</span> <span class="menu-arrow"></span></a>
                     <ul class="nav-second-level nav" aria-expanded="false">
-                        <li><a href="{{route('creation_sgi')}}">Créer une SGI</a></li>
-                        <li><a href="#">Listes des SGI</a></li>
+                        {{-- <li><a href="{{route('creation.sgi.form')}}">Créer une SGI</a></li> --}}
+                        <li><a href="{{route('list.sgi')}}">Listes des SGI</a></li>
                         {{-- <li><a href="ui-buttons.html">Buttons</a></li>
                         <li><a href="ui-modals.html">Modals</a></li>
                         <li><a href="ui-checkbox-radio.html">Checkboxs-Radios</a></li>

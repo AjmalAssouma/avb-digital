@@ -33,18 +33,19 @@ class InactivityLogout
         // }
 
 
-        if (Auth::check()) {
-            $lastActivity = Session::get('last_activity');
-            if ($lastActivity && (time() - $lastActivity > (10 * 60))) {
-                Auth::logout();
-                $request->session()->invalidate();
-                $request->session()->regenerateToken();
-                Session::forget('last_activity');
-                Session::flash('message', 'Vous avez été automatiquement déconnecté en raison d\'une inactivité de 600 secondes.');
-                return redirect()->route('login');
-            }
-            Session::put('last_activity', time());
-        }
+        // if (Auth::check()) {
+        //     $lastActivity = Session::get('last_activity');
+        //     if ($lastActivity && (time() - $lastActivity > (60 * 60))) {
+        //         Auth::logout();
+        //         $request->session()->invalidate();
+        //         $request->session()->regenerateToken();
+        //         Session::forget('last_activity');
+        //         Log::info('Vous avez été automatiquement déconnecté en raison d\'une inactivité de 3600 secondes.');
+        //         Session::flash('message', 'Vous avez été automatiquement déconnecté en raison d\'une inactivité de 3600 secondes.');
+        //         return redirect()->route('login');
+        //     }
+        //     Session::put('last_activity', time());
+        // }
         return $next($request);
     }
 }

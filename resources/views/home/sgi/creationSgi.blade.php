@@ -20,6 +20,7 @@
         <link href="{{asset('plugins/sweet-alert2/sweetalert2.min.css')}}" rel="stylesheet" type="text/css">
 
         <script src="{{asset('assetss/js/modernizr.min.js')}}"></script>
+        <script src="{{asset('assetss/pages/jquery.sweet-alert.init.js')}}"></script>
 
     </head>
 
@@ -49,7 +50,7 @@
                                     <h4 class="page-title">SGI (Societe de Gestion d'Investissements)</h4>
                                     <ol class="breadcrumb p-0 m-0">
                                         <li>
-                                            <a href="{{route('creation_sgi')}}">Créer une SGI</a>
+                                            <a href="{{route('creation.sgi.form')}}">Créer une SGI</a>
                                         </li>
                                         <li class="active">
                                             SGI
@@ -66,28 +67,50 @@
                                 <div class="card">
                                     <div class="card-body">
                                         <h3 class="m-t-0 ">Formulaire de création d'une SGI</h3>
-                                        <p class="text-muted m-b-30">
-                                            Most common form control, text-based input fields. Includes support for all HTML5 types: <code>text</code>, <code>password</code>, <code>datetime</code>, <code>datetime-local</code>, <code>date</code>, <code>month</code>, <code>time</code>, <code>week</code>, <code>number</code>, <code>email</code>, <code>url</code>, <code>search</code>, <code>tel</code>, and <code>color</code>.
-                                        </p>
-    
+                                        <br>
                                         <div class="row">
-                                            <div class="col-lg-6">
-                                                <form class="form-horizontal">
+                                           
+                                            <div class="col">
+                                                <form action="{{ route('creation.sgi.form') }}" method="POST">
                                                     @csrf
-                                                    <div class="form-group row">
-                                                        <label class="col-md-5 control-label">Désignation de la SGI *</label>
-                                                        <div class="col-md-10">
-                                                            <input type="text" class="form-control" placeholder="Exemple : SGI ou SGI/AFB etc..." required>
+
+                                                    @if(session('success'))
+                                                        <div class="alert alert-icon alert-success alert-dismissible fade show justify-content-center col-sm-6 col-md-6" style="margin: 0 auto; margin-top: -10px; margin-bottom: 15px;" role="alert">
+                                                            <button type="button" class="close" data-dismiss="alert"
+                                                                    aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                            <i class="mdi mdi-check-all"></i>
+                                                            {{ session('success') }}
+                                                        </div>
+                                                    @endif
+
+                                                    <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+                                                        {{-- Colonne de gauche --}}
+                                                        <div style="flex: 1;">
+                                                            <div class="form-group">
+                                                                <label for="designation_sgi">Désignation de la SGI <span class="text-danger">*</span></label>
+                                                                <input type="text" class="form-control" name="designation_sgi"  value="{{ old('designation_sgi') }}"   placeholder="SGI, AFB, BFS etc..." oninput="this.value = this.value.toUpperCase();" required>
+                                                                @error('designation_sgi')
+                                                                    <div class="text-danger">{{ $message }}</div>
+                                                                @enderror
+                                                            </div>
+                                                        </div>
+
+                                                        {{-- Colonne de droite --}}
+                                                        <div style="flex: 1;">
+                                                            <div class="form-group">
+                                                                <label for="num_compte_prod_finan">Numéro de compte du produit financier <span class="text-danger">*</span></label>
+                                                                <input type="text" class="form-control" name="num_compte_prod_finan"  value="{{ old('num_compte_prod_finan') }}" placeholder="77xxxxxxx" data-parsley-type="number" required>
+                                                                @error('num_compte_prod_finan')
+                                                                    <div class="text-danger">{{ $message }}</div>
+                                                                @enderror
+                                                            </div>
                                                         </div>
                                                     </div>
-                                                   
-                                                    <div class="form-group row">
-                                                        <label class="col-md-8 control-label">Numéro de compte du produit financier *</label>
-                                                        <div class="col-md-10">
-                                                            <input type="text" class="form-control" placeholder="77xxxxxxx" required>
-                                                        </div>
+                                                    <div style="display: flex; justify-content: center;">
+                                                        <button type="submit" class="btn btn-primary  waves-effect waves-light btn-sm sgi-button">Créer</button>
                                                     </div>
-                                                    <button type="submit" class="btn btn-primary waves-effect waves-light btn-sm" id="sgi-success">Créer</button>
                                                 </form>
                                             </div>
                                         </div>
@@ -137,6 +160,44 @@
         <script src="{{asset('assetss/js/jquery.core.js')}}"></script>
         <script src="{{asset('assetss/js/jquery.app.js')}}"></script>
 
+        <script>  
+            !function ($) {  
+                "use strict";  
+            
+                var SweetAlert = function () {};  
+            
+                //examples  
+                SweetAlert.prototype.init = function () {  
+                    // Success Message when page loads with session success  
+                    if ({{ session('success') ? 'true' : 'false' }}) {  
+                        Swal.fire(  
+                            {  
+                                title: 'Succès',  
+                                text: '{{ session("success") }}',  
+                                type: 'success',  
+                                confirmButtonColor: '#4fa7f3'  
+                            }  
+                        );  
+                    }  
+            
+                    // You can keep the click event listener if you want separate alerts for button click  
+                    $('#sgi-success').click(function () {  
+                        // If you wanted to prevent the default action here (for AJAX), you could add:  
+                        // event.preventDefault();  
+                    });  
+                };  
+            
+                //init  
+                $.SweetAlert = new SweetAlert, $.SweetAlert.Constructor = SweetAlert  
+            }(window.jQuery),  
+            
+            //initializing  
+            function ($) {  
+                "use strict";  
+                $.SweetAlert.init()  
+            }(window.jQuery);  
+        </script>
+
         {{-- <script>
             let timeout;
             const logoutTime = 10 * 60 * 1000; // 10 minutes en millisecondes
@@ -165,7 +226,7 @@
         
             // Initialisation du timer au chargement de la fenêtre
             window.onload = resetTimer;
-        </script>         --}}
+        </script> --}}
     
     </body>
 </html>

@@ -25,15 +25,7 @@ class HomeController extends Controller implements \Illuminate\Routing\Controlle
         ]);
     }
 
-    public function showSgiCreationForm()
-    {
-        return view('home.sgi.creationSgi');
-    }
-
-    public function showPlacementCreationForm()
-    {
-        return view('home.placement.creationPlacement');
-    }
+    
 }
 
 
