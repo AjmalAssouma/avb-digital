@@ -16,7 +16,7 @@
                     <a href="javascript: void(0);"><i class="fa fa-bar-chart-o"></i><span>SGI</span> <span class="menu-arrow"></span></a>
                     <ul class="nav-second-level nav" aria-expanded="false">
                         {{-- <li><a href="{{route('creation.sgi.form')}}">Créer une SGI</a></li> --}}
-                        <li><a href="{{route('list.sgi')}}">Listes des SGI</a></li>
+                        <li><a href="{{route('list.sgi')}}">Liste des SGI</a></li>
                         {{-- <li><a href="ui-buttons.html">Buttons</a></li>
                         <li><a href="ui-modals.html">Modals</a></li>
                         <li><a href="ui-checkbox-radio.html">Checkboxs-Radios</a></li>
@@ -35,9 +35,8 @@
                     <a href="javascript: void(0);"><i class="dripicons-graph-line"></i><span>Placement</span><span class="menu-arrow"></span></a>
                     <ul class="nav-second-level nav" aria-expanded="false">
                         <li><a href="{{route('creation.placement')}}">Créer un placement</a></li>
-                        <li><a href="#">Listes des placements</a></li>
-                        {{-- <li><a href="icons-dripicons.html">Dripicons</a></li>
-                        <li><a href="icons-fontawesome.html">Font awesome</a></li>
+                        <li><a href="{{route('list.placement')}}">Liste des placements</a></li>
+                        {{-- <li><a href="icons-fontawesome.html">Font awesome</a></li>
                         <li><a href="icons-feather.html">Feather Icons</a></li> --}}
                     </ul>
                 </li>

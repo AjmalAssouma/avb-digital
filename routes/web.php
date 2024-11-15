@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PlacementController;
+use App\Http\Controllers\DetailPlacementController;
 use App\Http\Controllers\SgiController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ProfileController;
@@ -48,9 +49,6 @@ Route::middleware(['auth', 'role:1'])->group(function () {
 });
 
 
-
-
-
 // ---------------------------------------------------------------------------------------------------------
 
 Route::get('/otp-verify', [LoginController::class, 'showOtpForm'])->name('auth.otp');
@@ -84,9 +82,18 @@ Route::post('/home/liste-des-sgis/suppression', [SgiController::class, 'deleteSg
 
 
 // ---------------------------------------ROUTES PLACEMENTS----------------------------------------------------------------
-Route::get('/home/creation-placement', [PlacementController::class, 'showPlacementCreationForm'])->name('creation.placement');
+Route::get('/home/creer-un-placement', [PlacementController::class, 'showPlacementCreationForm'])->name('creation.placement');
 
-Route::post('/home/creation-placement', [PlacementController::class, 'createdPlacement']);
+Route::post('/home/creer-un-placement', [PlacementController::class, 'createdPlacement']);
+
+Route::get('/home/liste-des-placements', [PlacementController::class, 'allPlacement'])->name('list.placement');
+
+Route::post('/home/liste-des-placements/modifier', [PlacementController::class, 'updatePlacement']);
+
+
+// ---------------------------------------ROUTES DETAIL PLACEMENTS----------------------------------------------------------------
+Route::get('/home/details-placement/{id}', [DetailPlacementController::class, 'show'])->name('details.placement');
+
 
 
 

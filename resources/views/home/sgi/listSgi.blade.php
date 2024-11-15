@@ -126,7 +126,7 @@
                                                     <th>Code de la SGI</th>
                                                     <th>Désignation de la SGI</th>
 													<th>Numéro de compte du produits financier</th>
-													<th>Actions</th>
+													<th style="width: 15%">Actions</th>
                                                     <th hidden>Id</th>
 												</tr>
 											</thead>
@@ -138,23 +138,23 @@
                                                         <td>{{ $sgi->num_compte_prod_finan }}</td>
                                                         <td class="actions">
                                                             <button type="button"
-                                                            style="border: none; background-color: transparent;" 
+                                                            style="border: none; background-color: transparent; font-size: 5px;" 
                                                             data-toggle="modal" 
                                                             data-target="#con-close-modal"
-                                                            class="edit-btn"
+                                                            class="btn btn-modif waves-effect waves-light edit-btn"
                                                             data-id="{{ $sgi->id }}"
                                                             data-codesgi= "{{ $sgi->code_sgi }}" 
                                                             data-designation="{{ $sgi->designation_sgi }}" 
                                                             data-numcompte="{{ $sgi->num_compte_prod_finan }}">
-                                                                <i class="fa fa-pencil"></i>
+                                                                <i class="fa fa-pencil" style="font-size: 15px"></i>
                                                             </button>
 
                                                             <button type="button" 
-                                                            style="border: none; background-color: transparent;" 
-                                                            class="delete-btn"
+                                                            style="border: none; background-color: transparent; font-size: 5px;" 
+                                                            class="btn btn-del waves-effect waves-light delete-btn"
                                                              
                                                             data-id="{{ $sgi->id }}">
-                                                                <i class="fa fa-trash-o"></i>
+                                                                <i class="fa fa-trash-o" style="font-size: 15px"></i>
                                                             </button>
                                                         </td>
                                                         <td hidden> {{$sgi->id}} </td>
@@ -379,6 +379,8 @@
                                 }).then(() => {
                                     location.reload(); // Recharger la page après confirmation
                                 });
+                            } else {
+                                Swal.fire("Erreur", response.message, "error");
                             }
                         },
                         error: function (xhr) {

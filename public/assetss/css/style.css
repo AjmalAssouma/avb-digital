@@ -1935,6 +1935,11 @@ body.enlarged.bg-transparent {
   background-color: #007bb6 !important;
 }
 
+.btn-modif {
+  color: #ffffff !important;
+  background-color: #007bb6 !important;
+}
+
 .btn-dribbble {
   color: #ffffff !important;
   background-color: #ea4c89 !important;
@@ -1950,7 +1955,17 @@ body.enlarged.bg-transparent {
   background-color: #517fa4 !important;
 }
 
+.btn-rens {
+  color: #ffffff !important;
+  background-color: #517fa4 !important;
+}
+
 .btn-pinterest {
+  color: #ffffff !important;
+  background-color: #cb2027 !important;
+}
+
+.btn-del{
   color: #ffffff !important;
   background-color: #cb2027 !important;
 }
@@ -1994,6 +2009,14 @@ body.enlarged.bg-transparent {
           box-shadow: none;
   margin-bottom: 30px;
 }
+
+.card-detail {
+  border: 1px solid #40bb3c;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  margin-bottom: 30px;
+}
+
 
 .hh{
   width: 90%; /* Assure que le hr prenne toute la largeur de la carte */
@@ -2110,10 +2133,6 @@ body.enlarged.bg-transparent {
   margin: 0;
   padding: 0;
   padding-bottom: 15px;
-}
-
-.mod{
- 
 }
 
 .modal .modal-dialog .modal-content .modal-body {
@@ -3147,6 +3166,16 @@ textarea.form-control {
   width: 100% !important;
 }
 
+/* .select2-container, .det{
+  width: 60% !important;
+}
+
+.select2-container, .det, .opt{
+  font-size: 15px;
+  font-family: 'Poppins';
+} */
+
+
 .select2-container .select2-selection--single {
   border: 1px solid #E3E3E3 !important;
   height: 38px !important;
@@ -3586,6 +3615,12 @@ textarea.form-control {
 
 .note-popover .popover .popover-content {
   padding: 5px 0 10px 5px;
+}
+
+.list-btn{
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 500;
 }
 
 .note-popover .btn-default {
@@ -4261,7 +4296,13 @@ ul.ColVis_collection li {
 }
 
 #datatable-editable .fa-trash-o {
-  color: #f7531f;
+  color: #ffffff;
+  font-weight: 500;
+  font-size: 18px;
+}
+
+#datatable-editable .fa-info-circle {
+  color: #ffffff;
   font-weight: 500;
   font-size: 18px;
 }
@@ -4271,7 +4312,7 @@ ul.ColVis_collection li {
 }
 
 #datatable-editable .fa-pencil {
-  color: #348cd4;
+  color: #ffffff;
   font-weight: 500;
   font-size: 18px;
 }

@@ -15,16 +15,19 @@ return new class extends Migration
             $table->id();
             $table->foreignId('users_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('sgis_id')->constrained('sgis')->onDelete('cascade');
+            $table->string('num_compte')->unique();
             $table->string('type_placement');
             $table->string('nom_placement');
-            $table->string('num_compte')->unique();
+            $table->string('periodicite');
+            $table->string('taux_annuel');
+            $table->string('taux_periode');
             $table->integer('nbre_titre');
-            $table->string('valeur_titre')->nullable();
-            $table->string('valeur_acq_titre')->nullable();
+            $table->string('valeur_titre');
+            $table->string('valeur_acq_titre');
             $table->date('date_debut');
             $table->date('date_fin');
             $table->string('duree');
-            $table->string('gain')->nullable();
+            $table->string('gain');
             $table->timestamps();
         });
     }

@@ -21,6 +21,7 @@
         <link href="{{asset('plugins/bootstrap-select/css/bootstrap-select.min.css')}}" rel="stylesheet" />
         <link href="{{asset('plugins/sweet-alert2/sweetalert2.min.css')}}" rel="stylesheet" type="text/css">
         <link href="{{asset('plugins/select2/css/select2.min.css')}}" rel="stylesheet" type="text/css" />
+        <link href="{{asset('plugins/bootstrap-touchspin/css/jquery.bootstrap-touchspin.min.css')}}" rel="stylesheet" />
 
         <script src="{{asset('assetss/js/modernizr.min.js')}}"></script>
         <style>
@@ -146,46 +147,27 @@
                                                                     </div>
 
                                                                     <div class="form-group">
-                                                                        <label for="nbre_titre">Nombre de titre <span class="text-danger">*</span></label>
-                                                                        <input type="text" class="form-control nbre_titre" name="nbre_titre" id="nbre_titre" 
-                                                                        placeholder="Le nombre de titre pour ce placement." data-parsley-type="number" pattern="\d+" value="{{ old('nbre_titre') }}" required>
+                                                                        <label for="periodicite">Périodicité <span class="text-danger">*</span> </label>
+                                                                        <select  class="form-control" name="periodicite" id="periodicite" required style="cursor: pointer">
+                                                                            <option value="">Sélectionnez une périodicité.</option>
+                                                                            <option value="Trimestre">Trimestre</option>
+                                                                            <option value="Semestre">Semestre</option>
+                                                                            <option value="Annuel">Annuel</option>
+                                                                        </select>
                                                                     </div>
 
-                                                                    <div class="form-group">
-                                                                        <label for="vacq_titre">Valeur d'acquisition du titre <span class="text-danger">*</span></label>
-                                                                        <input type="text" class="form-control vacq_titre" name="vacq_titre" id="vacq_titre" 
-                                                                        placeholder="La valeur d'acquisition du titre." data-parsley-type="number" pattern="\d+" oninput="calculateGain()" value="{{ old('vacq_titre') }}" required>
-                                                                    </div>
-
-                                                                    <div class="form-group">
-                                                                        <label for="duree_annee">Durée (en année) <span class="text-danger">*</span> </label>
-                                                                        <input type="text" id="duree_annee" class="form-control duree_annee" name="duree_annee"
-                                                                        placeholder="Nombre d'année que couvre le placement" pattern="\d+" oninput="calculateGain()" value="{{ old('duree_annee') }}" required>
-                                                                    </div>
-                                                                    
-                                                                </div>
-    
-                                                                <!-- Colonne de droite -->
-                                                                <div  style="flex: 1;">
-
-                                                                    <div class="form-group">
-                                                                        <label for="nom_placement">Nom du placement <span class="text-danger">*</span> </label>
-                                                                        <input type="text" id="nom_placement" class="form-control nom_placement" name="nom_placement" 
-                                                                        placeholder="Type de placement + taux annuel + année debut - année fin." value="{{ old('nom_placement') }}" required>
-                                                                        @error('nom_placement')
-                                                                            <div class="text-danger">{{ $message }}</div>
-                                                                        @enderror
-                                                                    </div>
-
-                                                                    <div class="form-group">
-                                                                        <label for="sgis_id">SGI <span class="text-danger">*</span></label> 
-                                                                        <select class="form-control select2" name="sgis_id" id="sgis_id"  required>
-                                                                            <option value="">Sélectionnez une SGI</option>
-                                                                            @foreach ($sgis as $sgi)
-                                                                            <option value="{{$sgi->id}}" > {{$sgi->code_sgi}} ({{ $sgi->num_compte_prod_finan }}) </option>                                                                          
-                                                                            @endforeach
-                                                                        </select>  
-                                                                    </div>
+                                                                    <div class="form-group">  
+                                                                        <label for="taux_periode">Taux période <span class="text-danger">*</span></label>  
+                                                                        <div class="input-group">  
+                                                                            <input type="text" id="taux_periode" class="form-control taux_periode" name="taux_periode" value="{{old('taux_periode')}}" required readonly>  
+                                                                            <div class="input-group-append">  
+                                                                                <span class="input-group-text" id="basic-addon2"><i class="fas fa-percent"></i></span>  
+                                                                            </div>
+                                                                            @error('taux_periode')
+                                                                                <div class="text-danger">{{ $message }}</div>
+                                                                            @enderror  
+                                                                        </div>    
+                                                                    </div>  
 
                                                                     <div class="form-group">
                                                                         <label for="valeur_titre">Valeur du titre <span class="text-danger">*</span></label>
@@ -196,7 +178,7 @@
                                                                     <div class="form-group">
                                                                         <label>Plages de dates</label>
                                                                         
-                                                                        <div class="row">
+                                                                        {{-- <div class="row">
                                                                             <div class="col">
                                                                                 <input type="date" class="form-control" name="date_start" placeholder="Date de début" value="{{ old('date_start') }}" required />
                                                                                 @error('date_start')
@@ -216,24 +198,91 @@
                                                                                 @enderror
                                                                             </div>
                                                                             
-                                                                        </div>
+                                                                        </div> --}}
+                                                                        <div class="input-group">
+                                                                            <input type="date" class="form-control" name="date_start" placeholder="Date de début" value="{{ old('date_start') }}" required />
+                                                                            @error('date_start')
+                                                                                <div class="text-danger">{{ $message }}</div>
+                                                                            @enderror
+
+                                                                            <div class="input-group-append">
+                                                                                <span class="input-group-text bg-custom text-white b-0">à</span>
+                                                                            </div>
+                                                                            
+                                                                            <input type="date" class="form-control" name="date_end" placeholder="Date de fin" value="{{ old('date_end') }}"  required />
+                                                                            @error('date_end')
+                                                                                <div class="text-danger">{{ $message }}</div>
+                                                                            @enderror
+                                                                        </div> 
                                                                     </div>
-                                                                    
+
                                                                     <div class="form-group">
-                                                                        <label for="gain">Gain total du produit financier <span class="text-danger">*</span> </label>
+                                                                        <label for="gain">Gain total <span class="text-danger">*</span> </label>
                                                                         <input type="text" id="gain" class="form-control gain" name="gain" 
-                                                                        placeholder="(Valeur du titre - Valeur d'acquisition du titre) * Durée" data-parsley-type="number" pattern="\d+" value="{{ old('gain') }}" readonly required>
+                                                                        placeholder="(Valeur du titre - Valeur d'acquisition du titre)" data-parsley-type="number" pattern="\d+" value="{{ old('gain') }}" readonly required>
                                                                         @error('gain')
                                                                             <div class="text-danger">{{ $message }}</div>
                                                                         @enderror
                                                                     </div>
-
+                                                                    
                                                                 </div>
-                                                            
+    
+                                                                <!-- Colonne de droite -->
+                                                                <div  style="flex: 1;">
+
+                                                                    <div class="form-group">
+                                                                        <label for="nom_placement">Nom du placement <span class="text-danger">*</span> </label>
+                                                                        <input type="text" id="nom_placement" class="form-control nom_placement" name="nom_placement" 
+                                                                        placeholder="Type de placement + taux annuel + année debut - année fin." value="{{ old('nom_placement') }}" required>
+                                                                        @error('nom_placement')
+                                                                            <div class="text-danger">{{ $message }}</div>
+                                                                        @enderror
+                                                                    </div>
+
+                                                                    <div class="form-group">
+                                                                        <label for="sgis_id">SGI <span class="text-danger">*</span></label> 
+                                                                        <select class="form-control select2" name="sgis_id" id="sgis_id" required>
+                                                                            <option value="">Sélectionnez une SGI</option>
+                                                                            @foreach ($sgis as $sgi)
+                                                                            <option value="{{$sgi->id}}" > {{$sgi->code_sgi}} ({{ $sgi->num_compte_prod_finan }}) </option>                                                                          
+                                                                            @endforeach
+                                                                        </select>  
+                                                                    </div>
+
+                                                                    <div class="form-group">
+                                                                        <label for="taux_annuel">Taux annuel <span class="text-danger">*</span> </label>
+                                                                        <input type="text" id="taux_annuel" class="form-control taux_annuel" name="taux_annuel" value="{{old('taux_annuel')}}" required>
+                                                                        @error('taux_annuel')
+                                                                            <div class="text-danger">{{ $message }}</div>
+                                                                        @enderror
+                                                                    </div>
+
+                                                                    <div class="form-group">
+                                                                        <label for="nbre_titre">Nombre de titre <span class="text-danger">*</span></label>
+                                                                        <input type="text" class="form-control nbre_titre" name="nbre_titre" id="nbre_titre" 
+                                                                        placeholder="Le nombre de titre pour ce placement." data-parsley-type="number" pattern="\d+" value="{{ old('nbre_titre') }}" oninput="calculateGain()" required>
+                                                                    </div>
+
+                                                                    <div class="form-group">
+                                                                        <label for="vacq_titre">Valeur d'acquisition du titre <span class="text-danger">*</span></label>
+                                                                        <input type="text" class="form-control vacq_titre" name="vacq_titre" id="vacq_titre" 
+                                                                        placeholder="La valeur d'acquisition du titre." data-parsley-type="number" pattern="\d+" oninput="calculateGain()" value="{{ old('vacq_titre') }}" required>
+                                                                    </div>
+
+                                                                  
+
+                                                                    <div class="form-group">
+                                                                        <label for="duree_annee">Durée (en année) <span class="text-danger">*</span> </label>
+                                                                        <input type="text" id="duree_annee" class="form-control duree_annee" name="duree_annee"
+                                                                        placeholder="Nombre d'année que couvre le placement" value="{{ old('duree_annee') }}" pattern="\d+" required>
+                                                                    </div>
+
+                                                                    
+                                                                </div>     
                                                             </div>
-                                                            
+
                                                             <div class="inp-sub-div">
-                                                                <button type="submit"  class="btn btn-primary inp-sub-place">Créer</button>
+                                                                <button type="submit" class="btn btn-primary inp-sub-place">Créer</button>
                                                             </div>
                                                         </div>
 
@@ -289,6 +338,9 @@
         {{-- <script src="{{asset('assetss/pages/jquery.form-pickers.init.js')}}"></script> --}}
         <script src="{{asset('assetss/pages/jquery.form-advanced.init.js')}}"></script>
 
+        <script src="{{asset('plugins/bootstrap-touchspin/js/jquery.bootstrap-touchspin.min.js')}}"></script>
+
+
         <!-- Counter js  -->
         <script src="{{asset('plugins/waypoints/jquery.waypoints.min.js')}}"></script>
         <script src="{{asset('plugins/counterup/jquery.counterup.min.js')}}"></script>
@@ -312,22 +364,76 @@
         <script src="{{asset('assetss/js/jquery.app.js')}}"></script>
 
         <script>
+            $("input[name='taux_annuel']").TouchSpin({
+                min: 0,
+                max: 100,
+                step: 0.01,
+                decimals: 2,
+                boostat: 5,
+                maxboostedstep: 10,
+                postfix: '%'
+            });
+        </script>
 
+        {{-- Script pour calculer le taux periode  --}}
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                const tauxAnnuelInput = document.querySelector("input[name='taux_annuel']");
+                const periodiciteSelect = document.querySelector("#periodicite");
+                const tauxPeriodeInput = document.querySelector("#taux_periode");
+        
+                function calculateTauxPeriode() {
+                    const tauxAnnuel = parseFloat(tauxAnnuelInput.value) || 0;
+                    const periodicite = periodiciteSelect.value;
+        
+                    let tauxPeriode = 0;
+        
+                    switch (periodicite) {
+                        case "Trimestre":
+                            tauxPeriode = tauxAnnuel / 4;
+                            break;
+                        case "Semestre":
+                            tauxPeriode = tauxAnnuel / 2;
+                            break;
+                        case "Annuel":
+                            tauxPeriode = tauxAnnuel;
+                            break;
+                        default:
+                            tauxPeriode = 0;
+                    }
+        
+                    // Mettre à jour le champ taux_periode avec deux décimales
+                    tauxPeriodeInput.value = tauxPeriode.toFixed(2);
+                }
+        
+                // Ajouter des écouteurs pour Touchspin (change) et saisie manuelle (input)
+                tauxAnnuelInput.addEventListener("input", calculateTauxPeriode);
+                tauxAnnuelInput.addEventListener("change", calculateTauxPeriode);
+                periodiciteSelect.addEventListener("change", calculateTauxPeriode);
+
+                // Événement spécifique à Touchspin
+                $("input[name='taux_annuel']").on('touchspin.on.stopspin', function() {
+                    calculateTauxPeriode();
+                });
+            });
+        </script>
+        
+
+        {{-- Script pour calculer le gain --}}
+        <script>
             document.querySelector('.valeur_titre').addEventListener('input', calculateGain);
             document.querySelector('.vacq_titre').addEventListener('input', calculateGain);
-            document.querySelector('.duree_annee').addEventListener('input', calculateGain);
 
             function calculateGain() {
                 const valeurTitre = parseFloat(document.querySelector('.valeur_titre').value);
                 const valeurAcquisition = parseFloat(document.querySelector('.vacq_titre').value);
-                const duree = parseInt(document.querySelector('.duree_annee').value);
 
                 // On vérifie si les champs nécessaires ont bien des valeurs numériques
-                if (!isNaN(valeurTitre) && !isNaN(valeurAcquisition) && !isNaN(duree)) {
-                    let gain = (valeurTitre - valeurAcquisition) * duree;
+                if (!isNaN(valeurTitre) && !isNaN(valeurAcquisition)) {
+                    let gain = (valeurTitre - valeurAcquisition);
                     
                     // Condition pour afficher sans .00 si le gain est un entier
-                    document.querySelector('.gain').value = Number.isInteger(gain) ? gain : gain.toFixed(2).replace(/\.00$/, '');
+                    document.querySelector('.gain').value = Number.isInteger(gain) ? gain : gain.toFixed(3).replace(/\.00$/, '');
                 }
             }
         </script>
@@ -374,7 +480,16 @@
                                 confirmButtonColor: '#4fa7f3'  
                             }  
                         );  
-                    }   
+                    }
+                    // Message d'erreur quand la page se charge avec session error  
+                    if ({{ session('error') ? 'true' : 'false' }}) {  
+                        Swal.fire({  
+                            title: 'Erreur',  
+                            text: '{{ session("error") }}',  
+                            type: 'error',  
+                            confirmButtonColor: '#f27474'  
+                        });  
+                    }     
                 };  
             
                 //init  

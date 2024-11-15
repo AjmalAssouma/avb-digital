@@ -12,9 +12,12 @@ class Placement extends Model
     protected $fillable = [
         'users_id',
         'sgis_id',
+        'num_compte',
         'type_placement',
         'nom_placement',
-        'num_compte',
+        'periodicite',
+        'taux_annuel',
+        'taux_periode',
         'nbre_titre',
         'valeur_titre',
         'valeur_acq_titre',
