@@ -29,68 +29,6 @@ class LoginController extends Controller implements \Illuminate\Routing\Controll
     public function showLoginForm()
     {
         return view("auth.login");
-    }
-
-
-    public function sendSMS($to, $content)
-    {
-        // Replace the following values with your own
-        $prodUrl = 'https://apis.letexto.com';
-        $token = '189e8e03a8a7c98d03ecb071ea8cb35d';
-        $from = 'AAVIE';
-        // $to = '2250000000000';
-        // $content = 'Hello API!';
-        $dlrUrl = 'https://lafricaineviebenin.com:4444/dlr';
-        $customData = 'LeSensDeLEngagement';
-        $sendAt = date('Y-m-d H:i:s');
-
-        $headers = [
-            'Authorization: Bearer ' . $token,
-            'Content-Type: application/json'
-        ];
-
-        $url = $prodUrl . '/v1/messages/send?from=' . urlencode($from) .
-            '&to=' . $to .
-            '&content=' . urlencode($content) .
-            '&token=' . $token .
-            '&dlrUrl=' . urlencode($dlrUrl) .
-            '&dlrMethod=GET&customData=' . $customData .
-            '&sendAt=' . urlencode($sendAt);
-
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-
-        // Désactiver la vérification SSL (à ne pas faire en production)
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-
-        $response = curl_exec($ch);
-
-        // if($response === false)
-        // {
-        //     echo 'Curl error: ' . curl_error($ch);
-        // }
-        // else
-        // {
-        //     echo $response;
-        // }
-
-        // curl_close($ch);
-
-        // Vérification des erreurs
-        if ($response === false) {
-            $error = curl_error($ch);
-            Log::error('Curl error: ' . $error);  // Enregistrement de l'erreur dans les logs Laravel
-            curl_close($ch);
-            return ['status' => 'error', 'message' => 'Curl error: ' . $error];
-        }
-
-        // Fermeture de la session cURL
-        curl_close($ch);
-
-        // Traitement de la réponse
-        return ['status' => 'success', 'response' => $response];
     }    
     
     public function notif($email, $otp)
