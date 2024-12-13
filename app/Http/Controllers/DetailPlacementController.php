@@ -36,7 +36,7 @@ class DetailPlacementController extends Controller
 
 
     /**
-     * Méthode pour mettre à jour un détail de placement.
+     * Méthode pour mettre à jour un détail de placement OBLIGATIONS.
      */
     public function updateObligations(Request $request, $id)
     {
