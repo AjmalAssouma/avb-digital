@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Sgi;
+use App\Models\DetailPlacement;
 use Illuminate\Support\Facades\Validator;
 
 class SgiController extends Controller
@@ -12,6 +13,7 @@ class SgiController extends Controller
     {
         return view('home.sgi.listSgi');
     }
+
     public function createSgi(Request $request)
     {
         // Définir les messages personnalisés
@@ -37,16 +39,25 @@ class SgiController extends Controller
             ], 422);
         }
 
-        // Création de la SGI
-        Sgi::create([
-            'code_sgi' => strtoupper($request->code_sgi), // Mettre en majuscule
-            'designation_sgi' => $request->designation_sgi,
-            'num_compte_prod_finan' => $request->num_compte_prod_finan,
-            'users_id' => auth()->id() // Récupérer l'ID de l'utilisateur authentifié
-        ]);
+        try{
+            // Création de la SGI
+            Sgi::create([
+                'code_sgi' => strtoupper($request->code_sgi), // Mettre en majuscule
+                'designation_sgi' => $request->designation_sgi,
+                'num_compte_prod_finan' => $request->num_compte_prod_finan,
+                'users_id' => auth()->id() // Récupérer l'ID de l'utilisateur authentifié
+            ]);
 
-        // Retourner une réponse JSON de succès
-        return response()->json(['success' => true, 'message' => 'SGI créée avec succès!']);
+            // Retourner une réponse JSON de succès
+            return response()->json(['success' => true, 'message' => 'SGI créée avec succès!']);
+        } catch (\Exception $e) {
+            // Gérer les exceptions
+            return response()->json([
+                'success' => false,
+                'message' => 'Une erreur s\'est produite lors de la création de la SGI.',
+                'error' => $e->getMessage() // Facultatif, peut être retiré en production
+            ], 500);
+        }
     }
 
     public function allSgi(){
@@ -66,6 +77,7 @@ class SgiController extends Controller
             'num_compte_prod_finan.numeric' => 'Le numéro de compte du produit financier doit contenir uniquement des chiffres.',
             'num_compte_prod_finan.unique' => 'Ce numéro de compte du produit financier existe déjà.',
         ];
+
         // Valider les données du formulaire
         $validator = Validator::make($request->all(), [
             'id' => 'required|integer|exists:sgis,id',
@@ -82,35 +94,48 @@ class SgiController extends Controller
             ], 422);
         }
 
-        // Récupérer la SGI existante et mettre à jour les informations
-        $sgi = Sgi::find($request->id);
-        $sgi->code_sgi = $request->code_sgi;
-        $sgi->designation_sgi = $request->designation_sgi;
-        $sgi->num_compte_prod_finan = $request->num_compte_prod_finan;
-        $sgi->save();
+        try{
 
-        // Retourner une réponse de succès
-        return response()->json([
-            'success' => true,
-            'message' => 'La SGI a été mise à jour avec succès.'
-        ]);
+            // Mise à jour de la SGI
+            $sgi = Sgi::findOrFail($request->id);
+            $sgi->update($request->only('code_sgi', 'designation_sgi', 'num_compte_prod_finan'));
+
+            // Retourner une réponse de succès
+            return response()->json([
+                'success' => true,
+                'message' => 'La SGI a été mise à jour avec succès.'
+            ]);
+        } catch (\Exception $e) {
+            // Gérer les exceptions
+            return response()->json([
+                'success' => false,
+                'message' => 'Une erreur s\'est produite lors de la mise à jour de la SGI.',
+                'error' => $e->getMessage() // Facultatif, à retirer en production
+            ], 500);
+        }
     }
 
     public function deleteSgi(Request $request)
     {
-        // Valider que l'ID existe
-        $request->validate([
-            'id' => 'required|integer|exists:sgis,id',
-        ]);
+        try{
+            // Valider que l'ID existe
+            $request->validate([
+                'id' => 'required|integer|exists:sgis,id',
+            ]);
 
-        // Rechercher et supprimer l'enregistrement
-        $sgi = Sgi::find($request->id);
-        if ($sgi) {
-            $sgi->delete();
-            return response()->json(['success' => true]);
+            // Rechercher et supprimer l'enregistrement
+            $sgi = Sgi::find($request->id);
+            if ($sgi) {
+                $sgi->delete();
+                return response()->json(['success' => true]);
+            }
+            return response()->json(['success' => false, 'message' => 'Élément non trouvé ou suppression échouée.'], 404);
+
+        }catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Erreur serveur.'], 500);
         }
 
-        return response()->json(['success' => false], 404);
+       
     }
 
 }

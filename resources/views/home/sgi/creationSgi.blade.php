@@ -50,7 +50,12 @@
                                     <h4 class="page-title">SGI (Societe de Gestion d'Investissements)</h4>
                                     <ol class="breadcrumb p-0 m-0">
                                         <li>
-                                            <a href="{{route('creation.sgi.form')}}">Créer une SGI</a>
+                                            <a href="{{route('creation.sgi.form')}}">
+                                                <button type="button" class="btn btn-icon waves-effect waves-light btn-success">
+                                                    <i class="fa fa-thumbs-o-up"></i>
+                                                </button>
+                                            </a>
+
                                         </li>
                                         <li class="active">
                                             SGI

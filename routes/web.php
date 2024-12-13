@@ -84,15 +84,33 @@ Route::post('/home/liste-des-sgis/suppression', [SgiController::class, 'deleteSg
 // ---------------------------------------ROUTES PLACEMENTS----------------------------------------------------------------
 Route::get('/home/creer-un-placement', [PlacementController::class, 'showPlacementCreationForm'])->name('creation.placement');
 
-Route::post('/home/creer-un-placement', [PlacementController::class, 'createdPlacement']);
+Route::post('/home/creer-un-placement/obligation', [PlacementController::class, 'createdPlacementObligation'])->name('creation.placement.obligation');
+
+Route::post('/home/creer-un-placement/action', [PlacementController::class, 'createdPlacementAction'])->name('creation.placement.action');
 
 Route::get('/home/liste-des-placements', [PlacementController::class, 'allPlacement'])->name('list.placement');
 
-Route::post('/home/liste-des-placements/modifier', [PlacementController::class, 'updatePlacement']);
+Route::post('/home/liste-des-placements/modifier-obligations', [PlacementController::class, 'updateObligationsPlacement']);
+
+Route::post('/home/liste-des-placements/modifier-actions', [PlacementController::class, 'updateActionsPlacement']);
+
+Route::delete('/home/liste-des-placements/supprimer', [PlacementController::class, 'deletePlacement']);
 
 
 // ---------------------------------------ROUTES DETAIL PLACEMENTS----------------------------------------------------------------
 Route::get('/home/details-placement/{id}', [DetailPlacementController::class, 'show'])->name('details.placement');
+
+Route::post('/home/details-placement/{id}/modifier-obligations', [DetailPlacementController::class, 'updateObligations']);
+
+Route::post('/home/details-placement/{id}/modifier-actions', [DetailPlacementController::class, 'updateActions']);
+
+Route::delete('/home/details-placement/{id}/supprimer', [DetailPlacementController::class, 'deleteDetail']);
+
+// ---------------------------------------ROUTES EXPORTATION PLACEMENTS----------------------------------------------------------------
+Route::get('/home/exporter-des-placements', [PlacementController::class, 'exportPlacement'])->name('exporter.placement');
+
+Route::post('/home/exporter-des-placements/importer', [PlacementController::class, 'importPlacement'])->name('importer.placement');;
+
 
 
 

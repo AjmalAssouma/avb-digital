@@ -19,10 +19,7 @@ class HomeController extends Controller implements \Illuminate\Routing\Controlle
     {
         $user = Auth::user();
         // Passer uniquement les colonnes 'firstname' et 'lastname' à la vue
-        return view('home.index', [
-            'firstname' => $user->firstname,
-            'lastname' => $user->lastname,
-        ]);
+        return view('home.index', compact('user'));
     }
 
     

@@ -141,14 +141,25 @@
                 </li>
 
                 <li class="dropdown user-box list-inline-item">
-                    <a href="" class="dropdown-toggle waves-effect user-link" data-toggle="dropdown" aria-expanded="true">
+                    {{-- <a href="" class="dropdown-toggle waves-effect user-link" data-toggle="dropdown" aria-expanded="true">
                         <img src="{{ auth()->user()->profile_photo ? asset('storage/' . auth()->user()->profile_photo) : 'https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp' }}" alt="user-img" class="rounded-circle user-img">
+                    </a> --}}
+
+                    <a href="#" class="dropdown-toggle waves-effect user-link" data-toggle="dropdown" aria-expanded="true">
+                        <img 
+                            src="{{ auth()->check() && auth()->user()->profile_photo 
+                                    ? (file_exists(storage_path('app/public/' . auth()->user()->profile_photo)) 
+                                        ? asset('storage/' . auth()->user()->profile_photo) 
+                                        : asset('assetss/images/icons/businessman.svg')) 
+                                    : asset('assetss/images/icons/businessman.svg')}}" 
+                            alt="user-img" 
+                            class="rounded-circle user-img">
                     </a>
+                    
 
                     <ul class="dropdown-menu dropdown-menu-right arrow-dropdown-menu arrow-menu-right user-list notify-list">
                         <li><a href="{{ route('home.userprofil') }}" class="dropdown-item">Profile</a></li>
                         <li><a href="" class="dropdown-item"><span class="badge badge-pill badge-info float-right">4</span>Paramètres</a></li>
-                        {{-- <li><a href="javascript:void(0)" class="dropdown-item">Lock screen</a></li> --}}
                         <li class="dropdown-divider"></li>
                         <li><a href="{{ route('logout') }}" class="dropdown-item">Déconnexion</a></li>
                     </ul>

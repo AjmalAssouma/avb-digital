@@ -1710,10 +1710,9 @@ body.enlarged.bg-transparent {
 }
 
 .sgi-button{
-  width: 150px;  
-  height: 38px;
-  border-radius: 5px;
-  font-size: 18px;  
+  width: 160px;  
+  height: 40px;
+  font-size: 16px;  
   font-weight: 500;  
 }
 
@@ -2173,8 +2172,8 @@ body.enlarged.bg-transparent {
 .modal-demo .close {
   position: absolute;
   top: 15px;
-  right: 25px;
-  color: #e2e2e2;
+  right: 15px;
+  color: #7a7a7a;
   font-weight: 400;
 }
 
@@ -4278,7 +4277,7 @@ ul.ColVis_collection li {
 ============= */
 .add-edit-table td, .add-edit-table th {
   vertical-align: middle !important;
-  font-size: 15px;
+  font-size: 14px;
 }
 
 .add-edit-table td {
@@ -4298,7 +4297,7 @@ ul.ColVis_collection li {
 #datatable-editable .fa-trash-o {
   color: #ffffff;
   font-weight: 500;
-  font-size: 18px;
+  font-size: 15px;
 }
 
 #datatable-editable .fa-info-circle {
@@ -4314,7 +4313,7 @@ ul.ColVis_collection li {
 #datatable-editable .fa-pencil {
   color: #ffffff;
   font-weight: 500;
-  font-size: 18px;
+  font-size: 15px;
 }
 
 #datatable-editable .fa-save {
@@ -4990,7 +4989,13 @@ table.dataTable thead th.sorting_desc:after {
    Account Pages
 ============= */
 .wrapper-page {
-  margin: 12% auto;
+  margin: 5% auto;
+  position: relative;
+  max-width: 520px;
+}
+
+.wrapper-page-forgot {
+  margin: 8% auto;
   position: relative;
   max-width: 520px;
 }

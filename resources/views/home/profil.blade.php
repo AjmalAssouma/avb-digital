@@ -83,8 +83,19 @@
                             </li>
 
                             <li class="dropdown user-box list-inline-item">
-                                <a href="" class="dropdown-toggle waves-effect user-link" data-toggle="dropdown" aria-expanded="true">
+                                {{-- <a href="" class="dropdown-toggle waves-effect user-link" data-toggle="dropdown" aria-expanded="true">
                                     <img src="{{ auth()->user()->profile_photo ? asset('storage/' . auth()->user()->profile_photo) : 'https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp' }}" alt="user-img" class="rounded-circle user-img">
+                                </a> --}}
+
+                                <a href="#" class="dropdown-toggle waves-effect user-link" data-toggle="dropdown" aria-expanded="true">
+                                    <img 
+                                        src="{{ auth()->check() && auth()->user()->profile_photo 
+                                                ? (file_exists(storage_path('app/public/' . auth()->user()->profile_photo)) 
+                                                    ? asset('storage/' . auth()->user()->profile_photo) 
+                                                    : asset('assetss/images/icons/businessman.svg')) 
+                                                : asset('assetss/images/icons/businessman.svg')}}" 
+                                        alt="user-img" 
+                                        class="rounded-circle user-img">
                                 </a>
 
                                 <ul class="dropdown-menu dropdown-menu-right arrow-dropdown-menu arrow-menu-right user-list notify-list">
@@ -111,65 +122,6 @@
                             <li>
                                 <a href="{{ route('home') }}"><i class="fi-air-play"></i><span class="badge badge-pill badge-success float-right"></span> <span>Tableau de bord</span> </a>
                             </li>
-                            
-                            <li class="menu-title">PRODUCTION</li>
-                            <li><a href="cotation.html"><i class="fi-align-left"></i><span>Cotation</span></a></li>
-                            <li><a href="customers_liste.html"><i class="fi-head"></i><span>Clients existant</span></a></li>
-                            <li><a href="liste_contrat.html"><i class="fi-folder"></i><span>Liste des contrats</span></a></li>
-                            <li><a href="liste_contrat_annules.html"><i class="fi-folder"></i><span>Contrats Annulés</span></a></li>
-                            
-                            <li class="menu-title">BOUCLIER EMPRUNTEUR</li>
-
-                            <li>
-                                <a href="javascript: void(0);"><i class="fi-box"></i><span>BOUC.&#160;EMPRUNTEUR </span> <span class="menu-arrow"></span> </a>
-                                <ul class="nav-second-level nav" aria-expanded="false">
-                                    <li><a href="liste_contrat_be.html"><span>Liste des contrats</span></a></li>
-                                    <!-- <li><a href="be_valide.html"><span>Charger des dossiers valides</span></a></li>
-                                    <li><a href="be_paiement.html"><span>Charger des paiements</span></a></li> -->
-                                    <li><a href="contrat_hla.html"><span>Contrat HLA</span></a></li>
-                                </ul>
-                            </li>
-                            <li class="menu-title">COMPTE PARRAINE</li>
-                            <li>
-                                <a href="javascript: void(0);"><i class="fi-umbrella"></i><span>COMPTE PARRAINE </span> <span class="menu-arrow"></span> </a>
-                                <ul class="nav-second-level nav" aria-expanded="false">
-                                    <li><a href="liste_contrat_cp.html"><span>Liste des contrats</span></a></li>
-                                    <!-- <li><a href="cp_valide.html"><span>Charger des dossiers valides</span></a></li>
-                                    <li><a href="cp_paiement.html"><span>Charger des paiements</span></a></li>
-                                    <li><a href="#.html"><span>Renouvellement des contrats</span></a></li> -->
-                                </ul>
-                            </li>
-                            <li class="menu-title">ETAT DE PRODUCTION</li>
-
-                            <li><a href="etat_prod.html"><i class="fi-bar-graph-2"></i><span>Etat Production</span></a></li>
-                            <!-- <li><a href="etat_com.html"><i class="fi-bar-graph"></i><span>Etat Commission</span></a></li> -->
-
-                            <li class="menu-title">SINISTRES</li>
-                            <li>
-                                <a href="javascript: void(0);"><i class="fi-umbrella"></i><span>SINISTRES</span> <span class="menu-arrow"></span> </a>
-                                <ul class="nav-second-level nav" aria-expanded="false">
-                                    <li><a href="liste_contrat.html"><span>Déclarer un sinistre</span></a></li>
-                                    <li><a href="sinistres_traites.html"><span>Liste des sinistres</span></a></li>
-                                    <!-- <li><a href="sinistres_non_traites.html"><span>Liste des sinistres non traités</span> </a></li>-->
-                                </ul>
-                            </li>
-
-                            <li class="menu-title">INFORMATIONS</li>
-                            <li>
-                                <a href="javascript: void(0);"><i class="fi-help"></i><span>INFORMATIONS</span> <span class="menu-arrow"></span> </a>
-                                <ul class="nav-second-level nav" aria-expanded="false">
-                                    <li><a href="pieces.html"><span>Pièces à fournir</span></a></li>
-                                    <li><a href="contact.html"><span>Support</span></a></li>
-                                </ul>
-                            </li>
-                            <!-- Administration -->
-                            <li class="toRemove">
-                                <a href="javascript: void(0);"><i class="fi-layers"></i><span>GEST.&#160;UTILISATEURS</span> <span class="menu-arrow"></span> </a>
-                                <ul class="nav-second-level nav" aria-expanded="false">
-                                    <li><a href="liste_users.html"><span>Liste des utilistaeurs</span></a></li>
-                                </ul>
-                            </li>
-
                         </ul>
                     </div>
                     <!-- Sidebar -->
@@ -211,16 +163,18 @@
                             <div class="col-lg-5">
                                 <div class="card mb-4">
                                     <div class="card-body text-center">
-                                        {{-- <img height="60px" src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar" class="rounded-circle img-fluid" style="width: 120px;">                                     --}}
-                                        {{-- <div>
-                                            <span id="fullname">Nom et Prenoms : {{ $user->lastname }} {{ $user->firstname }} </span><br>
-                                            <span id="agency">Agence : {{ $user->agency->name ?? 'Aucune agence' }} </span><br>
-                                            <span id="role">Rôle : {{ $user->role->habilitation ?? 'Aucun rôle' }} </span>
-                                        </div> --}}
-
                                         <div class="profile-photo-wrapper text-center">
-                                            <img src="{{ auth()->user()->profile_photo ? asset('storage/' . auth()->user()->profile_photo) : 'https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp' }}" alt="avatar" id="profile-photo-preview" class="rounded-circle img-fluid">
+                                            {{-- <img src="{{ auth()->user()->profile_photo ? asset('storage/' . auth()->user()->profile_photo) : 'https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp' }}" alt="avatar" id="profile-photo-preview" class="rounded-circle img-fluid"> --}}
                                             
+                                            <img src="{{ auth()->check() && auth()->user()->profile_photo 
+                                            ? (file_exists(storage_path('app/public/' . auth()->user()->profile_photo)) 
+                                                ? asset('storage/' . auth()->user()->profile_photo) 
+                                                : asset('assetss/images/icons/businessman.svg')) 
+                                            : asset('assetss/images/icons/businessman.svg')}}" 
+                                            alt="avatar" 
+                                            id="profile-photo-preview" 
+                                            class="rounded-circle img-fluid">
+
                                             <label for="profile_photo" class="edit-icon">
                                                 <i class="fas fa-pencil-alt"></i>
                                             </label>
@@ -229,7 +183,6 @@
                                         <form action="{{ route('profile.update-photo') }}" method="POST" enctype="multipart/form-data">
                                             @csrf
                                             <input type="file" name="profile_photo" id="profile_photo" accept="image/*" onchange="previewPhoto()">
-                                            {{-- <button type="submit" class="btn btn-custom mt-3">Mettre à jour</button> --}}
                                             <button type="submit" class="btn btn-customm mt-3">Modifier</button>
                                         </form>
                                         
@@ -253,6 +206,7 @@
                                   </div>
                                 </div>
                             </div>
+
                             <div class="col-lg-7">
                                 <div class="card mb-3">
                                     <div class="card-body">
@@ -261,7 +215,7 @@
                                                 <p class="mb-0">Téléphone</p>
                                             </div>
                                             <div class="col-sm-20">
-                                                <p class="text-muted mb-0"><span class="ff">{{ old('phone', $user->phone)}} </span></p>
+                                                <p class="text-muted mb-0"><span class="ff"> {{ old('phone', $user->phone)}} </span></p>
                                             </div>
                                             <hr class="hh">
                                         </div>
@@ -485,7 +439,7 @@
                 </div> <!-- content -->
 
                 <footer class="footer text-center">
-                    2007 - 2022 © <span class="text-success">L'AFRICAINE VIE BENIN SA</span> <span class="d-none d-sm-inline-block"> - Lafricaineviebenin.com</span>
+                    2024 © <span class="text-success">L'AFRICAINE VIE BENIN SA</span> <span class="d-none d-sm-inline-block"> - Lafricaineviebenin.com</span>
                 </footer>
 
             </div>

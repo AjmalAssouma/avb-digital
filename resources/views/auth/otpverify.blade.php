@@ -62,8 +62,9 @@
     </div>
     <section class="fxt-template-animation fxt-template-layout21">
         <!-- Animation Start Here -->
-        <div id="particles-js"></div>
+        {{-- <div id="particles-js"></div> --}}
         <!-- Animation End Here -->
+        
         <div class="container">
             <div class="row align-items-center justify-content-center">
                 <div class="col-xl-7 col-lg-7 col-sm-12 col-12 fxt-bg-color">
@@ -71,8 +72,8 @@
                     <div class="fxt-content">
 
                         <div class="fxt-header">
-                            <a href="" class="fxt-logo"><img src="{{asset('assets/img/otp-icon.png')}}" width="60" alt="L'Africiaine Vie Bénin"></a>
-                            <p>Reinitialisation du mot de passe</p>
+                            <a href="" class="fxt-logo"><img src="{{asset('assets/img/otp-icon.png')}}" width="70" alt="L'Africiaine Vie Bénin"></a>
+                            <h5 class="text-uppercase font-bold m-b-0">Vérification.</h5>
                         </div>
 
                         <div class="fxt-form">
@@ -93,7 +94,7 @@
                                     @endif
                                     
                                     <p style="font-family: 'Poppins', sans-serif; text-align:center; text-justify:inter-word; font-size: 16px; color: #000000; line-height: 1.5; font-weight: 550">
-                                        Nous vous avons envoyé un code de vérification. <br>Vérifiez votre boîte de réception (e-mail ou téléphone).
+                                        Veuillez renseigner le code que vous avez reçu.
                                     </p>
                                     <input type="hidden" name="email" class="form-control" value="{{ session('reset_identifier') }}" readonly>
                                 </div>
@@ -187,41 +188,7 @@
                 clearInterval(interval);
             }
         }, 1000);
-
-
-
     </script>
-
-
-
-    {{-- <script>
-        document.getElementById('resendOtpButton').addEventListener('click', function() {
-            let identifier = '{{ session('reset_identifier') }}';
-
-            fetch('{{ route('forgotpassword.otp.resend') }}', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                },
-                body: JSON.stringify({ identifier: identifier })
-            })
-            .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-            return response.text(); // Traiter comme du texte brut
-        })
-        .then(data => {
-            // Affichez le message de succès ou d'erreur en fonction de la réponse
-            alert('Le code de vérification a été renvoyé avec succès.'); // Vous pouvez personnaliser cette logique selon votre besoin
-        })
-        .catch(error => {
-            console.error('Erreur:', error);
-            alert('Une erreur est survenue.');
-        });
-        });
-    </script> --}}
 
 
     <!-- jquery-->

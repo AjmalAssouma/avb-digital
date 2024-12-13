@@ -63,66 +63,19 @@
 
     <section class="fxt-template-animation fxt-template-layout21">
         <!-- Animation Start Here -->
-        <div id="particles-js"></div>
+        {{-- <div id="particles-js"></div> --}}
         <!-- Animation End Here -->
+
         <div class="container">
             <div class="row align-items-center justify-content-center">
                 <div class="col-xl-7 col-lg-7 col-sm-12 col-12 fxt-bg-color">
                     <div class="fxt-content">
                         <div class="fxt-header">
                             <a href="{{ route('auth.otp') }}" class="fxt-logo"><img src="{{asset('assets/img/otp-icon.png')}}" width="70"  alt="L'Africiaine Vie Bénin"></a>
-                            <p style="color: #696565; font-weight:500">Vérification</p>
+                            {{-- <p style="color: #696565; font-weight:500">Vérification</p> --}}
+                            <h5 class="text-uppercase font-bold m-b-0">Vérification.</h5>
                         </div>
                         <div class="fxt-form" style="margin-top: -20px">
-                            {{-- <form action="{{ route('otp.check') }}" method="POST" novalidate>
-                            @csrf
-                            <div>
-                            <p style="font-family: 'Poppins', sans-serif; text-align: center; text-justify: inter-word; font-size: 17px; color: #000000; line-height: 1.6; max-width: 600px; margin: 0 auto;">
-                                Nous vous avons envoyé un code de vérification. Vérifiez votre boîte de réception (e-mail ou téléphone)
-                            </p>
-                            <input type="hidden" name="email" class="form-control" value="{{ $email_tel }}">
-                            </div>
-
-                            <div class="form-group">
-                            <div class="fxt-transformY-50 fxt-transition-delay-5">
-                                <div class="otp-inputs">
-                                    <input type="text" id="otp1"  name="otp1" class="otp-input" maxlength="1" required>
-                                    <input type="text" id="otp2"  name="otp2" class="otp-input" maxlength="1" required>
-                                    <input type="text" id="otp3"  name="otp3" class="otp-input" maxlength="1" required>
-                                    <input type="text" id="otp4"  name="otp4" class="otp-input" maxlength="1" required>
-                                    <input type="text" id="otp5"  name="otp5" class="otp-input" maxlength="1" required>
-                                    <input type="text" id="otp6"  name="otp6" class="otp-input" maxlength="1" required>
-                                </div>
-                                @if($errors->has('otp'))
-                                    <span class="text-danger">{{ $errors->first('otp') }}</span>
-                                @endif
-                            </div>
-                            </div>
-
-                            <form action="{{ route('otp.resend') }}" method="POST">
-                            @csrf
-                            <input type="hidden" name="email" value="{{ $email_tel }}">
-                            <div style="display: flex; align-items: center; gap: 10px; margin-left: 20px;">
-                                <span style="font-size: 15px; color: #000000;">Vous n'avez pas reçu le code ?</span>
-                                <button type="submit" style="background-color: #131212; border: none; padding: 5px 8px; border-radius: 5px; cursor: pointer; transition: background-color 0.3s;">
-                                    <span style="color: white; font-size: 14px; font-weight: 500;">Renvoyer le code</span>
-                                </button>
-                            </div>
-                            </form>
-
-                            <br>
-                            <div class="form-group">
-                            <div class="fxt-transformY-50 fxt-transition-delay-6">
-                                <button type="submit" class="fxt-btn-fill">Vérifier le code</button>
-                            </div>
-                            </div>
-
-                            @if(session('error'))
-                            <div class="form-group">
-                                <span class="text-danger">{{ session('error') }}</span>
-                            </div>
-                            @endif
-                            </form> --}}
 
                             <form action="{{ route('otp.check') }}" method="POST" novalidate>
                                 @csrf

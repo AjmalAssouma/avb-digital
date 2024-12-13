@@ -24,20 +24,8 @@ class ProfileController extends Controller implements \Illuminate\Routing\Contro
         ];
     }
 
-     // public function showProfileUser()
-    // {
-    //     $user = Auth::user();
-    //     return view('home.profil', [
-    //         'telephone' => $user->phone,
-    //         'mail' => $user->email,
-    //         'adresse' => $user->address,
-    //         'created_at' => $user->created_at->format('d/m/Y'),
-    //     ]);
-    // }
-
     public function showProfileUser()
     {
-        //$user = Auth::user(); // Récupérer l'utilisateur connecté
         $user = Auth::user()->load('agency', 'role'); // Charger les relations agency et role
         return view('home.profil', compact('user')); // Passer l'objet utilisateur complet à la vue
     }
@@ -65,11 +53,8 @@ class ProfileController extends Controller implements \Illuminate\Routing\Contro
 
         $user->update([
             'password' => Hash::make($validated['password']),
-            'password_expires_at' => now()->addMonths(1), // Ajouter 3 mois à la date actuelle
+            'password_expires_at' => now()->addMonths(3), // Ajouter 3 mois à la date actuelle
         ]);
-
-        // Utiliser session()->flash() pour garantir que le message soit affiché correctement
-        // session()->flash('passwordSuccess', 'Mot de passe modifié avec succès.');
 
         return redirect()->route('home.userprofil')->with('successpass', 'Mot de passe modifié avec succès.');
     }

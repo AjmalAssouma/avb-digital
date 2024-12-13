@@ -110,6 +110,9 @@ class LoginController extends Controller implements \Illuminate\Routing\Controll
         $credentials = $request->validate([
             'identifier' => ['required'], // Email ou téléphone
             'password' => ['required', 'string'],
+        ],[
+            'identifier.required' => 'Ce champ est obligatoire',
+            'password.required' => 'Le mot de passe est obligatoire'
         ]);
 
         // Vérifier si l'identifiant est un email ou un téléphone

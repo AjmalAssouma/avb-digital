@@ -18,16 +18,16 @@ return new class extends Migration
             $table->string('num_compte')->unique();
             $table->string('type_placement');
             $table->string('nom_placement');
-            $table->string('periodicite');
-            $table->string('taux_annuel');
-            $table->string('taux_periode');
-            $table->integer('nbre_titre');
-            $table->string('valeur_titre');
-            $table->string('valeur_acq_titre');
-            $table->date('date_debut');
-            $table->date('date_fin');
-            $table->string('duree');
-            $table->string('gain');
+            $table->string('periodicite')->nullable();
+            $table->string('taux_annuel')->nullable();
+            $table->string('taux_periode')->nullable();
+            $table->integer('nbre_titre')->nullable();
+            $table->string('valeur_titre')->nullable();
+            $table->string('valeur_acq_titre')->nullable();
+            $table->date('date_debut')->nullable();
+            $table->date('date_fin')->nullable();
+            $table->string('duree')->nullable();
+            $table->string('gain')->nullable();
             $table->timestamps();
         });
     }

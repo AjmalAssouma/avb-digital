@@ -58,7 +58,9 @@
                                     <h4 class="page-title">Liste des SGI (Societe de Gestion d'Intermédiations)</h4>
                                     <ol class="breadcrumb p-0 m-0">
                                         <li>
-                                            <button type="button" class="btn btn-primary  waves-effect waves-light btn-sm sgi-button" data-toggle="modal" data-target="#con-close-modal-sgi-created">Créer une SGI</button>
+                                            {{-- <button type="button" class="btn btn-primary  waves-effect waves-light btn-sm sgi-button" data-toggle="modal" data-target="#con-close-modal-sgi-created">Créer une SGI</button> --}}
+
+                                            <button type="button" class="btn btn-icon waves-effect waves-light btn-success sgi-button" data-toggle="modal" data-target="#con-close-modal-sgi-created"> <i class="fa fa-plus"></i> <span> Créer une SGI</span></button>
                                         </li>
                                     </ol>
                                     <div class="clearfix"></div>
@@ -82,7 +84,7 @@
                                                             <span aria-hidden="true">&times;</span>
                                                         </button>
                                                     </div>
-                                                    <form >
+                                                    <form id="create-sgi-form">
                                                         @csrf
                                                         <div class="modal-body">
                                                             <div class="row">
@@ -169,16 +171,17 @@
 
                             <!-- Modal Start -->
                             <div id="con-close-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
-                                <form action="" method="POST">
-                                    @csrf
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h4 class="modal-title mt-0">Modification de la SGI</h4>
-                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                    <span aria-hidden="true">&times;</span>
-                                                </button>
-                                            </div>
+                            
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title mt-0">Modification de la SGI</h4>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <form>
+                                            @csrf
                                             <div class="modal-body">
                                                 <div class="row"> 
                                                     <div class="col-md-12">
@@ -191,7 +194,7 @@
                                                         <div class="form-group">
                                                             <label for="codesgi_update" class="control-label">Code SGI<span class="text-danger">*</span></label>
                                                             <input type="text" class="form-control codesgi_update" id="codesgi_update"  name="codesgi_update" placeholder="SGI,AGI,BFS etc..." oninput="this.value = this.value.toUpperCase();" required>
-                                                            <span class="text-danger error-codesgi"></span>
+                                                            <span class="text-danger errors-code_sgi"></span>
                                                         </div>
                                                     </div>
 
@@ -199,7 +202,7 @@
                                                         <div class="form-group">
                                                             <label for="designation_update" class="control-label">Désignation de la SGI <span class="text-danger">*</span></label>
                                                             <input type="text" class="form-control designation_update" id="designation_update" name="designation_update"  placeholder="Nom complet de la SGI.." required>
-                                                            <span class="text-danger error-designation"></span>
+                                                            <span class="text-danger errors-designation_sgi"></span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -209,7 +212,7 @@
                                                         <div class="form-group">
                                                             <label for="numcompte_update" class="control-label">Numéro de compte du produit financier <span class="text-danger">*</span></label>
                                                             <input type="text" class="form-control numcompte_update" id="numcompte_update" name="numcompte_update" placeholder="77xxxxxxx">
-                                                            <span class="text-danger error-numcompte"></span> <!-- Zone pour le message d'erreur -->
+                                                            <span class="text-danger errors-num_compte_prod_finan"></span> <!-- Zone pour le message d'erreur -->
                                                         </div>
                                                     </div>  
                                                 </div>
@@ -218,10 +221,11 @@
                                                 <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">Annuler</button>
                                                 <button type="button" class="btn-chang btn-appliq waves-effect waves-light">Appliquer les changements</button>
                                             </div>
-                                        </div>
-
+                                        </form>
                                     </div>
-                                </form>
+
+                                </div>
+                            
                             </div>
                         </div> 
 
@@ -316,6 +320,76 @@
             });  
         </script>
 
+        <script>
+            // Script permettant de créer une SGI avec Fetch
+            document.addEventListener('DOMContentLoaded', function () {
+                const createButton = document.querySelector('.sgi-sub');
+
+                createButton.addEventListener('click', async function (e) {
+                    e.preventDefault();
+
+                    // Désactiver le bouton pour éviter les doubles soumissions
+                    createButton.disabled = true;
+
+                    // Réinitialiser les messages d'erreur
+                    document.querySelectorAll('.text-danger').forEach(el => el.textContent = '');
+
+                    // Récupérer les données du formulaire
+                    const formData = {
+                        _token: '{{ csrf_token() }}',
+                        'code_sgi': document.querySelector('.code_sgi').value,
+                        'designation_sgi': document.querySelector('.designation_sgi').value,
+                        'num_compte_prod_finan': document.querySelector('.num_compte_prod_finan').value,
+                    };
+
+                    try {
+                        // Envoi des données via Fetch
+                        const response = await fetch('/home/liste-des-sgis/creer-une-sgi', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(formData),
+                        });
+
+                        // Vérification de la réponse
+                        const result = await response.json();
+
+                        if (response.ok && result.success) {
+                            Swal.fire({
+                                title: "Succès!",
+                                text: result.message,
+                                type: "success",
+                                confirmButtonColor: '#4fa7f3',
+                            }).then(() => {
+                                // Recharger le tableau ou la page (optionnel)
+                                location.reload();
+                            });
+                        } else {
+                            // Gérer les erreurs envoyées par le contrôleur
+                            if (result.errors) {
+                                for (const field in result.errors) {
+                                    const errorElement = document.querySelector(`.error-${field}`);
+                                    if (errorElement) {
+                                        errorElement.textContent = result.errors[field][0];
+                                    }
+                                }
+                            } else {
+                                Swal.fire("Erreur","Une erreur est survenue.", "error");
+                            }
+                        }
+
+                    } catch (error) {
+                        console.error("Erreur inattendue :", error);
+                        Swal.fire("Erreur", "Une erreur inattendue est survenue. Veuillez réessayer.", "error");
+                    } finally {
+                        // Réactiver le bouton
+                        createButton.disabled = false;
+                    }
+                });
+            });
+        </script>
+
         {{-- Script qui permet d'afficher le modal et de faire la mise a jours --}}
         <script>
             $(document).ready(function () {
@@ -348,127 +422,82 @@
                     $('.numcompte_update').val('');
                 });
             });
+        </script>
 
-            $(document).ready(function () {
-                $('.btn-chang').on('click', function (e) {
-                    e.preventDefault();
-                    // Récupérer les données du formulaire
-                    const sgiId = $('.sgi_id').val();
-                    const codeSgi = $('.codesgi_update').val();
-                    const designation = $('.designation_update').val();
-                    const numCompte = $('.numcompte_update').val();
+        {{-- Script permettant de faire la mise a jour d'une SGI avec Fetch --}}
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                
+                const updateButton = document.querySelector('.btn-chang');
 
-                    // Envoyer une requête AJAX pour mettre à jour les informations
-                    $.ajax({
-                        url: '/home/liste-des-sgis/modifier', // URL vers la méthode du controller
-                        type: 'POST',
-                        data: {
-                            _token: '{{ csrf_token() }}', // Token CSRF
-                            id: sgiId,
-                            code_sgi: codeSgi,
-                            designation_sgi: designation,
-                            num_compte_prod_finan: numCompte,
-                        },
-                        success: function (response) {
-                            if (response.success) {
-                                Swal.fire({
-                                title: 'Succès',
-                                text: response.message,
-                                type: 'success',
-                                confirmButtonColor: '#4fa7f3'
-                                }).then(() => {
-                                    location.reload(); // Recharger la page après confirmation
-                                });
-                            } else {
-                                Swal.fire("Erreur", response.message, "error");
-                            }
-                        },
-                        error: function (xhr) {
-                           // Réinitialiser les messages d'erreur
-                            $('.error-designation').text('');
-                            $('.error-numcompte').text('');
-                            $('.error-codesgi').text('');
-
-                            // Afficher les messages d'erreur en fonction des champs
-                            if (xhr.responseJSON && xhr.responseJSON.errors) {
-                                if (xhr.responseJSON.errors.designation_sgi) {
-                                    $('.error-designation').text(xhr.responseJSON.errors.designation_sgi[0]);
-                                }
-                                if (xhr.responseJSON.errors.num_compte_prod_finan) {
-                                    $('.error-numcompte').text(xhr.responseJSON.errors.num_compte_prod_finan[0]);
-                                }
-                                if (xhr.responseJSON.errors.code_sgi) {
-                                    $('.error-codesgi').text(xhr.responseJSON.errors.code_sgi[0]);
-                                }
-                            } else {
-                                Swal.fire("Erreur", "Une erreur est survenue. Veuillez réessayer.", "error");
-                            }
-                        }
-                    });
-                });
-            });
-
-            // Script permettant de créer une SGI
-            $(document).ready(function () {
-                $('.sgi-sub').on('click', function (e) {
+                updateButton.addEventListener('click', async function (e) {
                     e.preventDefault();
 
-                    // Réinitialiser les messages d'erreur
-                    $('.text-danger').text('');
+                    // Désactiver le bouton pour éviter les doubles soumissions
+                    updateButton.disabled = true;
 
                     // Récupérer les données du formulaire
-                    let formData = {
-                        _token: '{{ csrf_token() }}',  // Token CSRF
-                        'code_sgi': $('.code_sgi').val(),
-                        'designation_sgi': $('.designation_sgi').val(),
-                        'num_compte_prod_finan': $('.num_compte_prod_finan').val()
+                    const formData = {
+                        _token: '{{ csrf_token() }}',
+                        'id': document.querySelector('.sgi_id').value,
+                        'code_sgi': document.querySelector('.codesgi_update').value,
+                        'designation_sgi': document.querySelector('.designation_update').value,
+                        'num_compte_prod_finan': document.querySelector('.numcompte_update').value,
                     };
 
-                    // Requête Ajax pour envoyer les données au contrôleur
-                    $.ajax({
-                        url: '/home/liste-des-sgis/creer-une-sgi',
-                        type: "POST",
-                        data: formData,
-                        success: function (response) {
-                            if (response.success) {
-                                Swal.fire({
-                                    title: "Succès!",
-                                    text: response.message,
-                                    type: "success", // Correction ici : utilisez 'icon' au lieu de 'type'
-                                    confirmButtonColor: '#4fa7f3'
-                                }).then(() => {
-                                    location.reload();  // Recharger la page ou mettre à jour le tableau
-                                });
-                            } else {
-                                Swal.fire("Erreur", response.message, "error");
-                            }
-                        },
-                        error: function (xhr) {
-                            console.log(xhr.responseJSON); // Affiche les détails de l'erreur dans la console
-                            // Gérer les erreurs de validation
-                            if (xhr.status === 422) {  // Code d'erreur de validation Laravel
-                                let errors = xhr.responseJSON.errors;
-                                if (errors['code_sgi']) {
-                                    $('.error-code_sgi').text(errors['code_sgi'][0]);
+                    try {
+                        // Envoi des données via Fetch
+                        const response = await fetch('/home/liste-des-sgis/modifier', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(formData),
+                        });
+
+                        // Analyse de la réponse JSON
+                        const result = await response.json();
+
+                        if (response.ok && result.success) {
+                            Swal.fire({
+                                title: 'Succès!',
+                                text: result.message,
+                                type: 'success',
+                                confirmButtonColor: '#4fa7f3',
+                            }).then(() => {
+                                location.reload(); // Recharger la page après confirmation
+                            });
+                        } else if (response.status === 422 && result.errors){
+                            // Réinitialiser les messages d'erreur
+                            document.querySelectorAll('.text-danger').forEach(el => el.textContent = '');
+
+                            // Affichage des erreurs de validation
+                            for (const field in result.errors) {
+                                const errorElement = document.querySelector(`.errors-${field}`);
+                                if (errorElement) {
+                                    // Affiche le premier message d'erreur pour le champ concerné
+                                    errorElement.textContent = result.errors[field][0];
                                 }
-                                if (errors['designation_sgi']) {
-                                    $('.error-designation_sgi').text(errors['designation_sgi'][0]);
-                                }
-                                if (errors['num_compte_prod_finan']) {
-                                    $('.error-num_compte_prod_finan').text(errors['num_compte_prod_finan'][0]);
-                                }
-                            } else {
-                                Swal.fire("Erreur", "Une erreur est survenue. Veuillez réessayer.", "error");
-                            }
+                            }     
+                            
+                        } else {
+                            Swal.fire("Erreur","Une erreur est survenue.", "error");
                         }
-                    });
+                    } catch (error) {
+                        console.error("Erreur inattendue :", error);
+                        Swal.fire("Erreur", "Une erreur inattendue est survenue. Veuillez réessayer.", "error");
+                    } finally {
+                        // Réactiver le bouton
+                        updateButton.disabled = false;
+                    }
                 });
             });
         </script>
 
+
         {{-- Script pour la suppression d'une SGI dans le tableau --}}
         <script>
-           // Utilisation de la délégation d'événements sur la table avec son ID
+            // Utilisation de la délégation d'événements sur la table avec son ID
             $('#datatable-editable').on('click', '.delete-btn', function () {
                 let sgiId = $(this).data('id');  // Récupération de l'ID de l'élément à supprimer
 
@@ -480,7 +509,8 @@
                     showCancelButton: true,
                     confirmButtonColor: "#4fa7f3",
                     cancelButtonColor: "#ec536c",
-                    confirmButtonText: "Oui, supprimer !"
+                    confirmButtonText: "Oui, supprimer !",
+                    cancelButtonText: 'Annuler'
                 }).then((result) => {
                     if (result.value) {
                         $.ajax({
@@ -507,8 +537,9 @@
                     }
                 });
             });
-
         </script>
-    
+        
+        
+        
     </body>
 </html>

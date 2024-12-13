@@ -44,7 +44,7 @@
                         <div class="row">
 							<div class="col-12">
 								<div class="page-title-box">
-                                    <h4 class="page-title">Welcome {{ $firstname }} {{ $lastname }}</h4>
+                                    <h4 class="page-title">Welcome {{ $user->firstname }} {{ $user->lastname }}</h4>
                                     <ol class="breadcrumb p-0 m-0">
                                         <li>
                                             <a href="{{route('home')}}">Tableau de bord</a>
