@@ -34,7 +34,6 @@ class DetailPlacementController extends Controller
         ]);
     }
 
-
     /**
      * Méthode pour mettre à jour un détail de placement OBLIGATIONS.
      */
@@ -293,6 +292,137 @@ class DetailPlacementController extends Controller
             return response()->json(['error' => 'Une erreur est survenue : ' . $e->getMessage()], 500);
         }
     }
+
+    public function updateDat(Request $request, $id)
+    {
+        // Déchiffrer l'ID crypté pour obtenir l'ID réel du placement
+        try {
+            $placementId = Crypt::decrypt($id);
+        } catch (\Illuminate\Contracts\Encryption\DecryptException $e) {
+            abort(404, 'Placement non trouvé');
+        }
+
+        // Validation des données
+        $validator = Validator::make($request->all(), [
+            'id_dat' => 'required|exists:detail_placements,id',
+            'placementsid_dat' => 'required|exists:placements,id',
+            'anneedat_exercice' => 'required|integer',
+            'soldedat_31_12_n_1' => 'nullable|numeric|min:0',
+            'soldedat_comptable' => 'nullable|numeric',
+            'interetdat_recu_31_12_n' => 'nullable|numeric|min:0',
+            'interetdat_attendu' => 'nullable|numeric|min:0',
+            'ecartdat_icne' => 'nullable|numeric',
+            'date_dernierdat_paiement' => 'nullable|date|before_or_equal:date_arret_dat',
+            'date_arret_dat' => 'nullable|date',
+            'acquisdat' => 'nullable|numeric|min:0',
+            'ecart_dat' => 'nullable|numeric',
+            'icnedat_31_12_n' => 'nullable|numeric',
+            'ecartdat_paiement' => 'nullable|numeric',
+            'remboursdat' => 'nullable|numeric|min:0',
+            'provisiondat_31_12_n' => 'nullable|numeric',
+            'interetdat_controle' => 'nullable|numeric',
+            'ecartdat_comptabilise' => 'nullable|numeric',
+            'nbredat_jrs_icne' => 'nullable|integer|min:0',
+            'soldedat_31_12_n' => 'nullable|numeric|min:0',
+            'extdat_icne_31_12_n_1' => 'nullable|numeric',
+            'interetdat_comptable' => 'nullable|numeric',
+            'icnedat_comptable_31_12_n' => 'nullable|numeric',
+        ], [
+            'anneedat_exercice.required' => 'L\'année d\'exercice est requise.',   
+            'soldedat_31_12_n_1.numeric' => 'Le solde au 31/12/ doit être un nombre.',  
+            'soldedat_31_12_n_1.min' => 'Le solde au 31/12/ ne peut pas être inférieur à zéro.', 
+            'soldedat_comptable.numeric' => 'Le solde comptable doit être un nombre valide.',  
+            'interetdat_recu_31_12_n.numeric' => 'L\'intérêt reçu doit être un nombre valide.',  
+            'interetdat_recu_31_12_n.min' => 'L\'intérêt reçu ne peut pas être inférieur à zéro.',  
+            'interetdat_attendu.numeric' => 'L\'intérêt attendu doit être un nombre valide.',  
+            'interetdat_attendu.min' => 'L\'intérêt attendu ne peut pas être inférieur à zéro.',  
+            'ecartdat_icne.numeric' => 'L\'écart ICNE doit être un nombre valide.',  
+            'date_dernierdat_paiement.date' => 'La date du dernier paiement doit être une date valide.',  
+            'date_dernierdat_paiement.before_or_equal' => 'La date du dernier paiement ne peut pas être postérieure à la date d\'arrêt.',
+            'date_arret_dat.date' => 'La date d\'arrêt doit être une date valide.',  
+            'acquisdat.numeric' => 'L\'acquisition doit être un nombre valide.',  
+            'acquisdat.min' => 'L\'acquisition ne peut pas être inférieure à zéro.',  
+            'ecart_dat.numeric' => 'L\'écart doit être un nombre valide.',  
+            'icnedat_31_12_n.numeric' => 'L\'ICNE doit être un nombre valide.',  
+            'ecartdat_paiement.numeric' => 'L\'écart de paiement doit être un nombre valide.',  
+            'remboursdat.numeric' => 'Le remboursement doit être un nombre valide.',  
+            'remboursdat.min' => 'Le remboursement ne peut pas être inférieur à zéro.',  
+            'provisiondat_31_12_n.numeric' => 'La provision  doit être un nombre valide.',  
+            'interetdat_controle.numeric' => 'L\'intérêt contrôle doit être un nombre valide.',  
+            'ecartdat_comptabilise.numeric' => 'L\'écart comptabilisé doit être un nombre valide.',  
+            'nbredat_jrs_icne.integer' => 'Le nombre de jours ICNE doit être un nombre entier.',  
+            'nbredat_jrs_icne.min' => 'Le nombre de jours ICNE ne peut pas être inférieur à zéro.',  
+            'soldedat_31_12_n.numeric' => 'Le solde doit être un nombre valide.',  
+            'soldedat_31_12_n.min' => 'Le solde ne peut pas être inférieur à zéro.',  
+            'extdat_icne_31_12_n_1.numeric' => 'Ext ICNE doit être un nombre valide.',  
+            'interetdat_comptable.numeric' => 'L\'intérêt comptable doit être un nombre valide.',  
+            'icnedat_comptable_31_12_n.numeric' => 'L\'ICNE comptable  doit être un nombre valide.',  
+        ]);
+
+        // Vérifier si la validation a échoué
+        if ($validator->fails()) {
+            \Log::error('Validation échouée:', $validator->errors()->toArray());
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        try {
+
+            // Trouver le détail existant
+            // $detailPlacement = DetailPlacement::findOrFail($request->id);
+
+            // Trouver le détail existant en utilisant l'ID déchiffré
+            $detailPlacement = DetailPlacement::where('placements_id', $placementId)->findOrFail($request->id_dat);
+
+            if (!$detailPlacement) {
+                \Log::warning('Détail de placement introuvable avec l\'ID : ' . $request->id_dat . ' et placementsid_dat : ' . $placementId);
+                return response()->json(['error' => 'Détail de placement introuvable.'], 404);
+            }
+
+            // $detailPlacement->update($request->all());
+
+            // Mettre à jour les champs
+            $detailPlacement->users_id = auth()->id();
+            $detailPlacement->placements_id = $request->placementsid_dat;
+            $detailPlacement->annee_exercice = $request->anneedat_exercice;
+            $detailPlacement->date_dernier_paiement = $request->date_dernierdat_paiement;
+            $detailPlacement->date_arret = $request->date_arret_dat;
+            $detailPlacement->nbre_jrs_icne = $request->nbredat_jrs_icne;
+            $detailPlacement->solde_31_12_n_1 = $request->soldedat_31_12_n_1;
+            $detailPlacement->acquisition = $request->acquisdat;
+            $detailPlacement->remboursement = $request->remboursdat;
+            $detailPlacement->solde_31_12_n = $request->soldedat_31_12_n;
+            $detailPlacement->solde_comptable = $request->soldedat_comptable;
+            $detailPlacement->ecart = $request->ecart_dat;
+            $detailPlacement->provision_31_12_n = $request->provisiondat_31_12_n;
+            $detailPlacement->ext_icne_31_12_n_1 = $request->extdat_icne_31_12_n_1;
+            $detailPlacement->interet_recu_31_12_n = $request->interetdat_recu_31_12_n;
+            $detailPlacement->icne_31_12_n = $request->icnedat_31_12_n;
+            $detailPlacement->interet_controle = $request->interetdat_controle;
+            $detailPlacement->interet_comptable = $request->interetdat_comptable;
+            $detailPlacement->interet_attendu = $request->interetdat_attendu;
+            $detailPlacement->ecart_paiement = $request->ecartdat_paiement;
+            $detailPlacement->ecart_comptabilise = $request->ecartdat_comptabilise;
+            $detailPlacement->icne_comptable_31_12_n = $request->icnedat_comptable_31_12_n;
+            $detailPlacement->ecart_icne = $request->ecartdat_icne;
+            $detailPlacement->save();
+
+
+            // Retourner une réponse JSON de succès
+            return response()->json([
+                'success' => true, 
+                'message' => 'Mise à jour détail(DAT) réussie.']);
+        } catch (\Exception $e) {
+            // \Log::error('Erreur inattendue lors de la mise à jour : ' . $e->getMessage(), [
+            //     'trace' => $e->getTraceAsString()
+            // ]);
+            // Gérer les erreurs inattendues
+            return response()->json(['error' => 'Une erreur est survenue : ' . $e->getMessage()], 500);
+        }
+    }
+
 
     public function deleteDetail(Request $request, $id)
     {

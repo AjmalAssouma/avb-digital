@@ -81,18 +81,37 @@ Route::post('/home/liste-des-sgis/modifier', [SgiController::class, 'updateSgi']
 Route::post('/home/liste-des-sgis/suppression', [SgiController::class, 'deleteSgi']);
 
 
+// ---------------------------------------ROUTES NUMERO COMPTES----------------------------------------------------------------
+
+Route::get('/home/liste-des-numeros-de-compte', [PlacementController::class, 'showAllNumCompte'])->name('list.numcompte');
+
+Route::post('/home/liste-des-numeros-de-compte/ajouter-numero-compte', [PlacementController::class, 'createdNumCompte']);
+
+Route::post('/home/liste-des-numeros-de-compte/modifier', [PlacementController::class, 'updateNumCompte']);
+
+Route::delete('/home/liste-des-numeros-de-compte/supprimer', [PlacementController::class, 'deleteNumCompte']);
+
+
 // ---------------------------------------ROUTES PLACEMENTS----------------------------------------------------------------
 Route::get('/home/creer-un-placement', [PlacementController::class, 'showPlacementCreationForm'])->name('creation.placement');
+
+Route::get('/home/creer-un-placement/{numCompteId}', [PlacementController::class, 'getPlacementNumComptes']);
+
+Route::get('/home/liste-des-placements/{id}/sgis', [PlacementController::class, 'getSGIsForPlacement']);
 
 Route::post('/home/creer-un-placement/obligation', [PlacementController::class, 'createdPlacementObligation'])->name('creation.placement.obligation');
 
 Route::post('/home/creer-un-placement/action', [PlacementController::class, 'createdPlacementAction'])->name('creation.placement.action');
+
+Route::post('/home/creer-un-placement/dat', [PlacementController::class, 'createdPlacementDat'])->name('creation.placement.dat');
 
 Route::get('/home/liste-des-placements', [PlacementController::class, 'allPlacement'])->name('list.placement');
 
 Route::post('/home/liste-des-placements/modifier-obligations', [PlacementController::class, 'updateObligationsPlacement']);
 
 Route::post('/home/liste-des-placements/modifier-actions', [PlacementController::class, 'updateActionsPlacement']);
+
+Route::post('/home/liste-des-placements/modifier-dat', [PlacementController::class, 'updateDatPlacement']);
 
 Route::delete('/home/liste-des-placements/supprimer', [PlacementController::class, 'deletePlacement']);
 
@@ -103,6 +122,8 @@ Route::get('/home/details-placement/{id}', [DetailPlacementController::class, 's
 Route::post('/home/details-placement/{id}/modifier-obligations', [DetailPlacementController::class, 'updateObligations']);
 
 Route::post('/home/details-placement/{id}/modifier-actions', [DetailPlacementController::class, 'updateActions']);
+
+Route::post('/home/details-placement/{id}/modifier-dat', [DetailPlacementController::class, 'updateDat']);
 
 Route::delete('/home/details-placement/{id}/supprimer', [DetailPlacementController::class, 'deleteDetail']);
 

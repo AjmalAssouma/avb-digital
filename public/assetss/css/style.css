@@ -1644,6 +1644,15 @@ body.enlarged.bg-transparent {
   font-family: "Poppins", sans-serif;
 }
 
+.btn-ajsgi {
+  border-radius: 2px;
+  color: #ffffff;
+  font-size: 14px;
+  padding: 7px 14px;
+  outline: none !important;
+  font-family: "Poppins", sans-serif;
+}
+
 
 .btn-md {
   padding: 9px 18px;
@@ -1744,6 +1753,11 @@ body.enlarged.bg-transparent {
 .btn-info {
   background-color: #45bbe0 !important;
   border: 1px solid #45bbe0 !important;
+}
+
+.btn-voirsgi {
+  background-color: #bda4f7fd !important;
+  border: 1px solid #bda4f7fd !important;
 }
 
 .btn-appliq {
@@ -2009,6 +2023,14 @@ body.enlarged.bg-transparent {
   margin-bottom: 30px;
 }
 
+.card-sgi {
+  border: 2px solid #a2a7a37a;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+  margin-bottom: 30px;
+  border-radius: 5px;
+}
+
 .card-detail {
   border: 1px solid #40bb3c;
   -webkit-box-shadow: none;
@@ -2124,7 +2146,7 @@ body.enlarged.bg-transparent {
   border-color: #DDDDDD;
   border-radius: 2px;
   box-shadow: none;
-  padding: 16px;
+  padding: 15px;
 }
 
 .modal .modal-dialog .modal-content .modal-header {
@@ -3163,6 +3185,7 @@ textarea.form-control {
 /* Select 2 */
 .select2-container {
   width: 100% !important;
+  font-size: 14px;
 }
 
 /* .select2-container, .det{

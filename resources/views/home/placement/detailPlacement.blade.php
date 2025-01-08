@@ -101,8 +101,16 @@
                                                                         <strong>Taux annuel: </strong> {{ $placement->taux_annuel . '%' }}
                                                                     @endif
                                                                 </p>
-                                                                <p><strong>Nombre de titre: </strong> {{ $placement->nbre_titre }}</p>
-                                                                <p><strong>Valeur d'acquisition du titre: </strong> {{ $placement->valeur_acq_titre }}</p>
+                                                                <p>
+                                                                    @if ($placement->type_placement !== 'DAT')
+                                                                        <strong>Nombre de titre: </strong> {{ $placement->nbre_titre }}
+                                                                    @endif
+                                                                </p>
+                                                                <p>
+                                                                    @if ($placement->type_placement !== 'DAT')
+                                                                        <strong>Valeur d'acquisition du titre: </strong> {{ $placement->valeur_acq_titre }}
+                                                                    @endif
+                                                                </p>
                                                             </div>
                                                             <div class="col-lg-4">
                                                                 <p><strong>Numéro de compte: </strong> {{ $placement->num_compte }}</p>
@@ -116,14 +124,22 @@
                                                                         <strong>Taux période:</strong> {{ $placement->taux_periode . '%' }}
                                                                     @endif
                                                                 </p>
-                                                                <p><strong>Valeur du titre: </strong> {{ $placement->valeur_titre }}</p>
+                                                                <p>
+                                                                    @if ($placement->type_placement !== 'DAT')
+                                                                        <strong>Valeur du titre: </strong> {{ $placement->valeur_titre }}
+                                                                    @endif
+                                                                </p>
                                                                 <p><strong>Durée: </strong> {{ $placement->duree }} ans</p>
                                                                 
                                                             </div>
                                                             <div class="col-lg-4">
                                                                 <p><strong>Date de début du placement: </strong> {{ \Carbon\Carbon::parse($placement->date_debut)->format('d/m/Y') }}</p>
                                                                 <p><strong>Date de fin du placement: </strong> {{ \Carbon\Carbon::parse($placement->date_fin)->format('d/m/Y') }}</p>
-                                                                <p><strong>Gain: </strong> {{ $placement->gain }}</p>
+                                                                <p>
+                                                                    @if ($placement->type_placement !== 'DAT')
+                                                                        <strong>Gain: </strong> {{ $placement->gain }}
+                                                                    @endif
+                                                                </p>
                                                             </div>
                                                         </div>   
                                                     </div>
@@ -132,7 +148,6 @@
                                         </div>
                                     </div>
 
-                                   
 
 									<div class="card-body" style="margin: 0 auto; width: 95%;">
                                         <table class="table table-striped add-edit-table table-bordered dt-responsive" id="datatable-editable" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
@@ -205,7 +220,7 @@
                                                         <td> {{$detail->ecart_icne}} </td>
                                                         @if ($detail->placement->type_placement === 'ACTIONS')
                                                             <td> {{$detail->dividende}} </td>
-                                                            <td> {{$detail->rendement}} </td>
+                                                            <td> {{$detail->rendement}} %</td>
                                                         @endif
                                                         <td hidden> {{$detail->id}} </td>
                                                         <td hidden> {{$detail->placement->nbre_titre}} </td>
@@ -528,21 +543,18 @@
                                                                             <span class="text-danger error-actions_dividende"></span>
                                                                         </div>
                                                                         
-                                                                    
                                                                         <div class="form-group">
-                                                                            <label for="interet_actions_recus" id="interetrecus_actions_label">Intérêts reçus au 31/12/année exercice <span class="text-danger">*</span> </label>
-                                                                            <input type="text" id="interet_actions_recus" class="form-control interet_actions_recus" name="interet_actions_recus" data-parsley-type="number" pattern="\d+" required>
-                                                                            <span class="text-danger error-actions_interet_recu_31_12_n"></span>
+                                                                            <label for="icne_actions" id="icne_actions_label">ICNE au 31/12/année exercice <span class="text-danger">*</span> </label>
+                                                                            <input type="text" id="icne_actions" class="form-control icne_actions" name="icne_actions" required>
+                                                                            <span class="text-danger error-actions_icne_31_12_n"></span>
                                                                         </div>
                                                                         
                                                                         <div class="form-group">
-                                                                            <label for="interet_actions_attendu">Intérêts attendus <span class="text-danger">*</span> </label>
-                                                                            <input type="text" id="interet_actions_attendu" class="form-control interet_actions_attendu" name="interet_actions_attendu" readonly required>
-                                                                            <span class="text-danger error-actions_interet_attendu"></span>
+                                                                            <label for="ecart_actions_paiement">Écart de paiement <span class="text-danger">*</span> </label>
+                                                                            <input type="text" id="ecart_actions_paiement" class="form-control ecart_actions_paiement" name="ecart_actions_paiement" readonly required>
+                                                                            <span class="text-danger error-actions_ecart_paiement"></span>
                                                                         </div>
-
                                                                         
-
                                                                         <div class="form-group">
                                                                             <label for="nbretitre_actions">Nombre de titre <span class="text-danger">*</span></label>
                                                                             <input type="text" class="form-control nbretitre_actions" name="nbretitre_actions" id="nbretitre_actions" readonly required>
@@ -578,15 +590,15 @@
                                                                         </div>  
             
                                                                         <div class="form-group">
-                                                                            <label for="icne_actions" id="icne_actions_label">ICNE au 31/12/année exercice <span class="text-danger">*</span> </label>
-                                                                            <input type="text" id="icne_actions" class="form-control icne_actions" name="icne_actions" required>
-                                                                            <span class="text-danger error-actions_icne_31_12_n"></span>
+                                                                            <label for="interet_actions_controle">Intérêts contrôlés <span class="text-danger">*</span> </label>
+                                                                            <input type="text" id="interet_actions_controle" class="form-control interet_actions_controle" name="interet_actions_controle" readonly required>
+                                                                            <span class="text-danger error-actions_interet_controle"></span>
                                                                         </div>
             
                                                                         <div class="form-group">
-                                                                            <label for="ecart_actions_paiement">Écart de paiement <span class="text-danger">*</span> </label>
-                                                                            <input type="text" id="ecart_actions_paiement" class="form-control ecart_actions_paiement" name="ecart_actions_paiement" readonly required>
-                                                                            <span class="text-danger error-actions_ecart_paiement"></span>
+                                                                            <label for="ecart_actions_compta">Écart comptabilisé <span class="text-danger">*</span> </label>
+                                                                            <input type="text" id="ecart_actions_compta" class="form-control ecart_actions_compta" name="ecart_actions_compta" readonly required>
+                                                                            <span class="text-danger error-actions_ecart_comptabilise"></span>
                                                                         </div>
 
                                                                         <div class="form-group">
@@ -612,26 +624,22 @@
                                                                             <span class="text-danger error-actions_ecart"></span>
                                                                         </div>
 
-                                                                        
-            
                                                                         <div class="form-group">
-                                                                            <label for="interet_actions_controle">Intérêts contrôlés <span class="text-danger">*</span> </label>
-                                                                            <input type="text" id="interet_actions_controle" class="form-control interet_actions_controle" name="interet_actions_controle" readonly required>
-                                                                            <span class="text-danger error-actions_interet_controle"></span>
+                                                                            <label for="ext_actions_icne" id="exticne_actions_label">Ext d'ICNE au 31/12/année antérieure <span class="text-danger">*</span> </label>
+                                                                            <input type="text" id="ext_actions_icne" class="form-control ext_actions_icne" name="ext_actions_icne" data-parsley-type="number" pattern="\d+" required>
+                                                                            <span class="text-danger error-actions_ext_icne_31_12_n_1"></span>
                                                                         </div>
             
                                                                         <div class="form-group">
-                                                                            <label for="ecart_actions_compta">Écart comptabilisé <span class="text-danger">*</span> </label>
-                                                                            <input type="text" id="ecart_actions_compta" class="form-control ecart_actions_compta" name="ecart_actions_compta" readonly required>
-                                                                            <span class="text-danger error-actions_ecart_comptabilise"></span>
+                                                                            <label for="interet_actions_compta">Intérêts comptable <span class="text-danger">*</span> </label>
+                                                                            <input type="text" id="interet_actions_compta" class="form-control interet_actions_compta" name="interet_actions_compta" data-parsley-type="number" pattern="\d+" required>
+                                                                            <span class="text-danger error-actions_interet_comptable"></span>
                                                                         </div>
-
-                                                                       
-
+            
                                                                         <div class="form-group">
-                                                                            <label for="ecart_actions_icne">Écart ICNE<span class="text-danger">*</span> </label>
-                                                                            <input type="text" id="ecart_actions_icne" class="form-control ecart_actions_icne" name="ecart_actions_icne" readonly required>
-                                                                            <span class="text-danger error-actions_ecart_icne"></span>
+                                                                            <label for="icne_actions_compta" id="icnecompta_actions_label">ICNE comptable au 31/12/année exercice <span class="text-danger">*</span> </label>
+                                                                            <input type="text" id="icne_actions_compta" class="form-control icne_actions_compta" name="icne_actions_compta" data-parsley-type="number" pattern="\d+" required>
+                                                                            <span class="text-danger error-actions_icne_comptable_31_12_n"></span>
                                                                         </div>
 
                                                                     </div>
@@ -652,23 +660,23 @@
                                                                         </div>
                                                                         
                                                                         <div class="form-group">
-                                                                            <label for="ext_actions_icne" id="exticne_actions_label">Ext d'ICNE au 31/12/année antérieure <span class="text-danger">*</span> </label>
-                                                                            <input type="text" id="ext_actions_icne" class="form-control ext_actions_icne" name="ext_actions_icne" data-parsley-type="number" pattern="\d+" required>
-                                                                            <span class="text-danger error-actions_ext_icne_31_12_n_1"></span>
+                                                                            <label for="interet_actions_recus" id="interetrecus_actions_label">Intérêts reçus au 31/12/année exercice <span class="text-danger">*</span> </label>
+                                                                            <input type="text" id="interet_actions_recus" class="form-control interet_actions_recus" name="interet_actions_recus" data-parsley-type="number" pattern="\d+" required>
+                                                                            <span class="text-danger error-actions_interet_recu_31_12_n"></span>
+                                                                        </div>
+                                                                        
+                                                                        <div class="form-group">
+                                                                            <label for="interet_actions_attendu">Intérêts attendus <span class="text-danger">*</span> </label>
+                                                                            <input type="text" id="interet_actions_attendu" class="form-control interet_actions_attendu" name="interet_actions_attendu" required>
+                                                                            <span class="text-danger error-actions_interet_attendu"></span>
+                                                                        </div>
+                                                                    
+                                                                        <div class="form-group">
+                                                                            <label for="ecart_actions_icne">Écart ICNE<span class="text-danger">*</span> </label>
+                                                                            <input type="text" id="ecart_actions_icne" class="form-control ecart_actions_icne" name="ecart_actions_icne" readonly required>
+                                                                            <span class="text-danger error-actions_ecart_icne"></span>
                                                                         </div>
             
-                                                                        <div class="form-group">
-                                                                            <label for="interet_actions_compta">Intérêts comptable <span class="text-danger">*</span> </label>
-                                                                            <input type="text" id="interet_actions_compta" class="form-control interet_actions_compta" name="interet_actions_compta" data-parsley-type="number" pattern="\d+" required>
-                                                                            <span class="text-danger error-actions_interet_comptable"></span>
-                                                                        </div>
-            
-                                                                        <div class="form-group">
-                                                                            <label for="icne_actions_compta" id="icnecompta_actions_label">ICNE comptable au 31/12/année exercice <span class="text-danger">*</span> </label>
-                                                                            <input type="text" id="icne_actions_compta" class="form-control icne_actions_compta" name="icne_actions_compta" data-parsley-type="number" pattern="\d+" required>
-                                                                            <span class="text-danger error-actions_icne_comptable_31_12_n"></span>
-                                                                        </div>
-
                                                                     </div>
                                                                         
                                                                 </div>
@@ -682,13 +690,212 @@
                                                 </div>
                                             </div>
                                         {{-- Modal End ACTIONS --}}
+
+
+                                        {{-- Modal Start DAT --}}
+                                            <div id="full-width-modal-dat" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="full-width-modalLabel" aria-hidden="true" style="display: none;">
+                                                <div class="modal-dialog modal-full">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h4 class="modal-title mt-0" id="full-width-modalLabel"><strong style="font-size: 20px">{{ $placement->nom_placement }}</strong></h4>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <form action="" method="POST">
+                                                            @csrf
+                                                            <div class="modal-body">
+                                                                <div class="row">
+                                                                    {{-- 1ère Colonne  --}}
+                                                                    <div class="col-lg-3">
+
+                                                                        <input type="hidden" id="id_detaildat" class="form-control id_detaildat" name="id_detaildat"  readonly required>
+                                                                        <input type="hidden" id="placement_id_dat" class="form-control placement_id_dat" name="placement_id_dat"  readonly required>
+                                                                    
+                                                                        <div class="form-group">
+                                                                            <label for="annee_exercice_dat">Année d'excercice <span class="text-danger">*</span> </label>
+                                                                            <input type="text" id="annee_exercice_dat" class="form-control annee_exercice_dat" name="annee_exercice_dat" readonly required>
+                                                                            <span class="text-danger error-anneedat_exercice"></span>
+                                                                        </div>
+            
+                                                                        <div class="form-group">
+                                                                            <label for="soldedat_31_12_n1" id="soldedatn1_label">Solde au 31/12/année antérieure <span class="text-danger">*</span> </label>
+                                                                            <input type="text" id="soldedat_31_12_n1" class="form-control soldedat_31_12_n1" name="soldedat_31_12_n1" required>
+                                                                            <span class="text-danger error-soldedat_31_12_n_1"></span>
+                                                                        </div>
+                                                                    
+                                                                        <div class="form-group">
+                                                                            <label for="soldedat_compta">Solde comptable <span class="text-danger">*</span> </label>
+                                                                            <input type="text" id="soldedat_compta" class="form-control soldedat_compta" name="soldedat_compta" required>
+                                                                            <span class="text-danger error-soldedat_comptable"></span>
+                                                                        </div>
+                                                                    
+                                                                        <div class="form-group">
+                                                                            <label for="interetdat_recus" id="interetdatrecus_label">Intérêts reçus au 31/12/année exercice <span class="text-danger">*</span> </label>
+                                                                            <input type="text" id="interetdat_recus" class="form-control interetdat_recus" name="interetdat_recus" required>
+                                                                            <span class="text-danger error-interetdat_recu_31_12_n"></span>
+                                                                        </div>
+                                                                        
+                                                                        <div class="form-group">
+                                                                            <label for="interetdat_attendu">Intérêts attendus <span class="text-danger">*</span> </label>
+                                                                            <input type="text" id="interetdat_attendu" class="form-control interetdat_attendu" name="interetdat_attendu" readonly required>
+                                                                            <span class="text-danger error-interetdat_attendu"></span>
+                                                                        </div>
+
+                                                                        <div class="form-group">
+                                                                            <label for="ecartdat_icne">Écart ICNE<span class="text-danger">*</span> </label>
+                                                                            <input type="text" id="ecartdat_icne" class="form-control ecartdat_icne" name="ecartdat_icne" readonly required>
+                                                                            <span class="text-danger error-ecartdat_icne"></span>
+                                                                        </div>
+                                                                    </div> 
+
+                                                                    {{-- 2ème Colonne  --}}
+                                                                    <div class="col-lg-3">
+            
+                                                                        <div class="form-group">
+                                                                            <label for="date_dernierdat_paie">Date de dernier paiement <span class="text-danger">*</span> </label>
+                                                                            <input type="date" id="date_dernierdat_paie" class="form-control date_dernierdat_paie" name="date_dernierdat_paie" required>
+                                                                            <span class="text-danger error-date_dernierdat_paiement"></span>
+                                                                        </div>
+            
+                                                                        <div class="form-group">
+                                                                            <label for="acquisitiondat" id="acquisdat_label">Acquisition <span class="text-danger">*</span> </label>
+                                                                            <input type="text" id="acquisitiondat" class="form-control acquisitiondat" name="acquisitiondat" required>
+                                                                            <span class="text-danger error-acquisdat"></span>
+                                                                        </div>
+            
+                                                                        <div class="form-group">
+                                                                            <label for="ecartdat">Écart <span class="text-danger">*</span> </label>
+                                                                            <input type="text" id="ecartdat" class="form-control ecartdat" name="ecartdat" readonly required>
+                                                                            <span class="text-danger error-ecart_dat"></span>
+                                                                        </div>
+            
+                                                                        <div class="form-group">
+                                                                            <label for="icnedat" id="icnedat_label">ICNE au 31/12/année exercice <span class="text-danger">*</span> </label>
+                                                                            <input type="text" id="icnedat" class="form-control icnedat" name="icnedat" readonly required>
+                                                                            <span class="text-danger error-icnedat_31_12_n"></span>
+                                                                        </div>
+            
+                                                                        <div class="form-group">
+                                                                            <label for="ecartdat_paiement">Écart de paiement <span class="text-danger">*</span> </label>
+                                                                            <input type="text" id="ecartdat_paiement" class="form-control ecartdat_paiement" name="ecartdat_paiement" readonly required>
+                                                                            <span class="text-danger error-ecartdat_paiement"></span>
+                                                                        </div>
+
+                                                                        <div class="form-group">  
+                                                                            <label for="tauxdat_periode">Taux période <span class="text-danger">*</span></label>  
+                                                                            <div class="input-group">  
+                                                                                <input type="text" id="tauxdat_periode" class="form-control tauxdat_periode" name="tauxdat_periode" required readonly>  
+                                                                                <div class="input-group-append">  
+                                                                                    <span class="input-group-text" id="basic-addon2"><i class="fas fa-percent"></i></span>  
+                                                                                </div>
+                                                                                <span class="text-danger"></span>
+                                                                            </div>    
+                                                                        </div>  
+            
+                                                                    </div>
+
+                                                                    {{-- 3ème Colonne  --}}
+                                                                    <div class="col-lg-3">
+            
+                                                                        <div class="form-group">
+                                                                            <label for="datearret_dat">Date d'arrêt <span class="text-danger">*</span> </label>
+                                                                            <input type="date" id="datearret_dat" class="form-control datearret_dat" name="datearret_dat" readonly required>
+                                                                            <span class="text-danger error-date_arret_dat"></span>
+                                                                        </div>
+            
+                                                                        <div class="form-group">
+                                                                            <label for="remboursementdat" id="remboursdat_label">Remboursement <span class="text-danger">*</span> </label>
+                                                                            <input type="text" id="remboursementdat" class="form-control remboursementdat" name="remboursementdat" required>
+                                                                            <span class="text-danger error-remboursdat"></span>
+                                                                        </div>
+
+                                                                        <div class="form-group">
+                                                                            <label for="provisiondat" id="provisdat_label">Provision au 31/12/année exercice <span class="text-danger">*</span> </label>
+                                                                            <input type="text" id="provisiondat" class="form-control provisiondat" name="provisiondat" readonly required>
+                                                                            <span class="text-danger error-provisiondat_31_12_n"></span>
+                                                                        </div>
+            
+                                                                        <div class="form-group">
+                                                                            <label for="interetdat_controle">Intérêts contrôlés <span class="text-danger">*</span> </label>
+                                                                            <input type="text" id="interetdat_controle" class="form-control interetdat_controle" name="interetdat_controle" readonly required>
+                                                                            <span class="text-danger error-interetdat_controle"></span>
+                                                                        </div>
+            
+                                                                        <div class="form-group">
+                                                                            <label for="ecartdat_compta">Écart comptabilisé <span class="text-danger">*</span> </label>
+                                                                            <input type="text" id="ecartdat_compta" class="form-control ecartdat_compta" name="ecartdat_compta" readonly required>
+                                                                            <span class="text-danger error-ecartdat_comptabilise"></span>
+                                                                        </div>
+                                                                        
+                                                                        <div class="form-group">  
+                                                                            <label for="tauxdat_annuel">Taux annuel <span class="text-danger">*</span></label>  
+                                                                            <div class="input-group">  
+                                                                                <input type="text" id="tauxdat_annuel" class="form-control tauxdat_annuel" name="tauxdat_annuel" required readonly>  
+                                                                                <div class="input-group-append">  
+                                                                                    <span class="input-group-text" id="basic-addon2"><i class="fas fa-percent"></i></span>  
+                                                                                </div>
+                                                                                <span class="text-danger"></span>
+                                                                            </div>    
+                                                                        </div>  
+
+                                                                    </div>
+
+                                                                    {{-- 4ème Colonne  --}}
+                                                                    <div class="col-lg-3">
+            
+                                                                        <div class="form-group">
+                                                                            <label for="nbrejrsdat_icne">Nombre de jours d'ICNE <span class="text-danger">*</span> </label>
+                                                                            <input type="text" id="nbrejrsdat_icne" class="form-control nbrejrsdat_icne" name="nbrejrsdat_icne" readonly required>
+                                                                            <span class="text-danger error-nbredat_jrs_icne"></span>
+                                                                        </div>
+            
+                                                                        <div class="form-group">
+                                                                            <label for="soldedat_31_12_n" id="soldedatn_label">Solde au 31/12/année exercice <span class="text-danger">*</span> </label>
+                                                                            <input type="text" id="soldedat_31_12_n" class="form-control soldedat_31_12_n" name="soldedat_31_12_n" readonly required>
+                                                                            <span class="text-danger error-soldedat_31_12_n"></span>
+                                                                        </div>
+            
+                                                                        <div class="form-group">
+                                                                            <label for="extdat_icne" id="exticnedat_label">Ext d'ICNE au 31/12/année antérieure <span class="text-danger">*</span> </label>
+                                                                            <input type="text" id="extdat_icne" class="form-control extdat_icne" name="extdat_icne" required>
+                                                                            <span class="text-danger error-extdat_icne_31_12_n_1"></span>
+                                                                        </div>
+            
+                                                                        <div class="form-group">
+                                                                            <label for="interetdat_compta">Intérêts comptable <span class="text-danger">*</span> </label>
+                                                                            <input type="text" id="interetdat_compta" class="form-control interetdat_compta" name="interetdat_compta" required>
+                                                                            <span class="text-danger error-interetdat_comptable"></span>
+                                                                        </div>
+            
+                                                                        <div class="form-group">
+                                                                            <label for="icnedat_compta" id="icnecomptadat_label">ICNE comptable au 31/12/année exercice <span class="text-danger">*</span> </label>
+                                                                            <input type="text" id="icnedat_compta" class="form-control icnedat_compta" name="icnedat_compta" required>
+                                                                            <span class="text-danger error-icnedat_comptable_31_12_n"></span>
+                                                                        </div>
+
+                                                                        <div class="form-group">
+                                                                            <label for="periodicitedat">Périodicité <span class="text-danger">*</span> </label>
+                                                                            <input type="text"  class="form-control periodicitedat" name="periodicitedat" id="periodicitedat"  readonly required>
+                                                                            <span class="text-danger"></span>
+                                                                        </div>
+                                                                    </div>
+                                                                        
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary waves-effect " data-dismiss="modal">Fermer</button>
+                                                                <button type="button" class="btn btn-primary waves-effect waves-light apply-btn-dat" data-iddatplace="{{ Crypt::encrypt($placement->id) }}">Appliquer les changements</button>
+                                                            </div>
+                                                        </form>
+                                                    </div><!-- /.modal-content -->
+                                                </div>
+                                            </div>
+                                        {{-- Modal End DAT --}}
 									</div>
 								</div>
                             </div>
                         </div> 
-
-                                               
-
 
                     </div> <!-- container-fluid -->
 
@@ -934,8 +1141,8 @@
             });
 
 
-             // Script qui permet d'afficher le modal et de remplir le modal des informations de ACTIONS
-             $(document).ready(function () {
+            // Script qui permet d'afficher le modal et de remplir le modal des informations de ACTIONS
+            $(document).ready(function () {
                 // Utiliser un écouteur délégué pour les événements 'click' sur les boutons d'édition de DataTables
                 $('#datatable-editable').on('click', '.edit-btn', function () {
                     // Effacer les valeurs existantes dans les champs du modal
@@ -1058,10 +1265,145 @@
                     $('.icne_actions_compta').val('');
                 });
             });
+            
+
+            // Script qui permet d'afficher le modal et de remplir le modal des informations de DAT
+            $(document).ready(function () {
+                // Utiliser un écouteur délégué pour les événements 'click' sur les boutons d'édition de DataTables
+                $('#datatable-editable').on('click', '.edit-btn', function () {
+                    // Effacer les valeurs existantes dans les champs du modal
+                    $('.id_detaildat').val('');
+                    $('.placement_id_dat').val('');
+                    $('.annee_exercice_dat').val('');
+                    $('.soldedat_31_12_n1').val('');
+                    $('.soldedat_compta').val('');
+                    $('.interetdat_recus').val('');
+                    $('.interetdat_attendu').val('');
+                    $('.ecartdat_icne').val('');
+                    $('.tauxdat_annuel').val('');
+                    $('.date_dernierdat_paie').val('');
+                    $('.acquisitiondat').val('');
+                    $('.ecartdat').val('');
+                    $('.icnedat').val('');
+                    $('.ecartdat_paiement').val('');
+                    $('.tauxdat_periode').val('');
+                    $('.datearret_dat').val('');
+                    $('.remboursementdat').val('');
+                    $('.provisiondat').val('');
+                    $('.interetdat_controle').val('');
+                    $('.ecartdat_compta').val('');
+                    $('.nbrejrsdat_icne').val('');
+                    $('.soldedat_31_12_n').val('');
+                    $('.extdat_icne').val('');
+                    $('.interetdat_compta').val('');
+                    $('.icnedat_compta').val('');
+                    $('.periodicitedat').val('');
+                   
+
+                    // Récupérer les valeurs data-* de l'élément cliqué
+                    const detailDatId = $(this).data('id');
+                    const placementDatID = $(this).data('placementid');
+                    const anneeDatExercice = $(this).data('annee');
+                    const dateDernierDatPaiement = $(this).data('datedernierpaie');
+                    const dateArretDat = $(this).data('datearret');
+                    const nbreJrsDatIcne = $(this).data('nbrejrsicne');
+                    const solde3112n1Dat = $(this).data('solde3112n1');
+                    const acquiDat = $(this).data('acquisition');
+                    const rembDat = $(this).data('remboursement');
+                    const solde3112nDat = $(this).data('solde3112n');
+                    const soldeDatComptable = $(this).data('soldecomptable');
+                    const ecartDat = $(this).data('ecart');
+                    const provisionDat = $(this).data('provision');
+                    const extDatIcne = $(this).data('exticne');
+                    const interetDatRecu = $(this).data('interetrecu');
+                    const icneDat3112n = $(this).data('icne3112n');
+                    const interetDatControle = $(this).data('interetcontrole');
+                    const interetDatComptable = $(this).data('interetcomptable');
+                    const interetDatAttendu = $(this).data('interetattendu');
+                    const ecartDatPaiement = $(this).data('ecartpaiement');
+                    const ecartDatCompta = $(this).data('ecartcompta');
+                    const icneComptaDat3112n = $(this).data('icnecompta3112n');
+                    const ecartDatIcne = $(this).data('ecarticne');
+                    const periodDat = $(this).data('periodicite');
+                    const tauxDatAnnuel = $(this).data('tauxannuel');
+                    const tauxDatPeriode = $(this).data('tauxperiode');
+
+                    // Met à jour le label avec la valeur de anneeExercice  
+                    $('#soldedatn1_label').text(`Solde au 31/12/${anneeDatExercice-1}`);  
+                    $('#soldedatn_label').text(`Solde au 31/12/${anneeDatExercice}`);  
+                    $('#acquisdat_label').text(`Acquisition ${anneeDatExercice}`);  
+                    $('#remboursdat_label').text(`Remboursement ${anneeDatExercice}`);  
+                    $('#provisdat_label').text(`Provision au 31/12/${anneeDatExercice}`);  
+                    $('#exticnedat_label').text(`Ext d'ICNE au 31/12/${anneeDatExercice-1}`);  
+                    $('#interetdatrecus_label').text(`Intérêts reçus au 31/12/${anneeDatExercice}`);
+                    $('#icnedat_label').text(`ICNE au 31/12/${anneeDatExercice}`);
+                    $('#icnecomptadat_label').text(`ICNE comptable au 31/12/${anneeDatExercice}`);
+
+                    
+                    // Remplir les champs du modal avec les valeurs récupérées
+                    $('.id_detaildat').val(detailDatId);
+                    $('.placement_id_dat').val(placementDatID);
+                    $('.annee_exercice_dat').val(anneeDatExercice);
+                    $('.soldedat_31_12_n1').val(solde3112n1Dat);
+                    $('.soldedat_compta').val(soldeDatComptable);
+                    $('.interetdat_recus').val(interetDatRecu);
+                    $('.interetdat_attendu').val(interetDatAttendu);
+                    $('.ecartdat_icne').val(ecartDatIcne);
+                    $('.tauxdat_annuel').val(tauxDatAnnuel);
+                    $('.date_dernierdat_paie').val(dateDernierDatPaiement);
+                    $('.acquisitiondat').val(acquiDat);
+                    $('.ecartdat').val(ecartDat);
+                    $('.icnedat').val(icneDat3112n);
+                    $('.ecartdat_paiement').val(ecartDatPaiement);
+                    $('.tauxdat_periode').val(tauxDatPeriode);
+                    $('.datearret_dat').val(dateArretDat);
+                    $('.remboursementdat').val(rembDat);
+                    $('.provisiondat').val(provisionDat);
+                    $('.interetdat_controle').val(interetDatControle);
+                    $('.ecartdat_compta').val(ecartDatCompta);
+                    $('.nbrejrsdat_icne').val(nbreJrsDatIcne);
+                    $('.soldedat_31_12_n').val(solde3112nDat);
+                    $('.extdat_icne').val(extDatIcne);
+                    $('.interetdat_compta').val(interetDatComptable);
+                    $('.icnedat_compta').val(icneComptaDat3112n);
+                    $('.periodicitedat').val(periodDat);
+                });
+
+                // Réinitialiser les champs lorsque le modal est fermé
+                $('#full-width-modal-dat').on('hidden.bs.modal', function () {
+                    $('.id_detaildat').val('');
+                    $('.placement_id_dat').val('');
+                    $('.annee_exercice_dat').val('');
+                    $('.soldedat_31_12_n1').val('');
+                    $('.soldedat_compta').val('');
+                    $('.interetdat_recus').val('');
+                    $('.interetdat_attendu').val('');
+                    $('.ecartdat_icne').val('');
+                    $('.tauxdat_annuel').val('');
+                    $('.date_dernierdat_paie').val('');
+                    $('.acquisitiondat').val('');
+                    $('.ecartdat').val('');
+                    $('.icnedat').val('');
+                    $('.ecartdat_paiement').val('');
+                    $('.tauxdat_periode').val('');
+                    $('.datearret_dat').val('');
+                    $('.remboursementdat').val('');
+                    $('.provisiondat').val('');
+                    $('.interetdat_controle').val('');
+                    $('.ecartdat_compta').val('');
+                    $('.nbrejrsdat_icne').val('');
+                    $('.soldedat_31_12_n').val('');
+                    $('.extdat_icne').val('');
+                    $('.interetdat_compta').val('');
+                    $('.icnedat_compta').val('');
+                    $('.periodicitedat').val('');
+                });
+            });
         </script>
 
         {{--  Script du calcul du nombre de jours d'icne  --}}
         <script>
+            // Script du calcul du nombre de jours d'icne OBLIGATIONS
             $(document).ready(function () {
                 // Fonction pour calculer la différence en jours entre deux dates
                 function calculateDays(dateArret, dateDernierPaiement) {
@@ -1092,6 +1434,43 @@
                         } else {
                             alert("La date de dernier paiement ne peut pas être postérieure à la date d'arrêt.");
                             $('#nbre_jrs_icne').val(''); // Réinitialiser le champ
+                        }
+                    }
+                });
+            });
+
+
+            // Script du calcul du nombre de jours d'icne DAT
+            $(document).ready(function () {
+                // Fonction pour calculer la différence en jours entre deux dates
+                function calculateDatDays(dateArret, dateDernierPaiement) {
+                    // Convertir les dates en objets Date
+                    const dateA = new Date(dateArret);
+                    const dateB = new Date(dateDernierPaiement);
+
+                    // Calculer la différence en millisecondes
+                    const diffTime = dateA - dateB;
+
+                    // Convertir la différence en jours
+                    return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                }
+
+                // Ajouter un écouteur d'événement pour la modification de la date de dernier paiement
+                $('#date_dernierdat_paie').on('change', function () {
+                    const dateDernierPaiementDat = $(this).val(); // Récupérer la nouvelle valeur
+                    const dateArretDat = $('#datearret_dat').val();  // Récupérer la date d'arrêt
+
+                    // Vérifier que les deux dates sont définies
+                    if (dateArretDat && dateDernierPaiementDat) {
+                        // Calculer le nombre de jours
+                        const nbreJoursIcneDat = calculateDatDays(dateArretDat, dateDernierPaiementDat);
+
+                        // Vérifier si le calcul est valide
+                        if (nbreJoursIcneDat >= 0) {
+                            $('#nbrejrsdat_icne').val(nbreJoursIcneDat).trigger('input'); // Mettre à jour le champ, Déclencher un événement 'input' manuellement;
+                        } else {
+                            alert("La date de dernier paiement ne peut pas être postérieure à la date d'arrêt.");
+                            $('#nbrejrsdat_icne').val(''); // Réinitialiser le champ
                         }
                     }
                 });
@@ -1163,6 +1542,38 @@
                     calculateActionsSolde(); // Recalculer dès qu'une valeur est modifiée
                 });
             });
+
+            // Script du calcul du solde de l'année d'exercice DAT
+            $(document).ready(function () {
+                // Fonction pour vérifier si un nombre est un entier
+                function isInteger(value) {
+                    return Number.isInteger(value);
+                }
+
+                // Fonction pour calculer et afficher le solde
+                function calculateDatSolde() {
+                    // Récupérer les valeurs des champs
+                    const soldeDat31_12_N1 = parseFloat($('#soldedat_31_12_n1').val()) || 0; // Solde au 31/12 année antérieure
+                    const acquisitionDat = parseFloat($('#acquisitiondat').val()) || 0; // Acquisition
+                    const remboursementDat = parseFloat($('#remboursementdat').val()) || 0; // Remboursement
+
+                    // Calculer le solde
+                    const soldeDat_31_12_N = soldeDat31_12_N1 + acquisitionDat - remboursementDat;
+
+                    // Vérifier si le résultat est un entier
+                    const formattedSolde = isInteger(soldeDat_31_12_N) 
+                        ? soldeDat_31_12_N // Si entier, pas de décimales
+                        : soldeDat_31_12_N.toFixed(2); // Sinon, deux décimales
+
+                    // Mettre à jour le champ Solde au 31/12 année exercice
+                    $('#soldedat_31_12_n').val(formattedSolde).trigger('input'); // Déclencher un événement 'input' manuellement;
+                }
+
+                // Ajouter des écouteurs d'événements sur les champs
+                $('#soldedat_31_12_n1, #acquisitiondat, #remboursementdat').on('input', function () {
+                    calculateDatSolde(); // Recalculer dès qu'une valeur est modifiée
+                });
+            });
         </script>
 
         {{-- Script du calcul de la Provision --}}
@@ -1227,6 +1638,7 @@
 
         {{-- Script du calcul de l'icne  --}}
         <script>
+            // Script du calcul de l'icne OBLIGATIONS
             $(document).ready(function () {
                 /**
                  * Fonction pour calculer l'ICNE en fonction des valeurs des champs
@@ -1271,6 +1683,50 @@
 
                 // Appeler une première fois pour initialiser les valeurs
                 calculateICNE();
+            });
+
+            // Script du calcul de l'icne DAT
+            $(document).ready(function () {
+                /**
+                 * Fonction pour calculer l'ICNE en fonction des valeurs des champs
+                 */
+                function calculateDatICNE() {
+                    // Récupérer les valeurs des champs
+                    const periodDat = $('#periodicitedat').val(); // Périodicité (Annuel, Semestre, Trimestre)
+                    const tauxPeriodePourcentage = parseFloat($('#tauxdat_periode').val()) || 0; // Taux annuel (%)
+                    const nombreJoursDatICNE = parseFloat($('#nbrejrsdat_icne').val()) || 0; // Nombre de jours d'ICNE
+                    const solde31_12_NDat = parseFloat($('#soldedat_31_12_n').val()) || 0; // Solde au 31/12 année exercice
+                    
+                    // Convertir le taux annuel de pourcentage à valeur décimale
+                    const tauxPeriodeDat = tauxPeriodePourcentage / 100;
+
+                    let icneDat = 0; // Initialisation de l'ICNE
+
+                    // Vérifier la périodicité pour appliquer la formule appropriée
+                    if (periodDat === 'Annuel' || periodDat === 'Semestre' || periodDat === 'Trimestre' || periodDat ==='Mensuel') {
+                        // Calcul pour Annuel ou Semestre ou Trimestre ou Mensuel
+                        icneDat = (solde31_12_NDat * nombreJoursDatICNE * tauxPeriodeDat) / 360;
+                    }
+
+                    // Vérifier si le résultat est un entier
+                    const formattedICNE = Number.isInteger(icneDat)
+                        ? icneDat // Si entier, pas de décimales
+                        : icneDat.toFixed(0); // Sinon, deux décimales
+
+                    // Mettre à jour le champ ICNE
+                    $('#icnedat').val(formattedICNE).trigger('input');
+                }
+
+                /**
+                 * Ajouter des écouteurs d'événements pour recalculer l'ICNE
+                 * chaque fois qu'une des valeurs change.
+                 */
+                $('#periodicitedat, #tauxdat_periode, #nbrejrsdat_icne, #soldedat_31_12_n').on('input', function () {
+                    calculateDatICNE(); // Recalculer l'ICNE
+                });
+
+                // Appeler une première fois pour initialiser les valeurs
+                calculateDatICNE();
             });
         </script>
 
@@ -1346,6 +1802,42 @@
                 // Appeler une première fois pour initialiser les valeurs
                 calculateActionsInteretControle();
             });
+
+
+            // Script du calcul de l'interet controlé DAT
+            $(document).ready(function () {
+                /**
+                 * Fonction pour calculer les Intérêts contrôlés
+                 */
+                function calculateDatInteretControle() {
+                    // Récupérer les valeurs des champs
+                    const interetRecusDat = parseFloat($('#interetdat_recus').val()) || 0; // Intérêts reçus
+                    const icneDat = parseFloat($('#icnedat').val()) || 0; // ICNE
+                    const extICNEDat = parseFloat($('#extdat_icne').val()) || 0; // Ext d'ICNE
+
+                    // Calcul des Intérêts contrôlés
+                    const interetDatControle = interetRecusDat + icneDat - extICNEDat;
+
+                    // Vérifier si le résultat est un entier
+                    const formattedInteretControle = Number.isInteger(interetDatControle)
+                        ? interetDatControle // Si entier, pas de décimales
+                        : interetDatControle.toFixed(2); // Sinon, deux décimales
+
+                    // Mettre à jour le champ Intérêts contrôlés
+                    $('#interetdat_controle').val(formattedInteretControle).trigger('input');
+                }
+
+                /**
+                 * Ajouter des écouteurs d'événements pour recalculer les Intérêts contrôlés
+                 * chaque fois qu'une des valeurs change.
+                 */
+                $('#interetdat_recus, #icnedat, #extdat_icne').on('input', function () {
+                    calculateDatInteretControle(); // Recalculer les Intérêts contrôlés
+                });
+
+                // Appeler une première fois pour initialiser les valeurs
+                calculateDatInteretControle();
+            });
         </script>
 
         {{-- Script du calcul des interets attendus --}}
@@ -1393,12 +1885,58 @@
 
                 // Appeler une première fois pour initialiser les valeurs si elles sont déjà présentes
                 calculateInteretAttendu();
-            });
-            
+            }); 
+
+
+            // Script du calcul des interets attendus DAT
+            $(document).ready(function () {
+                /**
+                 * Fonction pour calculer les Intérêts attendus
+                 */
+                function calculateDatInteretAttendu() {
+                    // Récupérer les valeurs des champs
+                    const periodicite = $('#periodicite').val(); // Périodicité
+                    const soldeAnneeAnterieure = parseFloat($('#solde_31_12_n1').val()) || 0; // Solde au 31/12 de l'année précédente
+                    const tauxPeriodePourcentage = parseFloat($('#tauxperiode').val()) || 0; // Taux période 
+
+                    const tauxPeriode = tauxPeriodePourcentage / 100;
+
+                    let interetAttendu = 0; // Initialiser la variable des Intérêts attendus
+
+                    // Calculer les Intérêts attendus selon la périodicité
+                    if (periodicite === 'Annuel') {
+                        interetAttendu = soldeAnneeAnterieure * tauxPeriode;
+                    } else if (periodicite === 'Semestre') {
+                        interetAttendu = (soldeAnneeAnterieure * tauxPeriode) * 2;
+                    } else if (periodicite === 'Trimestre') {
+                        interetAttendu = ((soldeAnneeAnterieure * tauxPeriode) * 4) * 0.98;
+                    }
+
+                    // Vérifier si le résultat est un entier et formater en conséquence
+                    const formattedInteretAttendu = Number.isInteger(interetAttendu)
+                        ? interetAttendu // Si entier, pas de décimales
+                        : interetAttendu.toFixed(2); // Sinon, deux décimales
+
+                    // Mettre à jour le champ Intérêts attendus
+                    $('#interet_attendu').val(formattedInteretAttendu);
+                }
+
+                /**
+                 * Ajouter des écouteurs d'événements pour recalculer les Intérêts attendus
+                 * chaque fois qu'une des valeurs change.
+                 */
+                $('#solde_31_12_n1, #tauxperiode, #periodicite').on('input', function () {
+                    calculateDatInteretAttendu(); // Recalculer les Intérêts attendus
+                });
+
+                // Appeler une première fois pour initialiser les valeurs si elles sont déjà présentes
+                calculateDatInteretAttendu();
+            }); 
         </script>
 
         {{-- Script du calcul des écarts de paiements --}}
         <script>
+            // Script du calcul des écarts de paiements OBLIGATIONS
             $(document).ready(function () {
                 /**
                  * Fonction pour calculer l'écart de paiement
@@ -1431,10 +1969,45 @@
                 // Appeler une première fois pour initialiser les valeurs si elles sont déjà présentes
                 calculateEcartPaiement();
             });
+
+            // Script du calcul des écarts de paiements ACTIONS
+            $(document).ready(function () {
+                /**
+                 * Fonction pour calculer l'écart de paiement
+                 */
+                function calculateActionsEcartPaiement() {
+                    // Récupérer les valeurs des champs
+                    const interetRecusActions = parseFloat($('#interet_actions_recus').val()) || 0; // Intérêts reçus
+                    const interetAttenduActions = parseFloat($('#interet_actions_attendu').val()) || 0; // Intérêts attendus
+
+                    // Calculer l'écart de paiement
+                    const ecartPaiementActions = interetRecusActions - interetAttenduActions;
+
+                    // Vérifier si le résultat est un entier et formater en conséquence
+                    const formattedEcartPaiement = Number.isInteger(ecartPaiementActions)
+                        ? ecartPaiementActions // Si entier, pas de décimales
+                        : ecartPaiementActions.toFixed(2); // Sinon, deux décimales
+
+                    // Mettre à jour le champ Écart de paiement
+                    $('#ecart_actions_paiement').val(formattedEcartPaiement);
+                }
+
+                /**
+                 * Ajouter des écouteurs d'événements pour recalculer l'écart de paiement
+                 * chaque fois qu'une des valeurs change.
+                 */
+                $('#interet_actions_recus, #interet_actions_attendu').on('input', function () {
+                    calculateActionsEcartPaiement(); // Recalculer l'écart de paiement
+                });
+
+                // Appeler une première fois pour initialiser les valeurs si elles sont déjà présentes
+                calculateActionsEcartPaiement();
+            });
         </script>
 
         {{-- Script du calcul de l'Ecart --}}
         <script>
+            //  Script du calcul de l'Ecart OBLIGATIONS
             $(document).ready(function () {
                 // Sélectionner les champs nécessaires
                 const $solde3112nInput = $(".solde_31_12_n"); // Champ pour le solde au 31/12/n
@@ -1470,11 +2043,120 @@
                 // Si le solde au 31/12/n change (par script), recalculer l'écart
                 $solde3112nInput.on("input", calculateEcart);
             });
+
+            //  Script du calcul de l'Ecart ACTIONS
+            $(document).ready(function () {
+                // Sélectionner les champs nécessaires
+                const $soldeactions3112nInput = $(".solde_31_12_n_actions"); // Champ pour le solde au 31/12/n
+                const $soldeComptaActionsInput = $(".solde_actions_compta"); // Champ pour le solde comptable
+                const $ecartActionsInput = $(".ecart_actions");             // Champ pour l'écart
+        
+                // Fonction pour vérifier si un nombre est entier
+                function formatNumber(value) {
+                    // Vérifier si le nombre est un entier
+                    if (Number.isInteger(value)) {
+                        return value; // Retourner l'entier
+                    }
+                    // Sinon, formater le nombre avec 2 chiffres après la virgule
+                    return value.toFixed(2);
+                }
+        
+                // Fonction pour calculer et mettre à jour l'écart
+                function calculateActionsEcart() {
+                    // Récupérer les valeurs des champs `solde_31_12_n` et `solde_compta`
+                    const soldeActions3112n = parseFloat($soldeactions3112nInput.val()) || 0; // Convertir en nombre ou utiliser 0 par défaut
+                    const soldeActionsCompta = parseFloat($soldeComptaActionsInput.val()) || 0; // Convertir en nombre ou utiliser 0 par défaut
+        
+                    // Calculer l'écart
+                    const ecartActions = soldeActions3112n - soldeActionsCompta;
+        
+                    // Mettre à jour le champ `ecart` avec un formatage adapté
+                    $ecartActionsInput.val(formatNumber(ecartActions));
+                }
+        
+                // Ajouter un écouteur d'événement pour détecter les modifications dans le champ `solde_compta`
+                $soldeComptaActionsInput.on("input", calculateActionsEcart);
+        
+                // Si le solde au 31/12/n change (par script), recalculer l'écart
+                $soldeactions3112nInput.on("input", calculateActionsEcart);
+            });
+
+            //  Script du calcul de l'Ecart DAT
+            $(document).ready(function () {
+                // Sélectionner les champs nécessaires
+                const $solde3112nDatInput = $(".soldedat_31_12_n"); // Champ pour le solde au 31/12/n
+                const $soldeComptaDatInput = $(".soldedat_compta"); // Champ pour le solde comptable
+                const $ecartDatInput = $(".ecartdat");             // Champ pour l'écart
+        
+                // Fonction pour vérifier si un nombre est entier
+                function formatNumber(value) {
+                    // Vérifier si le nombre est un entier
+                    if (Number.isInteger(value)) {
+                        return value; // Retourner l'entier
+                    }
+                    // Sinon, formater le nombre avec 2 chiffres après la virgule
+                    return value.toFixed(2);
+                }
+        
+                // Fonction pour calculer et mettre à jour l'écart
+                function calculateDatEcart() {
+                    // Récupérer les valeurs des champs `solde_31_12_n` et `solde_compta`
+                    const solde3112nDat = parseFloat($solde3112nDatInput.val()) || 0; // Convertir en nombre ou utiliser 0 par défaut
+                    const soldeComptaDat = parseFloat($soldeComptaDatInput.val()) || 0; // Convertir en nombre ou utiliser 0 par défaut
+        
+                    // Calculer l'écart
+                    const ecartDat = solde3112nDat - soldeComptaDat;
+        
+                    // Mettre à jour le champ `ecart` avec un formatage adapté
+                    $ecartDatInput.val(formatNumber(ecartDat));
+                }
+        
+                // Ajouter un écouteur d'événement pour détecter les modifications dans le champ `solde_compta`
+                $soldeComptaDatInput.on("input", calculateDatEcart);
+        
+                // Si le solde au 31/12/n change (par script), recalculer l'écart
+                $solde3112nDatInput.on("input", calculateDatEcart);
+            });
+        </script>
+
+        {{-- Script du calcul du rendement --}}
+        <script>
+            $(document).ready(function () {
+                // Sélectionner les champs nécessaires
+                const $soldeActions3112nInput = $(".solde_31_12_n_actions"); // Champ pour le solde au 31/12/n
+                const $dividendeInput = $(".dividende");                    // Champ pour le dividende
+                const $rendementInput = $(".rendement");                    // Champ pour le rendement
+
+                // Fonction pour formater un nombre avec 2 décimales
+                function formatNumber(value) {
+                    return Number.isInteger(value) ? value : value.toFixed(2);
+                }
+
+                // Fonction pour calculer et mettre à jour le rendement
+                function calculateRendement() {
+                    // Récupérer les valeurs des champs `solde_31_12` et `dividende`
+                    const soldeActions3112n = parseFloat($soldeActions3112nInput.val()) || 0; // Convertir en nombre ou utiliser 0 par défaut
+                    const dividende = parseFloat($dividendeInput.val()) || 0;                 // Convertir en nombre ou utiliser 0 par défaut
+
+                    // Calculer le rendement uniquement si le solde est positif
+                    if (soldeActions3112n > 0) {
+                        const rendement = (dividende / soldeActions3112n) * 100; // Rendement en pourcentage
+                        $rendementInput.val(formatNumber(rendement));            // Mettre à jour le champ `rendement`
+                    } else {
+                        $rendementInput.val(''); // Réinitialiser si le solde est nul ou invalide
+                    }
+                }
+
+                // Ajouter un écouteur d'événement pour détecter les modifications
+                $dividendeInput.on("input", calculateRendement);
+                $soldeActions3112nInput.on("input", calculateRendement);
+            });
         </script>
         
 
         {{-- Script du calcul de l'écart comptabilisé --}}
         <script>
+            // Script du calcul de l'écart comptabilisé OBLIGATIONS
             $(document).ready(function () {
                 // Sélectionner les champs nécessaires
                 const $ecartComptaInput = $(".ecart_compta"); // Champ pour l'écart comptabilisé
@@ -1512,11 +2194,51 @@
                 $interetControleInput.on("input", calculateEcartCompta);
 
             });
+
+            // Script du calcul de l'écart comptabilisé ACTIONS
+            $(document).ready(function () {
+                // Sélectionner les champs nécessaires
+                const $ecartComptaActionsInput = $(".ecart_actions_compta"); // Champ pour l'écart comptabilisé
+                const $interetControleActionsInput = $(".interet_actions_controle"); // Champ pour les intérêts contrôlés
+                const $interetComptaActionsInput = $(".interet_actions_compta"); // Champ pour les intérêts comptables
+                const $ecartIcneActionsInput = $(".ecart_actions_icne"); // Champ pour l'écart ICNE
+        
+                // Fonction pour vérifier si un nombre est entier ou décimal, avec 2 chiffres après la virgule si nécessaire
+                function formatNumber(value) {
+                    if (Number.isInteger(value)) {
+                        return value; // Retourner l'entier
+                    }
+                    return value.toFixed(2); // Retourner le nombre avec 2 chiffres après la virgule
+                }
+        
+                // Fonction pour calculer et mettre à jour l'écart comptabilisé
+                function calculateActionsEcartCompta() {
+                    // Récupérer les valeurs des champs
+                    const interetControleActions = parseFloat($interetControleActionsInput.val()) || 0; // Convertir en nombre ou utiliser 0 par défaut
+                    const interetComptaActions = parseFloat($interetComptaActionsInput.val()) || 0; // Convertir en nombre ou utiliser 0 par défaut
+                    const ecartIcneActions = parseFloat($ecartIcneActionsInput.val()) || 0; // Convertir en nombre ou utiliser 0 par défaut
+        
+                    // Calculer l'écart comptabilisé
+                    const ecartComptaActions = interetControleActions - interetComptaActions - ecartIcneActions;
+        
+                    // Mettre à jour le champ `écart_compta` avec un formatage adapté
+                    $ecartComptaActionsInput.val(formatNumber(ecartComptaActions));
+                }
+        
+                // Ajouter des écouteurs d'événement pour recalculer l'écart comptabilisé
+                $interetComptaActionsInput.on("input", calculateActionsEcartCompta);
+                $ecartIcneActionsInput.on("input", calculateActionsEcartCompta);
+
+                // Si le champ `interet_controle` est modifié (par script), recalculer également
+                $interetControleActionsInput.on("input", calculateActionsEcartCompta);
+
+            });
         </script>
 
 
         {{-- Script du calcul de l'écart ICNE --}}
         <script>
+            // Script du calcul de l'écart ICNE OBLIGATIONS
             $(document).ready(function () {
                 // Sélectionner les champs nécessaires
                 const $ecartIcneInput = $(".ecart_icne"); // Champ pour l'écart ICNE
@@ -1549,6 +2271,41 @@
         
                 // Si le champ `icne` est modifié (par script), recalculer également
                 $icneInput.on("input", calculateEcartIcne);
+            });
+
+            // Script du calcul de l'écart ICNE ACTIONS
+            $(document).ready(function () {
+                // Sélectionner les champs nécessaires
+                const $ecartIcneActionsInput = $(".ecart_actions_icne"); // Champ pour l'écart ICNE
+                const $icneActionsInput = $(".icne_actions"); // Champ pour l'ICNE
+                const $icneComptaActionsInput = $(".icne_actions_compta"); // Champ pour l'ICNE comptable
+        
+                // Fonction pour vérifier si un nombre est entier ou décimal, avec 2 chiffres après la virgule si nécessaire
+                function formatNumber(value) {
+                    if (Number.isInteger(value)) {
+                        return value; // Retourner l'entier
+                    }
+                    return value.toFixed(2); // Retourner le nombre avec 2 chiffres après la virgule
+                }
+        
+                // Fonction pour calculer et mettre à jour l'écart ICNE
+                function calculateActionsEcartIcne() {
+                    // Récupérer les valeurs des champs
+                    const icneActions = parseFloat($icneActionsInput.val()) || 0; // Convertir en nombre ou utiliser 0 par défaut
+                    const icneComptaActions = parseFloat($icneComptaActionsInput.val()) || 0; // Convertir en nombre ou utiliser 0 par défaut
+        
+                    // Calculer l'écart ICNE
+                    const ecartIcneActions = icneActions - icneComptaActions;
+        
+                    // Mettre à jour le champ `écart_icne` avec un formatage adapté
+                    $ecartIcneActionsInput.val(formatNumber(ecartIcneActions)).trigger('input');
+                }
+        
+                // Ajouter des écouteurs d'événement pour recalculer l'écart ICNE
+                $icneComptaActionsInput.on("input", calculateActionsEcartIcne);
+        
+                // Si le champ `icne` est modifié (par script), recalculer également
+                $icneActionsInput.on("input", calculateActionsEcartIcne);
             });
         </script>
         
@@ -1733,6 +2490,95 @@
                             } else {
                                 Swal.fire("Erreur", "Une erreur est survenue. Veuillez réessayer.", "error");
                             }
+                        }
+                    });
+                });
+            });
+
+
+            // Script pour faire la mise à jour du détail d'un placement DAT
+            document.addEventListener("DOMContentLoaded", function () {
+                // Écouteur pour le bouton "Appliquer les changements"
+                document.querySelectorAll('.apply-btn-dat').forEach(button => {
+                    button.addEventListener('click', async function (e) {
+                        e.preventDefault();
+
+                        // Récupérer l'ID crypté du placement depuis l'attribut 'data-id'
+                        const placementDatId = this.dataset.iddatplace;
+
+                        // Récupérer les valeurs des champs du modal
+                        const formData = {
+                            id_dat: document.querySelector('.id_detaildat').value,
+                            placementsid_dat: document.querySelector('.placement_id_dat').value,
+                            anneedat_exercice: document.querySelector('.annee_exercice_dat').value,
+                            soldedat_31_12_n_1: document.querySelector('.soldedat_31_12_n1').value,
+                            soldedat_comptable: document.querySelector('.soldedat_compta').value,
+                            interetdat_recu_31_12_n: document.querySelector('.interetdat_recus').value,
+                            interetdat_attendu: document.querySelector('.interetdat_attendu').value,
+                            ecartdat_icne: document.querySelector('.ecartdat_icne').value,
+                            date_dernierdat_paiement: document.querySelector('.date_dernierdat_paie').value,
+                            acquisdat: document.querySelector('.acquisitiondat').value,
+                            ecart_dat: document.querySelector('.ecartdat').value,
+                            icnedat_31_12_n: document.querySelector('.icnedat').value,
+                            ecartdat_paiement: document.querySelector('.ecartdat_paiement').value,
+                            date_arret_dat: document.querySelector('.datearret_dat').value,
+                            remboursdat: document.querySelector('.remboursementdat').value,
+                            provisiondat_31_12_n: document.querySelector('.provisiondat').value,
+                            interetdat_controle: document.querySelector('.interetdat_controle').value,
+                            ecartdat_comptabilise: document.querySelector('.ecartdat_compta').value,
+                            nbredat_jrs_icne: document.querySelector('.nbrejrsdat_icne').value,
+                            soldedat_31_12_n: document.querySelector('.soldedat_31_12_n').value,
+                            extdat_icne_31_12_n_1: document.querySelector('.extdat_icne').value,
+                            interetdat_comptable: document.querySelector('.interetdat_compta').value,
+                            icnedat_comptable_31_12_n: document.querySelector('.icnedat_compta').value,
+                            _token: '{{ csrf_token() }}' // CSRF Token
+                        };
+
+                        console.log(formData); // Vérifiez que les valeurs envoyées sont correctes
+
+                        try {
+                            // Envoi de la requête Fetch
+                            const response = await fetch(`/home/details-placement/${placementDatId}/modifier-dat`, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json', // Indique que les données envoyées sont au format JSON
+                                    'X-CSRF-TOKEN': '{{ csrf_token() }}' // CSRF Token pour Laravel
+                                },
+                                body: JSON.stringify(formData) // Conversion des données en JSON
+                            });
+
+                            // Traiter la réponse
+                            const result = await response.json();
+
+                            if (response.ok) {
+                                if (result.success) {
+                                    Swal.fire({
+                                        title: 'Succès',
+                                        text: result.message,
+                                        type: 'success',
+                                        confirmButtonColor: '#4fa7f3'
+                                    }).then(() => {
+                                        location.reload(); // Recharger la page après confirmation
+                                    });
+                                } else {
+                                    Swal.fire("Erreur", result.message, "error");
+                                }
+                            } else {
+                                // Afficher les messages d'erreur
+                                if (result.errors) {
+                                    Object.keys(result.errors).forEach(key => {
+                                        const errorElement = document.querySelector(`.error-${key}`);
+                                        if (errorElement) {
+                                            errorElement.textContent = result.errors[key][0];
+                                        }
+                                    });
+                                } else {
+                                    Swal.fire("Erreur", "Une erreur est survenue. Veuillez réessayer.", "error");
+                                }
+                            }
+                        } catch (error) {
+                            console.error("Une erreur est survenue :", error);
+                            Swal.fire("Erreur", "Une erreur est survenue. Veuillez réessayer.", "error");
                         }
                     });
                 });

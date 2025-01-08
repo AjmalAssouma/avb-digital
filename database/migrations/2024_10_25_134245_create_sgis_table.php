@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreign('users_id')->references('id')->on('users')->onDelete('cascade'); // Clé étrangère pour users_id
             $table->string('code_sgi'); // Nouvelle colonne code_sgi après users_id
             $table->string('designation_sgi'); // Colonne designation_sgi
-            $table->string('num_compte_prod_finan')->unique(); // Colonne num_compte_prod_finan, unique
+            $table->string('num_compte_tresor')->unique(); // Colonne num_compte_tresor, unique
             $table->timestamps();
         });
     }

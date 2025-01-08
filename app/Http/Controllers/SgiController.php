@@ -20,15 +20,15 @@ class SgiController extends Controller
         $messages = [
             'designation_sgi.required' => 'La désignation de la SGI est obligatoire.',
             'code_sgi.required' => 'Le code de la SGI est obligatoire.',
-            'num_compte_prod_finan.required' => 'Le numéro de compte est obligatoire.',
-            'num_compte_prod_finan.numeric' => 'Le numéro de compte du produit financier doit contenir uniquement des chiffres.',
-            'num_compte_prod_finan.unique' => 'Ce numéro de compte du produit financier existe déjà.',
+            'num_compte_tres.required' => 'Le numéro de compte est obligatoire.',
+            'num_compte_tres.numeric' => 'Le numéro de compte doit contenir uniquement des chiffres.',
+            'num_compte_tres.unique' => 'Ce numéro de compte existe déjà.',
         ];
         // Valider les données du formulaire
         $validator = Validator::make($request->all(), [
             'code_sgi' => 'required|string|max:255',
             'designation_sgi' => 'required|string|max:255',
-            'num_compte_prod_finan' => 'required|numeric|unique:sgis,num_compte_prod_finan',
+            'num_compte_tres' => 'required|numeric|unique:sgis,num_compte_tresor',
         ], $messages);
 
         // Si la validation échoue, retourner un message d'erreur
@@ -42,15 +42,16 @@ class SgiController extends Controller
         try{
             // Création de la SGI
             Sgi::create([
+                'users_id' => auth()->id(), // Récupérer l'ID de l'utilisateur authentifié
                 'code_sgi' => strtoupper($request->code_sgi), // Mettre en majuscule
                 'designation_sgi' => $request->designation_sgi,
-                'num_compte_prod_finan' => $request->num_compte_prod_finan,
-                'users_id' => auth()->id() // Récupérer l'ID de l'utilisateur authentifié
+                'num_compte_tresor' => $request->num_compte_tres,
             ]);
 
             // Retourner une réponse JSON de succès
             return response()->json(['success' => true, 'message' => 'SGI créée avec succès!']);
         } catch (\Exception $e) {
+            Log::error("Une erreur s\'est produite lors de la création de la SGI." . $e->getMessage() );
             // Gérer les exceptions
             return response()->json([
                 'success' => false,
@@ -73,9 +74,9 @@ class SgiController extends Controller
         $messages = [
             'designation_sgi.required' => 'La désignation de la SGI est obligatoire.',
             'code_sgi.required' => 'Le code SGI est obligatoire.',
-            'num_compte_prod_finan.required' => 'Le numéro de compte est obligatoire.',
-            'num_compte_prod_finan.numeric' => 'Le numéro de compte du produit financier doit contenir uniquement des chiffres.',
-            'num_compte_prod_finan.unique' => 'Ce numéro de compte du produit financier existe déjà.',
+            'num_compte_tres.required' => 'Le numéro de compte est obligatoire.',
+            'num_compte_tres.numeric' => 'Le numéro de compte doit contenir uniquement des chiffres.',
+            'num_compte_tres.unique' => 'Ce numéro de compte existe déjà.',
         ];
 
         // Valider les données du formulaire
@@ -83,7 +84,7 @@ class SgiController extends Controller
             'id' => 'required|integer|exists:sgis,id',
             'code_sgi' => 'required|string|max:255',
             'designation_sgi' => 'required|string|max:255',
-            'num_compte_prod_finan' => 'required|numeric|unique:sgis,num_compte_prod_finan,' . $request->id,
+            'num_compte_tres' => 'required|numeric|unique:sgis,num_compte_tresor,' . $request->id,
         ], $messages);
 
         // Si la validation échoue, retourner un message d'erreur
@@ -98,7 +99,10 @@ class SgiController extends Controller
 
             // Mise à jour de la SGI
             $sgi = Sgi::findOrFail($request->id);
-            $sgi->update($request->only('code_sgi', 'designation_sgi', 'num_compte_prod_finan'));
+            $sgi->code_sgi = $request->code_sgi;
+            $sgi->designation_sgi = $request->designation_sgi;
+            $sgi->num_compte_tresor = $request->num_compte_tres;
+            $sgi->save();
 
             // Retourner une réponse de succès
             return response()->json([

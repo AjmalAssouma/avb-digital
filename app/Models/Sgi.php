@@ -13,7 +13,7 @@ class Sgi extends Model
         'users_id',
         'code_sgi',
         'designation_sgi',
-        'num_compte_prod_finan',
+        'num_compte_tresor',
     ];
 
     // Si vous avez une relation avec le modèle User

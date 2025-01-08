@@ -13,7 +13,7 @@ class Placement extends Model
     protected $fillable = [
         'users_id',
         'sgis_id',
-        'num_compte',
+        'numcomptes_id',
         'type_placement',
         'nom_placement',
         'periodicite',
@@ -39,6 +39,15 @@ class Placement extends Model
     }
 
     /**
+     * Relation avec le modèle NumeroCompte.
+     * Un placement appartient à un numero de compte.
+     */
+    public function numCompte()
+    {
+        return $this->belongsTo(NumeroCompte::class, 'numcomptes_id');
+    }
+
+    /**
      * Relation avec le modèle Sgi.
      * Un placement appartient à une SGI.
      */
@@ -51,6 +60,12 @@ class Placement extends Model
     {
         return $this->hasMany(DetailPlacement::class, 'placements_id');
     }
+
+    public function placementSgis()
+    {
+        return $this->hasMany(PlacementSgi::class, 'placements_id');
+    }
+
 
     /**
      * Génère les enregistrements dans la table detail_placements
@@ -205,4 +220,69 @@ class Placement extends Model
         // Insérer les enregistrements dans la table detail_placements en une seule requête
         DetailPlacement::insert($details);
     }
+
+    public function generateDatDetailPlacements()
+    {
+        // Convertir les dates de début et de fin en instances Carbon pour une manipulation facile
+        $dateStart = Carbon::parse($this->date_debut);
+        $dateEnd = Carbon::parse($this->date_fin);
+
+        // Calculer la durée en années (inclusivement)
+        $duree = $dateStart->diffInYears($dateEnd);
+
+        // Initialiser un tableau pour stocker les enregistrements à insérer
+        $details = [];
+
+        // Générer les enregistrements pour chaque année d'exercice
+        for ($i = 0; $i <= $duree; $i++) {
+            // Déterminer l'année d'exercice courante
+            $anneeExercice = $dateStart->copy()->addYears($i)->year;
+
+            // Déterminer la date de dernier paiement (18/11 de l'année courante)
+            $dateDernierPaiement = Carbon::create($anneeExercice, $dateStart->month, $dateStart->day);
+
+            // Déterminer la date d'arrêt (31/12 de l'année courante)
+            $dateArret = Carbon::create($anneeExercice, 12, 31);
+
+            // Calculer le nombre de jours d'intérêts courus non échus
+            $joursInteretsCourus = $dateDernierPaiement->diffInDays($dateArret);
+
+            // Ajouter l'enregistrement au tableau
+            $details[] = [
+                'users_id' => auth()->id(), // ID de l'utilisateur associé
+                'placements_id' => $this->id, // ID du placement
+                'annee_exercice' => $anneeExercice, // Année d'exercice
+                'date_dernier_paiement' => $dateDernierPaiement, // Date de dernier paiement
+                'date_arret' => $dateArret, // Date d'arrêt
+                'nbre_jrs_icne' => $joursInteretsCourus, // Nombre de jours d'intérêts courus
+
+                // Initialiser toutes les autres colonnes à 0
+                'solde_31_12_n_1' => 0,
+                'acquisition' => 0,
+                'remboursement' => 0,
+                'solde_31_12_n' => 0,
+                'solde_comptable' => 0,
+                'ecart' => 0,
+                'provision_31_12_n' => 0,
+                'ext_icne_31_12_n_1' => 0,
+                'interet_recu_31_12_n' => 0,
+                'icne_31_12_n' => 0,
+                'interet_controle' => 0,
+                'interet_comptable' => 0,
+                'interet_attendu' => 0,
+                'ecart_paiement' => 0,
+                'ecart_comptabilise' => 0,
+                'icne_comptable_31_12_n' => 0,
+                'ecart_icne' => 0,
+                'dividende' => null,
+                'rendement' => null,
+                'created_at' => now(), // Date de création
+                'updated_at' => now(), // Date de mise à jour
+            ];
+        }
+
+        // Insérer les enregistrements dans la table detail_placements en une seule requête
+        DetailPlacement::insert($details);
+    }
+
 }

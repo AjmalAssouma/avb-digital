@@ -21,6 +21,13 @@
                 </li>
 
                 <li>
+                    <a href="javascript: void(0);"><i class="mdi mdi-book-open"></i><span>Numéro de compte</span> <span class="menu-arrow"></span></a>
+                    <ul class="nav-second-level nav" aria-expanded="false">
+                        <li><a href="{{route('list.numcompte')}}">Liste des nº de compte</a></li>
+                    </ul>
+                </li>
+
+                <li>
                     <a href="javascript: void(0);"><i class="dripicons-graph-line"></i><span>Placement</span><span class="menu-arrow"></span></a>
                     <ul class="nav-second-level nav" aria-expanded="false">
                         <li><a href="{{route('creation.placement')}}">Créer un placement</a></li>

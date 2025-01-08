@@ -5,7 +5,7 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>{{ config('app.name') . ' | Liste des SGI'}}</title>
+        <title>{{ config('app.name') . ' | Liste des numéros de comptes'}}</title>
 
         <!-- Favicon -->
         <link rel="shortcut icon" type="image/x-icon" href="{{asset('assets/img/favicon.png')}}">
@@ -55,12 +55,10 @@
                         <div class="row">
 							<div class="col-12">
 								<div class="page-title-box">
-                                    <h4 class="page-title">Liste des SGI (Societe de Gestion d'Intermédiations)</h4>
+                                    <h4 class="page-title">Liste des Nº de compte</h4> 
                                     <ol class="breadcrumb p-0 m-0">
                                         <li>
-                                            {{-- <button type="button" class="btn btn-primary  waves-effect waves-light btn-sm sgi-button" data-toggle="modal" data-target="#con-close-modal-sgi-created">Créer une SGI</button> --}}
-
-                                            <button type="button" class="btn btn-icon waves-effect waves-light btn-success sgi-button" data-toggle="modal" data-target="#con-close-modal-sgi-created"> <i class="fa fa-plus"></i> <span> Créer une SGI</span></button>
+                                            <button type="button" class="btn btn-icon waves-effect waves-light btn-success sgi-button" data-toggle="modal" data-target="#con-close-modal-add-numcompte"> <i class="fa fa-plus"></i> <span>Nº de compte</span></button>
                                         </li>
                                     </ol>
                                     <div class="clearfix"></div>
@@ -75,79 +73,79 @@
 
                                 <div class="card">
 									<div class="card-body" style="margin: 0 auto; width: 95%;">
-                                        <div id="con-close-modal-sgi-created" class="modal fade " tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+                                        <div id="con-close-modal-add-numcompte" class="modal fade " tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
                                             <div class="modal-dialog modal-lg" style="width: 50%">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h4 class="modal-title mt-0">Formulaire de création d'une SGI</h4>
+                                                        <h4 class="modal-title mt-0">Formulaire d'ajout d'un numéro de compte</h4>
                                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                             <span aria-hidden="true">&times;</span>
                                                         </button>
                                                     </div>
-                                                    <form id="create-sgi-form">
+                                                    <form>
                                                         @csrf
                                                         <div class="modal-body">
                                                             <div class="row">
-                                                                <div class="col-md-3">
+                                                                <div class="col-md-4">
                                                                     <div class="form-group">
-                                                                        <label for="code_sgi" class="control-label">Code SGI<span class="text-danger">*</span></label>
-                                                                        <input type="text" class="form-control code_sgi" id="code_sgi" name="code_sgi" placeholder="SGI,AGI,BFS etc..." oninput="this.value = this.value.toUpperCase();" required>
-                                                                        <span class="text-danger error-code_sgi"></span>
+                                                                        <label for="ncompte" class="control-label">Nº de compte <span class="text-danger">*</span></label>
+                                                                        <input type="text" class="form-control ncompte" id="ncompte" name="ncompte" placeholder="12xxxx" data-parsley-type="number" pattern="\d+" required>
+                                                                        <span class="text-danger error-ncompte"></span>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-md-9">
+                                                                <div class="col-md-8">
                                                                     <div class="form-group">
-                                                                        <label for="designation_sgi">Désignation de la SGI <span class="text-danger">*</span></label>
-                                                                        <input type="text" class="form-control designation_sgi" id="designation_sgi" name="designation_sgi" placeholder="Nom complet de la SGI"  required>
-                                                                        <span class="text-danger error-designation_sgi"></span>
+                                                                        <label for="lib_ncompte">Libellé du compte <span class="text-danger">*</span></label>
+                                                                        <input type="text" class="form-control lib_ncompte" id="lib_ncompte" name="lib_ncompte" placeholder="Nom du placement"  required>
+                                                                        <span class="text-danger error-libelle_ncompte"></span>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                             <div class="row">
                                                                 <div class="col-md-12">
                                                                     <div class="form-group">
-                                                                        <label for="num_compte_tres">Numéro de compte <span class="text-danger">*</span></label>
-                                                                        <input type="text" class="form-control num_compte_tres" id="num_compte_tres" name="num_compte_tres" placeholder="77xxxxxxx" data-parsley-type="number" pattern="\d+" required>
-                                                                        <span class="text-danger error-num_compte_tres"></span>
+                                                                        <label for="ncompte_prod_finan">Numéro de compte du produit financier associé <span class="text-danger">*</span></label>
+                                                                        <input type="text" class="form-control ncompte_prod_finan" id="ncompte_prod_finan" name="ncompte_prod_finan" placeholder="12xxxx" data-parsley-type="number" pattern="\d+" required>
+                                                                        <span class="text-danger error-ncompte_prod_finan"></span>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">Fermer</button>
-                                                            <button type="submit" class="btn btn-primary  waves-effect waves-light btn-sm sgi-sub">Créer</button>
+                                                            <button type="submit" class="btn btn-primary  waves-effect waves-light btn-sm ncompte-sub">Ajouter</button>
                                                         </div>
                                                     </form>
                                                 </div>
                                             </div>
                                         </div><!-- /.modal -->
 	
-										<table class="table table-striped add-edit-table table-bordered dt-responsive" id="datatable-editable" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+										<table class=" table table-striped add-edit-table table-bordered dt-responsive" id="datatable-editable" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
 											<thead >
 												<tr >
-                                                    <th>Code de la SGI</th>
-                                                    <th>Désignation de la SGI</th>
-													<th>Numéro de compte</th>
+                                                    <th>Nº de compte</th>
+                                                    <th>Libellé de compte</th>
+													<th>Nº de compte du produit financier</th>
 													<th style="width: 15%">Actions</th>
                                                     <th hidden>Id</th>
 												</tr>
 											</thead>
 											<tbody>
-                                                @foreach ($sgis as $sgi)
+                                                @foreach ($numcomptes as $numcompte)
                                                     <tr>
-                                                        <td>{{ $sgi->code_sgi }}</td>
-                                                        <td>{{ $sgi->designation_sgi }}</td>
-                                                        <td>{{ $sgi->num_compte_tresor }}</td>
+                                                        <td>{{ $numcompte->num_compte }}</td>
+                                                        <td>{{ $numcompte->libelle_numcompte }}</td>
+                                                        <td>{{ $numcompte->num_compte_prod_finan }}</td>
                                                         <td class="actions">
                                                             <button type="button"
                                                             style="border: none; background-color: transparent; font-size: 5px;" 
                                                             data-toggle="modal" 
                                                             data-target="#con-close-modal"
                                                             class="btn btn-modif waves-effect waves-light edit-btn"
-                                                            data-id="{{ $sgi->id }}"
-                                                            data-codesgi= "{{ $sgi->code_sgi }}" 
-                                                            data-designation="{{ $sgi->designation_sgi }}" 
-                                                            data-numcompte="{{ $sgi->num_compte_tresor }}">
+                                                            data-id="{{ $numcompte->id }}"
+                                                            data-ncompte= "{{ $numcompte->num_compte }}" 
+                                                            data-libncompte="{{ $numcompte->libelle_numcompte }}" 
+                                                            data-ncomprodfinan="{{ $numcompte->num_compte_prod_finan }}">
                                                                 <i class="fa fa-pencil" style="font-size: 15px"></i>
                                                             </button>
 
@@ -155,11 +153,11 @@
                                                             style="border: none; background-color: transparent; font-size: 5px;" 
                                                             class="btn btn-del waves-effect waves-light delete-btn"
                                                              
-                                                            data-id="{{ $sgi->id }}">
+                                                            data-id="{{ $numcompte->id }}">
                                                                 <i class="fa fa-trash-o" style="font-size: 15px"></i>
                                                             </button>
                                                         </td>
-                                                        <td hidden> {{$sgi->id}} </td>
+                                                        <td hidden> {{$numcompte->id}} </td>
                                                     </tr>
                                                 @endforeach
 												
@@ -172,10 +170,10 @@
                             <!-- Modal Start -->
                             <div id="con-close-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
                             
-                                <div class="modal-dialog">
+                                <div class="modal-dialog modal-lg" style="width: 45%">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <h4 class="modal-title mt-0">Modification de la SGI</h4>
+                                            <h4 class="modal-title mt-0">Modification</h4>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
@@ -186,23 +184,23 @@
                                                 <div class="row"> 
                                                     <div class="col-md-12">
                                                         <div class="form-group">
-                                                            <input type="hidden" class="form-control sgi_id" name="sgi_id">
+                                                            <input type="hidden" class="form-control ncompteid" name="ncompteid">
                                                         </div>
                                                     </div>
 
                                                     <div class="col-md-3">
                                                         <div class="form-group">
-                                                            <label for="codesgi_update" class="control-label">Code SGI<span class="text-danger">*</span></label>
-                                                            <input type="text" class="form-control codesgi_update" id="codesgi_update"  name="codesgi_update" placeholder="SGI,AGI,BFS etc..." oninput="this.value = this.value.toUpperCase();" required>
-                                                            <span class="text-danger errors-code_sgi"></span>
+                                                            <label for="ncompte_update" class="control-label">Nº de compte <span class="text-danger">*</span></label>
+                                                            <input type="text" class="form-control ncompte_update" id="ncompte_update"  name="ncompte_update" placeholder="12xxxx" data-parsley-type="number" pattern="\d+" required>
+                                                            <span class="text-danger errors-ncompteupdate"></span>
                                                         </div>
                                                     </div>
 
                                                     <div class="col-md-9">
                                                         <div class="form-group">
-                                                            <label for="designation_update" class="control-label">Désignation de la SGI <span class="text-danger">*</span></label>
-                                                            <input type="text" class="form-control designation_update" id="designation_update" name="designation_update"  placeholder="Nom complet de la SGI.." required>
-                                                            <span class="text-danger errors-designation_sgi"></span>
+                                                            <label for="libncompte_update" class="control-label">Libellé du compte <span class="text-danger">*</span></label>
+                                                            <input type="text" class="form-control libncompte_update" id="libncompte_update" name="libncompte_update"  placeholder="Nom du placement" required>
+                                                            <span class="text-danger errors-libncupdate"></span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -210,9 +208,9 @@
                                                 <div class="row"> 
                                                     <div class="col-md-12">
                                                         <div class="form-group">
-                                                            <label for="numcompte_update" class="control-label">Numéro de compte <span class="text-danger">*</span></label>
-                                                            <input type="text" class="form-control numcompte_update" id="numcompte_update" name="numcompte_update" placeholder="xxxxx">
-                                                            <span class="text-danger errors-num_compte_tres"></span> <!-- Zone pour le message d'erreur -->
+                                                            <label for="ncprodfinan_update" class="control-label">Numéro de compte du produit financier associé <span class="text-danger">*</span></label>
+                                                            <input type="text" class="form-control ncprodfinan_update" id="ncprodfinan_update" name="ncprodfinan_update" placeholder="12xxxx" data-parsley-type="number" pattern="\d+" required>
+                                                            <span class="text-danger errors-ncpfupdate"></span> <!-- Zone pour le message d'erreur -->
                                                         </div>
                                                     </div>  
                                                 </div>
@@ -320,10 +318,10 @@
             });  
         </script>
 
+        {{-- Script permettant de créer un numero de compte avec Fetch --}}
         <script>
-            // Script permettant de créer une SGI avec Fetch
             document.addEventListener('DOMContentLoaded', function () {
-                const createButton = document.querySelector('.sgi-sub');
+                const createButton = document.querySelector('.ncompte-sub');
 
                 createButton.addEventListener('click', async function (e) {
                     e.preventDefault();
@@ -337,14 +335,14 @@
                     // Récupérer les données du formulaire
                     const formData = {
                         _token: '{{ csrf_token() }}',
-                        'code_sgi': document.querySelector('.code_sgi').value,
-                        'designation_sgi': document.querySelector('.designation_sgi').value,
-                        'num_compte_tres': document.querySelector('.num_compte_tres').value,
+                        'ncompte': document.querySelector('.ncompte').value,
+                        'libelle_ncompte': document.querySelector('.lib_ncompte').value,
+                        'ncompte_prod_finan': document.querySelector('.ncompte_prod_finan').value,
                     };
 
                     try {
                         // Envoi des données via Fetch
-                        const response = await fetch('/home/liste-des-sgis/creer-une-sgi', {
+                        const response = await fetch('/home/liste-des-numeros-de-compte/ajouter-numero-compte', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -390,41 +388,41 @@
             });
         </script>
 
-        {{-- Script qui permet d'afficher le modal et de faire la mise a jours --}}
+        {{-- Script qui permet d'afficher le modal et de remplir les champs du modal --}}
         <script>
             $(document).ready(function () {
                 // Utiliser un écouteur délégué pour les événements 'click' sur les boutons d'édition de DataTables
                 $('#datatable-editable').on('click', '.edit-btn', function () {
                     // Effacer les valeurs existantes dans les champs du modal
-                    $('.sgi_id').val('');
-                    $('.codesgi_update').val('');
-                    $('.designation_update').val('');
-                    $('.numcompte_update').val('');
+                    $('.ncompteid').val('');
+                    $('.ncompte_update').val('');
+                    $('.libncompte_update').val('');
+                    $('.ncprodfinan_update').val('');
                     
                     // Récupérer les valeurs data-* de l'élément cliqué
-                    const sgiId = $(this).data('id');
-                    const codeSgi = $(this).data('codesgi');
-                    const designation = $(this).data('designation');
-                    const numCompte = $(this).data('numcompte');
+                    const ncompteId = $(this).data('id');
+                    const numCompte = $(this).data('ncompte');
+                    const libNumCompte = $(this).data('libncompte');
+                    const numCompteProdFinan = $(this).data('ncomprodfinan');
                     
                     // Remplir les champs du modal avec les valeurs récupérées
-                    $('.sgi_id').val(sgiId);
-                    $('.codesgi_update').val(codeSgi);
-                    $('.designation_update').val(designation);
-                    $('.numcompte_update').val(numCompte);
+                    $('.ncompteid').val(ncompteId);
+                    $('.ncompte_update').val(numCompte);
+                    $('.libncompte_update').val(libNumCompte);
+                    $('.ncprodfinan_update').val(numCompteProdFinan);
                 });
 
                 // Réinitialiser les champs lorsque le modal est fermé
                 $('#con-close-modal').on('hidden.bs.modal', function () {
-                    $('.sgi_id').val('');
-                    $('.codesgi_update').val('');
-                    $('.designation_update').val('');
-                    $('.numcompte_update').val('');
+                    $('.ncompteid').val('');
+                    $('.ncompte_update').val('');
+                    $('.libncompte_update').val('');
+                    $('.ncprodfinan_update').val('');
                 });
             });
         </script>
 
-        {{-- Script permettant de faire la mise a jour d'une SGI avec Fetch --}}
+        {{-- Script permettant de faire la mise a jour du numero de compte avec Fetch --}}
         <script>
             document.addEventListener('DOMContentLoaded', function () {
                 
@@ -439,15 +437,15 @@
                     // Récupérer les données du formulaire
                     const formData = {
                         _token: '{{ csrf_token() }}',
-                        'id': document.querySelector('.sgi_id').value,
-                        'code_sgi': document.querySelector('.codesgi_update').value,
-                        'designation_sgi': document.querySelector('.designation_update').value,
-                        'num_compte_tres': document.querySelector('.numcompte_update').value,
+                        'id': document.querySelector('.ncompteid').value,
+                        'ncompteupdate': document.querySelector('.ncompte_update').value,
+                        'libncupdate': document.querySelector('.libncompte_update').value,
+                        'ncpfupdate': document.querySelector('.ncprodfinan_update').value,
                     };
 
                     try {
                         // Envoi des données via Fetch
-                        const response = await fetch('/home/liste-des-sgis/modifier', {
+                        const response = await fetch('/home/liste-des-numeros-de-compte/modifier', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -494,12 +492,11 @@
             });
         </script>
 
-
-        {{-- Script pour la suppression d'une SGI dans le tableau --}}
+        {{-- Script pour la suppression d'un numero de compte dans le tableau --}}
         <script>
             // Utilisation de la délégation d'événements sur la table avec son ID
             $('#datatable-editable').on('click', '.delete-btn', function () {
-                let sgiId = $(this).data('id');  // Récupération de l'ID de l'élément à supprimer
+                let numCompteId = $(this).data('id');  // Récupération de l'ID de l'élément à supprimer
 
                 // Afficher la confirmation de suppression avec SweetAlert
                 Swal.fire({
@@ -514,15 +511,15 @@
                 }).then((result) => {
                     if (result.value) {
                         $.ajax({
-                            url: '/home/liste-des-sgis/suppression',  // Route pour la suppression
-                            type: "POST",
+                            url: '/home/liste-des-numeros-de-compte/supprimer',  // Route pour la suppression
+                            type: "DELETE",
                             data: {
                                 _token: '{{ csrf_token() }}',  // Token CSRF pour valider la requête
-                                id: sgiId  // ID de l'élément à supprimer
+                                id: numCompteId
                             },
                             success: function(response) {
                                 if(response.success) {
-                                    Swal.fire("Supprimé!", "La SGI a été supprimé avec succès.", "success").then(() => {
+                                    Swal.fire("Supprimé!", "Le numero de compte a été supprimé avec succès.", "success").then(() => {
                                         location.reload();  // Recharge la page pour mettre à jour les données
                                     });
                                 } else {

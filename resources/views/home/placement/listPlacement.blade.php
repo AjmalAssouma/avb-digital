@@ -24,7 +24,7 @@
         <link rel="stylesheet" href="{{asset('plugins/tooltipster/tooltipster.bundle.min.css')}}">
 
         <!-- Custom box css -->
-        <link href="{{asset('plugins/custombox/css/custombox.min.css')}}" rel="stylesheet">
+        <link href="{{asset('plugins/custombox/css/custombox.min.css')}}" rel="stylesheet">  
 
         <link href="{{asset('plugins/datatables/jquery.dataTables.min.css')}}" rel="stylesheet" type="text/css"/>
 
@@ -81,21 +81,16 @@
 										<table class="table table-striped add-edit-table table-bordered dt-responsive responsive" id="datatable-editable" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
 											<thead>
 												<tr>
-                                                    <th>Numéro de compte</th>
+                                                    <th>Nº de compte</th>
                                                     <th>Placement</th>
                                                     <th>Type de placement</th>
-                                                    <th>SGI</th>
-                                                    <th>Numéro de compte du produits financier</th>
+                                                    <th>Nº de compte du produit financier</th>
                                                     <th>Périodicité</th>
                                                     <th>Taux annuel</th>
                                                     <th>Taux période</th>
                                                     <th>Durée</th>
-													<th>Nombre de titre</th>
-                                                    <th>Valeur du titre</th>
-                                                    <th>Valeur d'acquisition du titre</th>
                                                     <th>Date de début du placement</th>
                                                     <th>Date de fin du placement</th>
-                                                    <th>Gain</th>
 													<th style="width: 10%">Actions</th>
                                                     <th hidden>Id</th>
 												</tr>
@@ -104,27 +99,16 @@
                                                 @foreach ($placements as $placement)
                                                 
                                                     <tr>
-                                                        <td>{{ $placement->num_compte }}</td>
-                                                        <td>{{ $placement->nom_placement }}</td>
+                                                        <td>{{ $placement->numCompte->num_compte }}</td>
+                                                        <td>{{ $placement->numCompte->libelle_numcompte }}</td>
                                                         <td>{{ $placement->type_placement }}</td>
-                                                        <td>{{ $placement->sgi->code_sgi }}</td>
-                                                        <td> {{ $placement->sgi->num_compte_prod_finan }} </td>
-                                                       
-                                                        {{-- <td>{{ $placement->periodicite }}</td>
-                                                        <td>{{ $placement->taux_annuel . '%' }}</td>
-                                                        <td>{{ $placement->taux_periode . '%' }}</td> --}}
-
-                                                        <td>{{ $placement->type_placement !== 'ACTIONS' ? $placement->periodicite : '' }}</td>
-                                                        <td>{{ $placement->type_placement !== 'ACTIONS' ? $placement->taux_annuel . '%' : '' }}</td>
-                                                        <td>{{ $placement->type_placement !== 'ACTIONS' ? $placement->taux_periode . '%' : '' }}</td>
-                                                        
-                                                        <td>{{ $placement->duree. 'ans' }}</td>
-                                                        <td>{{ $placement->nbre_titre }}</td>
-                                                        <td>{{ $placement->valeur_titre }}</td>
-                                                        <td>{{ $placement->valeur_acq_titre }}</td>
+                                                        <td>{{ $placement->numCompte->num_compte_prod_finan }}</td>
+                                                        <td>{{ $placement->type_placement !== 'ACTIONS' ? $placement->periodicite : '-' }}</td>
+                                                        <td>{{ $placement->type_placement !== 'ACTIONS' ? $placement->taux_annuel . '%' : '-' }}</td>
+                                                        <td>{{ $placement->type_placement !== 'ACTIONS' ? $placement->taux_periode . '%' : '-' }}</td>
+                                                        <td>{{ $placement->duree. ' ans' }}</td>
                                                         <td>{{ \Carbon\Carbon::parse($placement->date_debut)->format('d/m/Y') }}</td>
                                                         <td>{{ \Carbon\Carbon::parse($placement->date_fin)->format('d/m/Y') }}</td>
-                                                        <td>{{ $placement->gain }}</td>
                                                         <td class="actions">
                                                             @php
                                                                 $modalTarget = match($placement->type_placement) {
@@ -138,40 +122,44 @@
 
                                                             <button type="button"
                                                                 style="display: inline-block;" 
-                                                                data-toggle="modal" 
-                                                                {{-- data-target="#con-close-modal-obl" --}}
+                                                                data-toggle="modal"
                                                                 data-target="{{ $modalTarget }}"
                                                                 class="btn btn-modif waves-effect waves-light edit-btn"
                                                                 data-id="{{$placement->id}}"
-                                                                data-sgisid="{{$placement->sgis_id}}"
-                                                                data-numcompte="{{$placement->num_compte}}"
-                                                                data-nomplace="{{$placement->nom_placement}}"
+                                                                data-numcompte="{{$placement->numcomptes_id}}"
+                                                                data-nomplace="{{$placement->numCompte->libelle_numcompte}}"
+                                                                data-ncpf="{{$placement->numCompte->num_compte_prod_finan}}"
                                                                 data-periodicite="{{$placement->periodicite}}"
                                                                 data-tauxannuel="{{$placement->taux_annuel}}"
                                                                 data-tauxperiode="{{$placement->taux_periode}}"
                                                                 data-typeplace="{{$placement->type_placement}}"
                                                                 data-duree="{{$placement->duree}}"
-                                                                data-nbretitre="{{$placement->nbre_titre }}"
-                                                                data-valtitre="{{$placement->valeur_titre}}"
-                                                                data-valacqtitre="{{$placement->valeur_acq_titre}}"
                                                                 data-datedebut="{{$placement->date_debut}}"
                                                                 data-datefin="{{$placement->date_fin}}"
-                                                                data-gain="{{$placement->gain}}"
                                                             >
                                                                 <i class="fa fa-pencil"></i>
                                                             </button>
 
                                                             <button type="button" 
-                                                            style="display: inline-block;" 
-                                                            class="btn btn-del waves-effect waves-light delete-btn"
-                                                            data-id="{{$placement->id}}">
+                                                                style="display: inline-block;" 
+                                                                class="btn btn-del waves-effect waves-light delete-btn"
+                                                                data-id="{{$placement->id}}">
                                                                 <i class="fa fa-trash-o"></i>
                                                             </button>
 
-                                                            <a href="{{ route('details.placement', ['id' => Crypt::encrypt($placement->id)]) }}" 
-                                                            class="btn waves-effect waves-light btn-success">
+                                                            <button type="button" 
+                                                                class="btn btn-voirsgi waves-effect waves-light open-modal-btn" 
+                                                                data-placements-id="{{ $placement->id }}"
+                                                                data-toggle="modal"
+                                                                data-target="#sgiModal"
+                                                            >
+                                                                <i class="fa fa-eye"></i>Voir les SGI
+                                                            </button>
+
+                                                            {{-- <a href="{{ route('details.placement', ['id' => Crypt::encrypt($placement->id)]) }}" 
+                                                                class="btn waves-effect waves-light btn-success">
                                                                 <i class="fa fa-info-circle"></i>  Voir les détails
-                                                            </a>
+                                                            </a> --}}
                                                             
                                                         </td>
                                                         <td hidden> {{$placement->id}} </td>
@@ -184,6 +172,95 @@
 								</div>
                             </div>
 
+                            <!-- Modal -->
+                            <div id="custom-modal" class="modal-demo">
+                                <button type="button" class="close" onclick="Custombox.modal.close();">
+                                    <span>&times;</span><span class="sr-only">Close</span>
+                                </button>
+                                <h4 class="custom-modal-title">Modification de la SGI</h4>
+                                <div class="modal-body">
+                                    <form >
+                                        @csrf
+                                       <div class="row">
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <label for="sgis_id">SGI <span class="text-danger">*</span></label>
+                                                    <select class="form-control select2" name="" id="sgis_id" required>
+                                                        <option value="">Sélectionnez une SGI</option>
+                                                        @foreach ($sgis as $sgi)
+                                                            <option value="{{ $sgi->id }}">{{ $sgi->code_sgi }} ({{ $sgi->num_compte_tresor }})</option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="valeur_titre">Valeur du titre <span class="text-danger">*</span></label>
+                                                    <input type="text" class="form-control valeur_titre" name="" id=""
+                                                        placeholder="La valeur du titre."  required>
+                                                </div>
+
+                                                <div class="form-group">
+                                                    <label for="gain">Gain total <span class="text-danger">*</span></label>
+                                                    <input type="text" id="gain" class="form-control gain" name=""
+                                                        placeholder="(Valeur du titre - Valeur d'acquisition du titre)" readonly required>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-6">
+                                                <div class="form-group">
+                                                    <label for="nbre_titre">Nombre de titre <span class="text-danger">*</span></label>
+                                                    <input type="text" class="form-control nbre_titre" name="" id=""
+                                                        placeholder="Le nombre de titre."  required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="vacq_titre">Valeur d'acquisition du titre <span class="text-danger">*</span></label>
+                                                    <input type="text" class="form-control vacq_titre" name="" id=""
+                                                        placeholder="La valeur d'acquisition du titre." required>
+                                                </div>
+                                            </div>
+                                       </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary waves-effect" class="close" onclick="Custombox.modal.close();">Annuler</button>
+                                    <button type="button" class="btn-chang btn-appliq waves-effect waves-light">Appliquer les changements</button>
+                                </div>
+                            </div>
+
+                            {{-- Modal pour afficher les SGI de chaque placement --}}
+                            <div class="modal fade bs-example-modal-lg" id="sgiModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content modal-lg" style="width: 100%">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title mt-0" id="myLargeModalLabel">SGI</h4>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <table class="table table-striped add-edit-table table-bordered dt-responsive responsive" id="SgiTable" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                                                <thead>
+                                                    <tr>
+                                                        
+                                                        <th>SGI</th> 
+                                                        <th>Nombre de titre</th>
+                                                        <th>Valeur du titre</th>
+                                                        <th>Valeur d'acquisition du titre</th>
+                                                        <th>Gain</th>
+                                                        <th >Actions</th>
+                                
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div><!-- /.modal-content -->
+                                </div><!-- /.modal-dialog -->
+                            </div><!-- /.modal -->
+
+
                             <!-- Modal Start OBLIGATIONS -->
                             <div id="con-close-modal-obl" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
                                 
@@ -195,7 +272,7 @@
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>
-                                        <form  method="POST">
+                                        <form method="POST">
                                             @csrf
                                             <div class="modal-body">
                                                 <div style="display: flex; flex-wrap: wrap; gap: 20px;">
@@ -213,10 +290,10 @@
                                                         </div>
 
                                                         <div class="form-group">
-                                                            <label for="numcompte_update">Numéro de compte <span class="text-danger">*</span></label>
-                                                            <input type="text" class="form-control numcompte_update" name="numcompte_update" id="numcompte_update" 
-                                                            placeholder="Le numéro de compte doit etre uniquement composé de chiffre"  data-parsley-type="number" pattern="\d+" required>
-                                                            <span class="text-danger error-num_compte_update"></span>
+                                                            <label for="nomplacement_update">Nom du placement <span class="text-danger">*</span> </label>
+                                                            <input type="text" id="nomplacement_update" class="form-control nomplacement_update" name="nomplacement_update" 
+                                                            placeholder="Nom du placement" readonly required>
+                                                            <span class="text-danger error-nom_placement_update"></span>
                                                         </div>
 
                                                         <div class="form-group">
@@ -242,10 +319,39 @@
                                                         </div>  
 
                                                         <div class="form-group">
-                                                            <label for="valeurtitre_update">Valeur du titre <span class="text-danger">*</span></label>
-                                                            <input type="text" class="form-control valeurtitre_update" name="valeurtitre_update" id="valeurtitre_update" 
-                                                            placeholder="La valeur du titre pour ce placement." data-parsley-type="number" oninput="calculateGain()" pattern="\d+" required />
-                                                            <span class="text-danger error-valeur_titre_update"></span>
+                                                            <label for="dureeannee_update">Durée (en année) <span class="text-danger">*</span> </label>
+                                                            <input type="text" id="dureeannee_update" class="form-control dureeannee_update" name="dureeannee_update"
+                                                            placeholder="Nombre d'année que couvre le placement" pattern="\d+" readonly required>
+                                                            <span class="text-danger error-duree_update"></span>
+                                                        </div>
+                                                        
+                                                    </div>
+
+                                                    <!-- Colonne de droite -->
+                                                    <div  style="flex: 1;">
+
+                                                        <div class="form-group">
+                                                            <label for="numcompte_update">Numéro de compte <span class="text-danger">*</span></label>
+                                                            <select class="form-control select2 numcompte_update" name="numcompte_update" id="numcompte_update" required disabled>
+                                                                <option value="">Sélectionnez un numéro de compte</option>
+                                                                @foreach ($numcomptes as $numcompte)
+                                                                    <option value="{{ $numcompte->id }}">{{ $numcompte->num_compte }}</option>
+                                                                @endforeach
+                                                            </select>
+                                                            <span class="text-danger error-num_compte_update"></span>
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label for="ncpf_update">Numéro de compte du produits financier <span class="text-danger">*</span> </label>
+                                                            <input type="text" id="ncpf_update" class="form-control ncpf_update" name="ncpf_update" 
+                                                            placeholder="Numéro de compte du produits financier" readonly required>
+                                                           
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label for="tauxannuel_update">Taux annuel <span class="text-danger">*</span> </label>
+                                                            <input type="text" id="tauxannuel_update" class="form-control tauxannuel_update" name="tauxannuel_update" required>
+                                                            <span class="text-danger error-taux_annuel_update"></span>
                                                         </div>
 
                                                         <div class="form-group">
@@ -262,62 +368,7 @@
                                                                 <span class="text-danger error-date_fin_update"></span>
                                                             </div>
                                                         </div>
-
-                                                        <div class="form-group">
-                                                            <label for="gain_update">Gain total <span class="text-danger">*</span> </label>
-                                                            <input type="text" id="gain_update" class="form-control gain_update" name="gain_update" 
-                                                            placeholder="(Valeur du titre - Valeur d'acquisition du titre) * Durée" data-parsley-type="number" pattern="\d+" readonly required>
-                                                            <span class="text-danger error-gain_update"></span>
-                                                        </div>
                                                         
-                                                    </div>
-
-                                                    <!-- Colonne de droite -->
-                                                    <div  style="flex: 1;">
-
-                                                        <div class="form-group">
-                                                            <label for="nomplacement_update">Nom du placement <span class="text-danger">*</span> </label>
-                                                            <input type="text" id="nomplacement_update" class="form-control nomplacement_update" name="nomplacement_update" 
-                                                            placeholder="Type de placement + taux annuel + année debut - année fin." required>
-                                                            <span class="text-danger error-nom_placement_update"></span>
-                                                        </div>
-
-                                                        <div class="form-group">
-                                                            <label for="sgis_id">SGI <span class="text-danger">*</span></label> 
-                                                            <select class="form-control select2 sgisid_update" name="sgisid_update" id="sgisid_update" required>
-                                                                <option value="">Sélectionnez une SGI</option>
-                                                                @foreach ($sgis as $sgi)
-                                                                <option value="{{$sgi->id}}"> {{$sgi->code_sgi}} ({{ $sgi->num_compte_prod_finan }}) </option>                                                                          
-                                                                @endforeach
-                                                            </select>  
-                                                        </div>
-
-                                                        <div class="form-group">
-                                                            <label for="tauxannuel_update">Taux annuel <span class="text-danger">*</span> </label>
-                                                            <input type="text" id="tauxannuel_update" class="form-control tauxannuel_update" name="tauxannuel_update" required>
-                                                            <span class="text-danger error-taux_annuel_update"></span>
-                                                        </div>
-
-                                                        <div class="form-group">
-                                                            <label for="nbretitre_update">Nombre de titre <span class="text-danger">*</span></label>
-                                                            <input type="text" class="form-control nbretitre_update" name="nbretitre_update" id="nbretitre_update" 
-                                                            placeholder="Le nombre de titre pour ce placement." data-parsley-type="number" pattern="\d+" required>
-                                                            <span class="text-danger error-nbre_titre_update"></span>
-                                                        </div>
-
-                                                        <div class="form-group">
-                                                            <label for="vacqtitre_update">Valeur d'acquisition du titre <span class="text-danger">*</span></label>
-                                                            <input type="text" class="form-control vacqtitre_update" name="vacqtitre_update" id="vacqtitre_update" 
-                                                            placeholder="La valeur d'acquisition du titre." data-parsley-type="number" pattern="\d+" oninput="calculateGain()"  required>
-                                                            <span class="text-danger error-valeur_acq_titre_update"></span>
-                                                        </div>
-
-                                                        <div class="form-group">
-                                                            <label for="dureeannee_update">Durée (en année) <span class="text-danger">*</span> </label>
-                                                            <input type="text" id="dureeannee_update" class="form-control dureeannee_update" name="dureeannee_update"
-                                                            placeholder="Nombre d'année que couvre le placement" pattern="\d+" readonly required>
-                                                            <span class="text-danger error-duree_update"></span>
-                                                        </div>
                                                     </div>
                                                 </div>
                                                 
@@ -450,6 +501,128 @@
                                     </div>
                                 </div>
                             </div>
+
+
+                            <!-- Modal Start DAT -->
+                            <div id="con-close-modal-dat" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+                                
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title mt-0">Modification du placement</h4>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <form  method="POST">
+                                            @csrf
+                                            <div class="modal-body">
+                                                <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+                                                    <div class="form-group">
+                                                        <input type="text" id="placementdat_id" class="form-control placementdat_id" name="placementdat_id" hidden required>  
+                                                    </div>
+                                                    <!-- Colonne de gauche -->
+                                                    <div style="flex: 1;">
+
+                                                        <div class="form-group">
+                                                            <label for="typeplacementdat_update">Type du placement <span class="text-danger">*</span> </label>
+                                                            <input type="text" id="typeplacementdat_update" class="form-control typeplacementdat_update" name="typeplacementdat_update" 
+                                                            placeholder="DAT" readonly required>
+                                                            <span class="text-danger error-type_placementdat_update"></span>
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label for="numcomptedat_update">Numéro de compte <span class="text-danger">*</span></label>
+                                                            <input type="text" class="form-control numcomptedat_update" name="numcomptedat_update" id="numcomptedat_update" 
+                                                            placeholder="Le numéro de compte doit etre uniquement composé de chiffre"  data-parsley-type="number" pattern="\d+" required>
+                                                            <span class="text-danger error-num_comptedat_update"></span>
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label for="periodicitedat_update">Périodicité <span class="text-danger">*</span> </label>
+                                                            <select  class="form-control periodicitedat_update" name="periodicitedat_update" id="periodicitedat_update" required style="cursor: pointer">
+                                                                <option value="">Sélectionnez une périodicité.</option>
+                                                                <option value="Mensuel">Mensuel</option>
+                                                                <option value="Trimestre">Trimestre</option>
+                                                                <option value="Semestre">Semestre</option>
+                                                                <option value="Annuel">Annuel</option>
+                                                            </select>
+                                                            <span class="text-danger error-period_dat_update"></span>
+                                                        </div>
+
+                                                        <div class="form-group">  
+                                                            <label for="tauxperiodedat_update">Taux période <span class="text-danger">*</span></label>  
+                                                            <div class="input-group">  
+                                                                <input type="text" id="tauxperiodedat_update" class="form-control tauxperiodedat_update" name="tauxperiodedat_update" required readonly>  
+                                                                <div class="input-group-append">  
+                                                                    <span class="input-group-text" id="basic-addon2"><i class="fas fa-percent"></i></span>  
+                                                                </div>
+                                                                <span class="text-danger error-taux_periodedat_update"></span>
+                                                            </div>    
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label for="dureeanneedat_update">Durée (en année) <span class="text-danger">*</span> </label>
+                                                            <input type="text" id="dureeanneedat_update" class="form-control dureeanneedat_update" name="dureeanneedat_update"
+                                                            placeholder="Nombre d'année que couvre le placement" pattern="\d+" readonly required>
+                                                            <span class="text-danger error-duree_dat_update"></span>
+                                                        </div>
+
+                                                    </div>
+
+                                                    <!-- Colonne de droite -->
+                                                    <div  style="flex: 1;">
+
+                                                        <div class="form-group">
+                                                            <label for="nomplacementdat_update">Nom du placement <span class="text-danger">*</span> </label>
+                                                            <input type="text" id="nomplacementdat_update" class="form-control nomplacementdat_update" name="nomplacementdat_update" 
+                                                            placeholder="Nom du DAT" required>
+                                                            <span class="text-danger error-nom_placementdat_update"></span>
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label for="sgisiddat_update">Numéro de compte du produits financier <span class="text-danger">*</span></label> 
+                                                            <select class="form-control select2 sgisiddat_update" name="sgisiddat_update" id="sgisiddat_update" required>
+                                                                <option value="">Sélectionnez un numéro de compte</option>
+                                                                @foreach ($sgis as $sgi)
+                                                                <option value="{{$sgi->id}}"> {{ $sgi->num_compte_prod_finan }} </option>                                                                          
+                                                                @endforeach
+                                                            </select>  
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label for="tauxannueldat_update">Taux annuel <span class="text-danger">*</span> </label>
+                                                            <input type="text" id="tauxannueldat_update" class="form-control tauxannueldat_update" name="tauxannueldat_update" required>
+                                                            <span class="text-danger error-taux_annueldat_update"></span>
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label>Plages de dates</label>
+                                                            <div class="input-group">
+                                                                <input type="date" class="form-control datestartdat_update" name="datestartdat_update" placeholder="Date de début" required />
+                                                                <span class="text-danger error-date_debutdat_update"></span>
+                                                                
+                                                                <div class="input-group-append">
+                                                                    <span class="input-group-text bg-custom text-white b-0">à</span>
+                                                                </div>
+                                                                
+                                                                <input type="date" class="form-control dateenddat_update" name="dateenddat_update" placeholder="Date de fin" required />
+                                                                <span class="text-danger error-date_findat_update"></span>
+                                                            </div>
+                                                        </div>   
+                                                       
+                                                    </div>
+                                                </div>
+                                                
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">Annuler</button>
+                                                <button type="button" class="btn-chang btn-dat btn-appliq waves-effect waves-light">Appliquer les changements</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
                         </div> 
 
 
@@ -465,6 +638,8 @@
             <!-- ============================================================== -->
             <!-- End Right content here -->
             <!-- ============================================================== -->
+
+            
 
         </div>
         <!-- END wrapper -->
@@ -518,8 +693,78 @@
 			$('#mainTable').editableTableWidget().numericInputExample().find('td:first').focus();
 		</script>
 
+        {{-- Script qui permet d'afficher le modal SGI sur chaque placement --}}
+        <script>
+            $(document).ready(function() {
+                // Clic sur le bouton pour ouvrir le modal
+                $(document).on('click','.open-modal-btn', function (event) {
+                    event.preventDefault(); // Empêche la redirection par défaut
+
+                    const placementId = $(this).data('placements-id'); // Récupérer l'ID du placement
+                    console.log('ID du placement:', placementId); // Test pour voir si l'ID est récupéré
+
+                    // Charger les SGI associés
+                    loadSGIsForPlacement(placementId);
+                });
+
+                // Fonction pour charger les SGI via AJAX
+                function loadSGIsForPlacement(placementId) {
+                    $.ajax({
+                        url: '/home/liste-des-placements/' + placementId + '/sgis', // Endpoint pour récupérer les SGI
+                        method: 'GET',
+                        success: function(response) {
+                            // Remplir le tableau du modal avec les SGI
+                            $('#SgiTable tbody').html(response);
+                            //$('#sgiModal').modal('show');
+
+                            // Réinitialiser Custombox pour les nouveaux éléments
+                            $('[data-plugin="custommodal"]').off('click').on('click', function(e) {
+                                e.preventDefault();
+                                new Custombox.modal({
+                                    content: {
+                                        effect: $(this).data('animation'),
+                                        target: $(this).attr('href'),
+                                        overlaySpeed: $(this).data('overlaySpeed'),
+                                        overlayColor: $(this).data('overlayColor')
+                                    }
+                                }).open();
+
+                                // Attendez que le modal s'affiche, puis forcez le focus sur le premier champ
+                                setTimeout(function () {
+                                    // Forcer le focus sur le premier champ
+                                    $('#custom-modal input, #custom-modal select').first().focus();
+
+                                    // Réinitialiser Select2 si nécessaire
+                                    $('#custom-modal .select2').select2();
+
+                                    // Corriger pointer-events et opacité
+                                    $('#custom-modal').css('pointer-events', 'auto');
+                                    $('#custom-modal').css('opacity', '1');
+                                }, 500);
+                            });
+                        },
+                        error: function(err) {
+                            console.error('Erreur lors du chargement des SGI :', err);
+                            // alert('Une erreur est survenue lors du chargement des SGI.');
+                            Swal.fire('Erreur', 'Une erreur est survenue lors du chargement des SGI.', 'error');
+                        }
+                    });
+                }
+            });
+        </script>
+
         <script>
             $("input[name='tauxannuel_update']").TouchSpin({
+                min: 0,
+                max: 100,
+                step: 0.01,
+                decimals: 2,
+                boostat: 5,
+                maxboostedstep: 10,
+                postfix: '%'
+            });
+
+            $("input[name='tauxannueldat_update']").TouchSpin({
                 min: 0,
                 max: 100,
                 step: 0.01,
@@ -532,6 +777,7 @@
 
         {{-- Script pour calculer le taux periode  --}}
         <script>
+            //  Script pour calculer le taux periode OBLIGATIONS
             document.addEventListener("DOMContentLoaded", function() {
                 const tauxAnnuelInput = document.querySelector("input[name='tauxannuel_update']");
                 const periodiciteSelect = document.querySelector("#periodicite_update");
@@ -571,6 +817,56 @@
                     calculateTauxPeriode();
                 });
             });
+
+            //Script pour calculer le taux periode DAT
+            $(document).ready(function () {
+                // Fonction pour calculer le taux période
+                function calculateDatTauxPeriode() {
+                    // Récupération et stockage des valeurs dans des variables
+                    const $tauxAnnuelInput = $('#tauxannueldat_update'); // Champ "Taux Annuel"
+                    const $periodiciteInput = $('#periodicitedat_update'); // Champ "Périodicité"
+                    const $tauxPeriodeInput = $('#tauxperiodedat_update'); // Champ "Taux Période"
+
+                    // Conversion et extraction des valeurs
+                    const tauxAnnuel = parseFloat($tauxAnnuelInput.val()); // Valeur du taux annuel
+                    const periodicite = $periodiciteInput.val(); // Valeur de la périodicité
+
+                    // Initialisation du taux période
+                    let tauxPeriode = 0;
+
+                    // Vérification du taux annuel valide
+                    if (isNaN(tauxAnnuel) || tauxAnnuel < 0) {
+                        $tauxPeriodeInput.val(''); // Réinitialise si le taux annuel est invalide
+                        return;
+                    }
+
+                    // Calcul du taux période selon la périodicité
+                    switch (periodicite) {
+                        case 'Mensuel':
+                            tauxPeriode = tauxAnnuel / 12;
+                            break;
+                        case 'Trimestre':
+                            tauxPeriode = tauxAnnuel / 4;
+                            break;
+                        case 'Semestre':
+                            tauxPeriode = tauxAnnuel / 2;
+                            break;
+                        case 'Annuel':
+                            tauxPeriode = tauxAnnuel;
+                            break;
+                        default:
+                            tauxPeriode = 0; // Réinitialise si aucune périodicité n'est sélectionnée
+                    }
+
+                    // Mise à jour du champ "Taux période"
+                    $tauxPeriodeInput.val(tauxPeriode.toFixed(2)); // Formate en 2 décimales
+                }
+
+                // Écoute des changements sur les champs
+                $('#tauxannueldat_update, #periodicitedat_update').on('input change', function () {
+                    calculateDatTauxPeriode();
+                });
+            });
         </script>
 
         {{-- Script qui permet d'afficher le modal --}}
@@ -582,72 +878,56 @@
                     // Effacer les valeurs existantes dans les champs du modal
                     $('.placement_id').val('');
                     $('.typeplacement_update').val('');
+                    $('.nomplacement_update').val('');
                     $('.numcompte_update').val('');
-                    $('.nbretitre_update').val('');
+                    $('.ncpf_update').val('');
                     $('.periodicite_update').val('');
                     $('.tauxannuel_update').val('');
                     $('.tauxperiode_update').val('');
-                    $('.vacqtitre_update').val('');
                     $('.dureeannee_update').val('');
-                    $('.nomplacement_update').val('');
-                    $('.sgisid_update').val('');
-                    $('.valeurtitre_update').val('');
                     $('.datestart_update').val('');
                     $('.dateend_update').val('');
-                    $('.gain_update').val('');
                     
                     // Récupérer les valeurs data-* de l'élément cliqué
                     const placementId = $(this).data('id');
-                    const sgisId = $(this).data('sgisid');
                     const numCompte = $(this).data('numcompte');
                     const nomPlacement = $(this).data('nomplace');
+                    const numCompteProdFinan = $(this).data('ncpf');
                     const periodicite = $(this).data('periodicite');
                     const tauxAnnuel = $(this).data('tauxannuel');
                     const tauxPeriode =  $(this).data('tauxperiode');
                     const typePlacement = $(this).data('typeplace');
                     const duree = $(this).data('duree');
-                    const nbreTitre = $(this).data('nbretitre');
-                    const valeurTitre = $(this).data('valtitre');
-                    const valeurAcqTitre = $(this).data('valacqtitre');
                     const dateDebut = $(this).data('datedebut');
                     const dateFin = $(this).data('datefin');
-                    const gain = $(this).data('gain');
                     
                     // Remplir les champs du modal avec les valeurs récupérées
                     $('.placement_id').val(placementId);
                     $('.typeplacement_update').val(typePlacement);
-                    $('.numcompte_update').val(numCompte);
+                    $('.nomplacement_update').val(nomPlacement);
+                    $('.numcompte_update').val(numCompte).trigger('change');
+                    $('.ncpf_update').val(numCompteProdFinan);
                     $('.periodicite_update').val(periodicite);
                     $('.tauxannuel_update').val(tauxAnnuel);
                     $('.tauxperiode_update').val(tauxPeriode);
-                    $('.nbretitre_update').val(nbreTitre);
-                    $('.vacqtitre_update').val(valeurAcqTitre);
                     $('.dureeannee_update').val(duree);
-                    $('.nomplacement_update').val(nomPlacement);
-                    $('.sgisid_update').val(sgisId);
-                    $('.valeurtitre_update').val(valeurTitre);
                     $('.datestart_update').val(dateDebut);
                     $('.dateend_update').val(dateFin);
-                    $('.gain_update').val(gain);
                 });
 
                 // Réinitialiser les champs lorsque le modal est fermé
                 $('#con-close-modal-obl').on('hidden.bs.modal', function () {
                     $('.placement_id').val('');
                     $('.typeplacement_update').val('');
+                    $('.nomplacement_update').val('');
                     $('.numcompte_update').val('');
+                    $('.ncpf_update').val('');
                     $('.periodicite_update').val('');
                     $('.tauxannuel_update').val('');
                     $('.tauxperiode_update').val('');
-                    $('.nbretitre_update').val('');
-                    $('.vacqtitre_update').val('');
                     $('.dureeannee_update').val('');
-                    $('.nomplacement_update').val('');
-                    $('.sgisid_update').val('');
-                    $('.valeurtitre_update').val('');
                     $('.datestart_update').val('');
                     $('.dateend_update').val('');
-                    $('.gain_update').val('');
                 });
             });
 
@@ -714,8 +994,70 @@
                     $('.gain_actions_update').val('');
                 });
             });
+
+            // Script qui permet d'afficher le modal et les informations concernants les DAT
+            $(document).ready(function () {
+                // Utiliser un écouteur délégué pour les événements 'click' sur les boutons d'édition de DataTables
+                $('#datatable-editable').on('click', '.edit-btn', function () {
+                    // Effacer les valeurs existantes dans les champs du modal
+                    $('.placementdat_id').val('');
+                    $('.typeplacementdat_update').val('');
+                    $('.numcomptedat_update').val('');
+                    $('.periodicitedat_update').val('');
+                    $('.tauxannueldat_update').val('');
+                    $('.tauxperiodedat_update').val('');
+                    $('.dureeanneedat_update').val('');
+                    $('.nomplacementdat_update').val('');
+                    $('.sgisiddat_update').val('');
+                    $('.datestartdat_update').val('');
+                    $('.dateenddat_update').val('');
+                   
+                    
+                    // Récupérer les valeurs data-* de l'élément cliqué
+                    const placementDatId = $(this).data('id');
+                    const sgisDatId = $(this).data('sgisid');
+                    const numCompteDat = $(this).data('numcompte');
+                    const nomPlacementDat = $(this).data('nomplace');
+                    const periodiciteDat = $(this).data('periodicite');
+                    const tauxAnnuelDat = $(this).data('tauxannuel');
+                    const tauxPeriodeDat =  $(this).data('tauxperiode');
+                    const typePlacementDat = $(this).data('typeplace');
+                    const dureeDat = $(this).data('duree');
+                    const dateDatDebut = $(this).data('datedebut');
+                    const dateDatFin = $(this).data('datefin');
+                    
+                    // Remplir les champs du modal avec les valeurs récupérées
+                    $('.placementdat_id').val(placementDatId);
+                    $('.typeplacementdat_update').val(typePlacementDat);
+                    $('.numcomptedat_update').val(numCompteDat);
+                    $('.periodicitedat_update').val(periodiciteDat);
+                    $('.tauxannueldat_update').val(tauxAnnuelDat);
+                    $('.tauxperiodedat_update').val(tauxPeriodeDat);
+                    $('.dureeanneedat_update').val(dureeDat);
+                    $('.nomplacementdat_update').val(nomPlacementDat);
+                    $('.sgisiddat_update').val(sgisDatId);
+                    $('.datestartdat_update').val(dateDatDebut);
+                    $('.dateenddat_update').val(dateDatFin);
+                });
+
+                // Réinitialiser les champs lorsque le modal est fermé
+                $('#con-close-modal-dat').on('hidden.bs.modal', function () {
+                    $('.placementdat_id').val('');
+                    $('.typeplacementdat_update').val('');
+                    $('.numcomptedat_update').val('');
+                    $('.periodicitedat_update').val('');
+                    $('.tauxannueldat_update').val('');
+                    $('.tauxperiodedat_update').val('');
+                    $('.dureeanneedat_update').val('');
+                    $('.nomplacementdat_update').val('');
+                    $('.sgisiddat_update').val('');
+                    $('.datestartdat_update').val('');
+                    $('.dateenddat_update').val('');
+                });
+            });
         </script>
 
+        {{-- Script de la mise a jours des informations --}}
         <script>
             // Script de la mise a jours des informations de placement OBLIGATIONS
             document.addEventListener('DOMContentLoaded', () => {
@@ -725,19 +1067,14 @@
                     // Récupérer les données du formulaire
                     const placementId = document.querySelector('.placement_id').value;
                     const typePlacement = document.querySelector('.typeplacement_update').value;
-                    const numCompte = document.querySelector('.numcompte_update').value;
+                    const nomPlacement = document.querySelector('.nomplacement_update').value;
                     const periodicite = document.querySelector('.periodicite_update').value;
+                    const numCompte = document.querySelector('.numcompte_update').value;
                     const tauxAnnuel = document.querySelector('.tauxannuel_update').value;
                     const tauxPeriode = document.querySelector('.tauxperiode_update').value;
-                    const nbreTitre = document.querySelector('.nbretitre_update').value;
-                    const valeurTitre = document.querySelector('.valeurtitre_update').value;
-                    const valeurAcqTitre = document.querySelector('.vacqtitre_update').value;
                     const duree = document.querySelector('.dureeannee_update').value;
-                    const nomPlacement = document.querySelector('.nomplacement_update').value;
-                    const sgisId = document.querySelector('.sgisid_update').value;
                     const dateDebut = document.querySelector('.datestart_update').value;
                     const dateFin = document.querySelector('.dateend_update').value;
-                    const gain = document.querySelector('.gain_update').value;
 
                     // Préparer les données pour l'envoi
                     const data = {
@@ -748,15 +1085,10 @@
                         periodicite: periodicite,
                         taux_annuel: tauxAnnuel,
                         taux_periode: tauxPeriode,
-                        nbre_titre: nbreTitre,
-                        valeur_titre: valeurTitre,
-                        valeur_acq_titre: valeurAcqTitre,
                         duree: duree,
                         nom_placement: nomPlacement,
-                        sgis_id: sgisId,
                         date_debut: dateDebut,
                         date_fin: dateFin,
-                        gain: gain
                     };
 
                     try {
@@ -878,6 +1210,82 @@
                     }
                 });
             });
+
+            // Script de la mise a jours des informations de placement DAT
+            document.addEventListener('DOMContentLoaded', () => {
+                document.querySelector('.btn-dat').addEventListener('click', async (e) => {
+                    e.preventDefault();
+
+                    // Récupérer les données du formulaire
+                    const placementDatId = document.querySelector('.placementdat_id').value;
+                    const typePlacementDat = document.querySelector('.typeplacementdat_update').value;
+                    const numDatCompte = document.querySelector('.numcomptedat_update').value;
+                    const periodiciteDat = document.querySelector('.periodicitedat_update').value;
+                    const tauxAnnuelDat = document.querySelector('.tauxannueldat_update').value;
+                    const tauxPeriodeDat = document.querySelector('.tauxperiodedat_update').value;
+                    const dureeDat = document.querySelector('.dureeanneedat_update').value;
+                    const nomPlacementDat = document.querySelector('.nomplacementdat_update').value;
+                    const sgisDatId = document.querySelector('.sgisiddat_update').value;
+                    const dateDatDebut = document.querySelector('.datestartdat_update').value;
+                    const dateDatFin = document.querySelector('.dateenddat_update').value;
+
+                    // Préparer les données pour l'envoi
+                    const data = {
+                        _token: '{{ csrf_token() }}', // Token CSRF pour la sécurité
+                        id_dat: placementDatId,
+                        type_placementdat: typePlacementDat,
+                        num_comptedat: numDatCompte,
+                        period_dat: periodiciteDat,
+                        taux_annueldat: tauxAnnuelDat,
+                        taux_periodedat: tauxPeriodeDat,
+                        duree_dat: dureeDat,
+                        nom_placementdat: nomPlacementDat,
+                        sgis_iddat: sgisDatId,
+                        date_debutdat: dateDatDebut,
+                        date_findat: dateDatFin,
+                    };
+
+                    try {
+                        // Envoyer la requête avec Fetch API
+                        const response = await fetch('/home/liste-des-placements/modifier-dat', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(data),
+                        });
+
+                        const result = await response.json(); // Convertir la réponse en JSON
+
+                        if (response.ok && result.success) {
+                            Swal.fire({
+                                title: 'Succès',
+                                text: result.message,
+                                type: 'success',
+                                confirmButtonColor: '#4fa7f3',
+                            }).then(() => {
+                                location.reload(); // Recharger la page après confirmation
+                            });
+                        } else {
+                            // Réinitialiser les messages d'erreur
+                            document.querySelectorAll('.text-danger').forEach(el => el.textContent = '');
+
+                            // Afficher les erreurs spécifiques
+                            if (response.status === 422 && result.errors) {
+                                Object.keys(result.errors).forEach(key => {
+                                    const errorElement = document.querySelector(`.error-${key}_update`);
+                                    if (errorElement) {
+                                        errorElement.textContent = result.errors[key][0];
+                                    }
+                                });
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Erreur lors de la requête :', error);
+                        Swal.fire('Erreur', 'Une erreur est survenue. Veuillez réessayer.', 'error');
+                    }
+                });
+            });
         </script>
 
         {{-- Script permettant de calculer la durée en année --}}
@@ -942,6 +1350,49 @@
                 dateStartActionsInput.addEventListener('change', calculateDuration);
                 dateEndActionsInput.addEventListener('change', calculateDuration);
             });
+
+            //Script du calcul de la durée en année DAT
+            $(document).ready(function () {
+                // Fonction pour calculer la durée en années en utilisant uniquement les années
+                function calculerDureeEnAnnees() {
+                    // Récupération des champs DOM et des valeurs
+                    const $dateStartInput = $('.datestartdat_update'); // Champ "Date de début"
+                    const $dateEndInput = $('.dateenddat_update'); // Champ "Date de fin"
+                    const $dureeAnneeInput = $('.dureeanneedat_update'); // Champ "Durée (en années)"
+
+                    // Extraction des années à partir des dates saisies
+                    const dateStart = new Date($dateStartInput.val());
+                    const dateEnd = new Date($dateEndInput.val());
+
+                    // Validation : Vérifier si les dates sont valides
+                    if (isNaN(dateStart.getTime()) || isNaN(dateEnd.getTime())) {
+                        $dureeAnneeInput.val(''); // Réinitialise le champ "Durée" si une date est invalide
+                        return;
+                    }
+
+                    // Récupérer uniquement les années des dates
+                    const anneeStart = dateStart.getFullYear(); // Année de la date de début
+                    const anneeEnd = dateEnd.getFullYear(); // Année de la date de fin
+
+                    // Calcul de la différence entre les années
+                    const dureeEnAnnees = anneeEnd - anneeStart;
+
+                    // Vérifier si la durée est négative (date de fin avant date de début)
+                    if (dureeEnAnnees < 0) {
+                        $dureeAnneeInput.val(''); // Réinitialise si la date de fin est avant la date de début
+                        return;
+                    }
+
+                    // Mise à jour du champ "Durée (en années)" avec le résultat
+                    $dureeAnneeInput.val(dureeEnAnnees);
+                }
+
+                // Ajouter des écouteurs d'événements sur les champs de dates
+                $('.datestartdat_update, .dateenddat_update').on('change', function () {
+                    calculerDureeEnAnnees(); // Appelle la fonction lorsque l'une des dates est modifiée
+                });
+            });
+
         </script>
 
         {{-- Script permettant de calculer le gain --}}
