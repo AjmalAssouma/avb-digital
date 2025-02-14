@@ -22,6 +22,8 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{asset('assets/style.css')}}">
 
+    <link href="{{asset('assetss/css/icons.css')}}" rel="stylesheet" type="text/css" />
+
     <style>
         .otp-inputs {
         display: flex;
@@ -31,7 +33,7 @@
         }
 
         .otp-input {
-        width: 40px;
+        width: 50px;
         height: 50px;
         text-align: center;
         font-size: 18px;
@@ -82,7 +84,8 @@
                                 @csrf
                                 <div style="margin-top: -20px">
                                     @if (session('success'))
-                                        <div class="alert alert-success" style="text-align: center; font-size: 14px; padding: 10px 5px; margin-top: -40px">
+                                        <div class="alert alert-success" style="text-align: center; font-size: 15px; padding: 10px 5px; margin-top: -40px">
+                                            <i class="mdi mdi-check-all"></i>
                                             {{ session('success') }}
                                         </div>
                                     @endif
@@ -174,20 +177,68 @@
             document.getElementById('resendOtpForm').submit();
         });
 
+        document.addEventListener("DOMContentLoaded", () => {
+            const resendOtpButton = document.getElementById("resendOtpButton");
+            const resendOtpForm = document.getElementById("resendOtpForm");
+            const resendText = document.getElementById("resendText");
+            const countdownDuration = 10; // Temps de décompte en secondes
 
-        document.getElementById('resendOtpButton').disabled = true;
-        let resendTimeout = 10; // temps en secondes
+            // Vérifier si un décompte est déjà enregistré dans localStorage
+            const storedTimestamp = localStorage.getItem("resendStartTime");
 
-        const interval = setInterval(() => {
-            resendTimeout--;
-            document.getElementById('resendText').innerText = `Renvoyer le code (${resendTimeout})`;
+            if (storedTimestamp) {
+                const elapsedTime = Math.floor((Date.now() - storedTimestamp) / 1000);
+                const remainingTime = countdownDuration - elapsedTime;
 
-            if (resendTimeout <= 0) {
-                document.getElementById('resendOtpButton').disabled = false;
-                document.getElementById('resendText').innerText = 'Renvoyer le code';
-                clearInterval(interval);
+                if (remainingTime > 0) {
+                    startCountdown(remainingTime); // Reprendre le décompte si encore valide
+                } else {
+                    clearCountdown(); // Supprimer les données si le temps est écoulé
+                }
             }
-        }, 1000);
+
+            // Gérer le clic sur le bouton "Renvoyer le code"
+            resendOtpButton.addEventListener("click", () => {
+                // Soumettre le formulaire pour renvoyer le code
+                resendOtpForm.submit();
+
+                // Désactiver le bouton immédiatement après le clic
+                resendOtpButton.disabled = true;
+                resendOtpButton.style.backgroundColor = "#a9a9a9"; // Couleur désactivée
+                resendOtpButton.style.cursor = "not-allowed";
+
+                // Sauvegarder l'heure de début du décompte
+                localStorage.setItem("resendStartTime", Date.now());
+            });
+
+            // Fonction pour démarrer le décompte
+            function startCountdown(timeLeft) {
+                resendOtpButton.disabled = true;
+                resendOtpButton.style.backgroundColor = "#a9a9a9";
+                resendOtpButton.style.cursor = "not-allowed";
+
+                const interval = setInterval(() => {
+                    timeLeft--;
+                    resendText.innerText = `Renvoyer le code (${timeLeft}s)`;
+
+                    if (timeLeft <= 0) {
+                        clearInterval(interval);
+                        clearCountdown();
+
+                        // Réactiver le bouton
+                        resendOtpButton.disabled = false;
+                        resendOtpButton.style.backgroundColor = "#131212"; // Couleur initiale
+                        resendOtpButton.style.cursor = "pointer";
+                        resendText.innerText = "Renvoyer le code";
+                    }
+                }, 1000);
+            }
+
+            // Fonction pour effacer les données du décompte
+            function clearCountdown() {
+                localStorage.removeItem("resendStartTime");
+            }
+        });
     </script>
 
 

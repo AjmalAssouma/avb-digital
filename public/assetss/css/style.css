@@ -1720,9 +1720,15 @@ body.enlarged.bg-transparent {
 
 .sgi-button{
   width: 160px;  
-  height: 40px;
+  height: 50px;
+  border-radius: 5px;
   font-size: 16px;  
-  font-weight: 500;  
+  font-weight: 400;  
+}
+
+.sgi-button i{
+  margin-right: 7px;
+  margin-left: -10px;
 }
 
 .sgi-sub{
@@ -1743,6 +1749,107 @@ body.enlarged.bg-transparent {
 .btn-success {
   background-color: #78c350 !important;
   border: 1px solid #78c350 !important;
+}
+
+/* Zone de téléversement */
+.file-upload-area {
+  position: relative;
+  border: 2px dashed #36404a;
+  border-radius: 10px;
+  padding: 30px;
+  text-align: center;
+  cursor: pointer;
+  background-color: #f9f9f9;
+  transition: background-color 0.3s ease;
+}
+
+.file-upload-area:hover {
+  background-color: #e6f7ff;
+  border-color: #007bff;
+}
+
+.file-upload-area .upload-label {
+  display: block;
+  color: #555;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.file-upload-area .upload-label i {
+  color: #007bff;
+  margin-bottom: 10px;
+}
+
+.file-upload-area .upload-label .highlight {
+  color: #007bff;
+  font-weight: bold;
+}
+
+.file-upload-area .file-info {
+  font-size: 14px;
+  color: #999;
+}
+
+/* Masquer l'input de fichier */
+.file-input {
+  display: none;
+}
+
+/* Boutons */
+.form-actions {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.btns {
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.btn-primport {
+  background-color: #32b04a;
+  color: white;
+  border: none;
+}
+
+.btn-primport:hover {
+  background-color: #32b04a;
+}
+
+.btn-secann {
+  background-color: #f9f9f9;
+  color: #555;
+  border: 1px solid #ccc;
+}
+
+.btn-secann:hover {
+  background-color: #e6e6e6;
+  color: #333;
+}
+
+.btn-importsgi {
+  font-size: 15px;
+  border-radius: 5px 5px 0px 0px;
+  height: 50px;
+  width: 120px;
+  color: #ffffff;
+  background-color: #626661 !important;
+  border: 1px solid #434642 !important;
+}
+
+.btn-importsgi i{
+  margin-right: 7px;
+}
+
+
+.btn-importsgi:hover, .btn-importsgi:focus, .btn-importsgi:active, .btn-importsgi.active, .btn-importsgi.focus, .btn-importsgi:active, .btn-importsgi:focus, .btn-importsgi:hover, .open > .dropdown-toggle.btn-importsgi {
+  color: #ffffff;
+  background-color: #434642 !important;
+  border-color: #434642 !important;
 }
 
 .btn-success:hover, .btn-success:focus, .btn-success:active, .btn-success.active, .btn-success.focus, .btn-success:active, .btn-success:focus, .btn-success:hover, .open > .dropdown-toggle.btn-success {
@@ -2185,7 +2292,7 @@ body.enlarged.bg-transparent {
 /* Custom-modal */
 .modal-demo {
   background-color: #ffffff;
-  width: 600px;
+  width: 750px;
   border-radius: 4px;
   display: none;
   position: relative;
@@ -2196,21 +2303,22 @@ body.enlarged.bg-transparent {
   top: 15px;
   right: 15px;
   color: #7a7a7a;
-  font-weight: 400;
+  font-weight: 500;
 }
 
 .custom-modal-title {
   padding: 15px 25px 15px 25px;
-  line-height: 22px;
-  font-size: 18px;
+  line-height: 25px;
+  font-size: 20px;
   background-color: #313a46;
   color: #ffffff;
+  border-radius: 4px;
   text-align: left;
   margin: 0;
 }
 
 .custom-modal-text {
-  padding: 20px;
+  padding: 40px;
 }
 
 .custombox-modal-flash .close, .custombox-modal-rotatedown .close {

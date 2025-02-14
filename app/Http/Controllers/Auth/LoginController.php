@@ -326,13 +326,13 @@ class LoginController extends Controller implements \Illuminate\Routing\Controll
             if ($fieldType === 'phone') {
 
                 // Envoyer le SMS avec l'OTP
-                $smsContent = "Votre code de vérification est : " . $newOtp;
-                self::sendSMS($identifier, $smsContent);
+                // $smsContent = "Votre code de vérification est : " . $newOtp;
+                // self::sendSMS($identifier, $smsContent);
                 return redirect()->back()->with('success', 'Un nouveau code de verification a été renvoyé par SMS.');
             }elseif ($fieldType === 'email') {
 
                 // Envoi de l'email avec l'OTP
-                $this->notif($user->email, $newOtp);
+                // $this->notif($user->email, $newOtp);
                 return redirect()->back()->with('success', 'Un nouveau code de verification a été renvoyé par email.');
             }
         }

@@ -39,40 +39,40 @@
         <!-- Buttons for export functionality -->
         {{-- <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.bootstrap5.min.css"> --}}
 
-    <style>
-        .custom-modal-content {
-            background: #fdfffd;
-            border-radius: 10px;
-            padding: 30px;
-            max-width: 500px;
-            width: 100%;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-        }
-        .custom-modal-title {
-            font-size: 1.5rem;
-            font-weight: 600;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .upload-area {
-            border: 2px dashed #6c757d;
-            border-radius: 10px;
-            padding: 40px;
-            text-align: center;
-            background-color: #f8f9fa;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-        .upload-area:hover {
-            background-color: #e9ecef;
-        }
-        .upload-area input[type="file"] {
-            display: none;
-        }
-        .btn-success {
-            width: 100%;
-        }
-    </style>
+        <style>
+            .custom-modal-content {
+                background: #fdfffd;
+                border-radius: 10px;
+                padding: 30px;
+                max-width: 500px;
+                width: 100%;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            }
+            .custom-modal-title {
+                font-size: 1.5rem;
+                font-weight: 600;
+                text-align: center;
+                margin-bottom: 20px;
+            }
+            .upload-area {
+                border: 2px dashed #6c757d;
+                border-radius: 10px;
+                padding: 40px;
+                text-align: center;
+                background-color: #f8f9fa;
+                cursor: pointer;
+                transition: background-color 0.3s ease;
+            }
+            .upload-area:hover {
+                background-color: #e9ecef;
+            }
+            .upload-area input[type="file"] {
+                display: none;
+            }
+            .btn-success {
+                width: 100%;
+            }
+        </style>
     </head>
 
 

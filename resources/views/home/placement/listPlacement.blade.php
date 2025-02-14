@@ -143,18 +143,27 @@
                                                             <button type="button" 
                                                                 style="display: inline-block;" 
                                                                 class="btn btn-del waves-effect waves-light delete-btn"
-                                                                data-id="{{$placement->id}}">
+                                                                data-id="{{$placement->id}}"
+                                                            >
                                                                 <i class="fa fa-trash-o"></i>
                                                             </button>
 
                                                             <button type="button" 
                                                                 class="btn btn-voirsgi waves-effect waves-light open-modal-btn" 
+                                                                data-toggle="modal" 
+                                                                data-target="#custom-width-modal"
                                                                 data-placements-id="{{ $placement->id }}"
-                                                                data-toggle="modal"
-                                                                data-target="#sgiModal"
                                                             >
-                                                                <i class="fa fa-eye"></i>Voir les SGI
+                                                                <i class="fa fa-eye" style="font-size: 15px"></i> SGI
                                                             </button>
+
+                                                            <a href="#full-width-modal" 
+                                                                class="btn btn-tumblr waves-effect waves-light"
+                                                                data-toggle="modal"
+                                                                data-placeta-id="{{ $placement->id }}"
+                                                            >
+                                                                <i class="mdi mdi-bulletin-board"  style="font-size: 15px"></i> TA
+                                                            </a>
 
                                                             {{-- <a href="{{ route('details.placement', ['id' => Crypt::encrypt($placement->id)]) }}" 
                                                                 class="btn waves-effect waves-light btn-success">
@@ -172,67 +181,40 @@
 								</div>
                             </div>
 
+
                             <!-- Modal -->
-                            <div id="custom-modal" class="modal-demo">
+                            {{-- <div id="custom-modal" class="modal-demo custombox">
                                 <button type="button" class="close" onclick="Custombox.modal.close();">
                                     <span>&times;</span><span class="sr-only">Close</span>
                                 </button>
-                                <h4 class="custom-modal-title">Modification de la SGI</h4>
+                                <h4 class="custom-modal-title">SGI</h4>
                                 <div class="modal-body">
-                                    <form >
-                                        @csrf
-                                       <div class="row">
-                                            <div class="col-lg-6">
-                                                <div class="form-group">
-                                                    <label for="sgis_id">SGI <span class="text-danger">*</span></label>
-                                                    <select class="form-control select2" name="" id="sgis_id" required>
-                                                        <option value="">Sélectionnez une SGI</option>
-                                                        @foreach ($sgis as $sgi)
-                                                            <option value="{{ $sgi->id }}">{{ $sgi->code_sgi }} ({{ $sgi->num_compte_tresor }})</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-
-                                                <div class="form-group">
-                                                    <label for="valeur_titre">Valeur du titre <span class="text-danger">*</span></label>
-                                                    <input type="text" class="form-control valeur_titre" name="" id=""
-                                                        placeholder="La valeur du titre."  required>
-                                                </div>
-
-                                                <div class="form-group">
-                                                    <label for="gain">Gain total <span class="text-danger">*</span></label>
-                                                    <input type="text" id="gain" class="form-control gain" name=""
-                                                        placeholder="(Valeur du titre - Valeur d'acquisition du titre)" readonly required>
-                                                </div>
-                                            </div>
-
-                                            <div class="col-lg-6">
-                                                <div class="form-group">
-                                                    <label for="nbre_titre">Nombre de titre <span class="text-danger">*</span></label>
-                                                    <input type="text" class="form-control nbre_titre" name="" id=""
-                                                        placeholder="Le nombre de titre."  required>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="vacq_titre">Valeur d'acquisition du titre <span class="text-danger">*</span></label>
-                                                    <input type="text" class="form-control vacq_titre" name="" id=""
-                                                        placeholder="La valeur d'acquisition du titre." required>
-                                                </div>
-                                            </div>
-                                       </div>
-                                    </form>
+                                    <table class="table table-striped add-edit-table table-bordered dt-responsive responsive" id="SgiTable" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+                                        <thead>
+                                            <tr>
+                                                
+                                                <th>SGI</th> 
+                                                <th>Nombre de titre</th>
+                                                <th>Valeur nominale du titre</th>
+                                                <th>Valeur d'acquisition du titre</th>
+                                                <th style="width: 100px">Gain</th>
+                                                <th style="width: 100px">Actions</th>
+                        
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            
+                                        </tbody>
+                                    </table>
                                 </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary waves-effect" class="close" onclick="Custombox.modal.close();">Annuler</button>
-                                    <button type="button" class="btn-chang btn-appliq waves-effect waves-light">Appliquer les changements</button>
-                                </div>
-                            </div>
+                            </div> --}}
 
-                            {{-- Modal pour afficher les SGI de chaque placement --}}
-                            <div class="modal fade bs-example-modal-lg" id="sgiModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" style="display: none;">
-                                <div class="modal-dialog modal-lg">
-                                    <div class="modal-content modal-lg" style="width: 100%">
+
+                            <div id="custom-width-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="custom-width-modalLabel" aria-hidden="true" style="display: none;">
+                                <div class="modal-dialog" style="width:65%;max-width: none;">
+                                    <div class="modal-content">
                                         <div class="modal-header">
-                                            <h4 class="modal-title mt-0" id="myLargeModalLabel">SGI</h4>
+                                            <h4 class="modal-title mt-0" id="custom-width-modalLabel">SGI</h4>
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
@@ -241,14 +223,14 @@
                                             <table class="table table-striped add-edit-table table-bordered dt-responsive responsive" id="SgiTable" style="border-collapse: collapse; border-spacing: 0; width: 100%;">
                                                 <thead>
                                                     <tr>
-                                                        
-                                                        <th>SGI</th> 
+                                                        <th>SGI</th>
+                                                        <th hidden>Id Placement</th>
+                                                        <th hidden>Id Sgis</th>
                                                         <th>Nombre de titre</th>
-                                                        <th>Valeur du titre</th>
+                                                        <th>Valeur nominale du titre</th>
                                                         <th>Valeur d'acquisition du titre</th>
-                                                        <th>Gain</th>
-                                                        <th >Actions</th>
-                                
+                                                        <th style="width: 150px">Gain</th>
+                                                        <th>Actions</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -260,6 +242,28 @@
                                 </div><!-- /.modal-dialog -->
                             </div><!-- /.modal -->
 
+                            {{-- MODAL TABLEAU AMORTISSEMENT --}}
+                            <div id="full-width-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="full-width-modalLabel" aria-hidden="true" style="display: none;">
+                                <div class="modal-dialog modal-full">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title mt-0" id="full-width-modalLabel">TABLEAU D'AMORTISSEMENT</h4>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="table-responsive">
+                                               
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary waves-effect" data-dismiss="modal">Close</button>
+                                            <button type="button" class="btn btn-primary waves-effect waves-light">Save changes</button>
+                                        </div>
+                                    </div><!-- /.modal-content -->
+                                </div><!-- /.modal-dialog -->
+                            </div>
 
                             <!-- Modal Start OBLIGATIONS -->
                             <div id="con-close-modal-obl" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
@@ -689,67 +693,200 @@
         <script src="{{asset('assetss/js/jquery.core.js')}}"></script>
         <script src="{{asset('assetss/js/jquery.app.js')}}"></script>
 
-        <script>
+        {{-- <script>
 			$('#mainTable').editableTableWidget().numericInputExample().find('td:first').focus();
-		</script>
+		</script> --}}
 
         {{-- Script qui permet d'afficher le modal SGI sur chaque placement --}}
         <script>
-            $(document).ready(function() {
+            $(document).ready(function () {
                 // Clic sur le bouton pour ouvrir le modal
-                $(document).on('click','.open-modal-btn', function (event) {
+                $(document).on('click', '.open-modal-btn', function (event) {
                     event.preventDefault(); // Empêche la redirection par défaut
-
+            
                     const placementId = $(this).data('placements-id'); // Récupérer l'ID du placement
-                    console.log('ID du placement:', placementId); // Test pour voir si l'ID est récupéré
-
+                    console.log('ID du placement:', placementId);
+            
                     // Charger les SGI associés
                     loadSGIsForPlacement(placementId);
                 });
-
+            
                 // Fonction pour charger les SGI via AJAX
                 function loadSGIsForPlacement(placementId) {
                     $.ajax({
                         url: '/home/liste-des-placements/' + placementId + '/sgis', // Endpoint pour récupérer les SGI
                         method: 'GET',
-                        success: function(response) {
+                        success: function (response) {
                             // Remplir le tableau du modal avec les SGI
                             $('#SgiTable tbody').html(response);
-                            //$('#sgiModal').modal('show');
-
-                            // Réinitialiser Custombox pour les nouveaux éléments
-                            $('[data-plugin="custommodal"]').off('click').on('click', function(e) {
-                                e.preventDefault();
-                                new Custombox.modal({
-                                    content: {
-                                        effect: $(this).data('animation'),
-                                        target: $(this).attr('href'),
-                                        overlaySpeed: $(this).data('overlaySpeed'),
-                                        overlayColor: $(this).data('overlayColor')
-                                    }
-                                }).open();
-
-                                // Attendez que le modal s'affiche, puis forcez le focus sur le premier champ
-                                setTimeout(function () {
-                                    // Forcer le focus sur le premier champ
-                                    $('#custom-modal input, #custom-modal select').first().focus();
-
-                                    // Réinitialiser Select2 si nécessaire
-                                    $('#custom-modal .select2').select2();
-
-                                    // Corriger pointer-events et opacité
-                                    $('#custom-modal').css('pointer-events', 'auto');
-                                    $('#custom-modal').css('opacity', '1');
-                                }, 500);
-                            });
                         },
-                        error: function(err) {
+                        error: function (err) {
                             console.error('Erreur lors du chargement des SGI :', err);
-                            // alert('Une erreur est survenue lors du chargement des SGI.');
                             Swal.fire('Erreur', 'Une erreur est survenue lors du chargement des SGI.', 'error');
                         }
                     });
                 }
+            });
+        </script>
+
+        {{-- Script qui permet d'afficher le TA --}}
+        <script>
+            $(document).ready(function () {
+                // Écouteur d'événements pour le clic sur le lien
+                $(document).on("click", ".btn-tumblr", function (e) {
+                    e.preventDefault(); // Empêche le comportement par défaut du lien
+
+                    let placementId = $(this).data("placeta-id"); // Récupère l'id du placement
+
+                    if (!placementId) {
+                        alert("ID du placement introuvable !");
+                        return;
+                    }
+
+                    // Envoi de la requête AJAX avec Fetch API et jQuery
+                    fetch("/home/liste-des-placements/" + placementId + "/ta", {
+                        method: "GET",
+                        headers: {
+                            "X-Requested-With": "XMLHttpRequest", // Spécifie qu'il s'agit d'une requête AJAX
+                            "Content-Type": "application/json",
+                        }
+                    })
+                    .then(response => response.json()) // Conversion de la réponse en JSON
+                    .then(data => {
+                        if (data.success) {
+                            // Mettre à jour le modal avec le contenu renvoyé
+                            $(".modal-body .table-responsive").html(data.html);
+
+                            // Ouvrir le modal
+                            $("#full-width-modal").modal("show");
+                        } else {
+                            alert("Erreur : " + data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Erreur lors de la récupération des données :", error);
+                        alert("Une erreur s'est produite, veuillez réessayer.");
+                    });
+                });
+            });
+        </script>
+
+        {{-- Script pour gérer les différents actions sur l'affichage des Sgi sur un placement --}}
+        <script>
+            $(document).on("click", ".edit-row", function (e) {
+                e.preventDefault();
+                
+                let row = $(this).closest("tr");
+
+                // Récupération des valeurs actuelles
+                let codeSGI = row.find(".code-sgi").text().trim();
+                let placementsId = row.find(".placements-id").data("value");
+                let sgisId = row.find(".sgis-id").data("value");
+                let nbreTitre = row.find(".nbre-titre").data("value");
+                let valeurTitre = row.find(".valeur-titre").data("value");
+                let valeurAcqTitre = row.find(".valeur-acq-titre").data("value");
+                let gain = row.find(".gain").data("value");
+
+                // Remplacement du texte par des champs input
+                row.find(".code-sgi").html(`<input type="text" class="form-control input-lg-6" value="${codeSGI}" disabled>`);
+                row.find(".placements-id").html(`<input type="text" class="form-control input-lg-6" value="${placementsId}" disabled>`);
+                row.find(".sgis-id").html(`<input type="text" class="form-control input-lg-6" value="${sgisId}" disabled>`);
+                row.find(".nbre-titre").html(`<input type="text" class="form-control input-lg-6" value="${nbreTitre}">`);
+                row.find(".valeur-titre").html(`<input type="text" class="form-control input-lg-6" value="${valeurTitre}">`);
+                row.find(".valeur-acq-titre").html(`<input type="text" class="form-control input-lg-6" value="${valeurAcqTitre}">`);
+                row.find(".gain").html(`<input type="text" class="form-control input-lg-6" value="${gain}">`);
+
+                // Afficher les boutons "Enregistrer" et "Annuler", masquer "Modifier"
+                row.find(".edit-row").hide();
+                row.find(".save-row, .cancel-row").removeClass("hidden");
+            });
+
+            $(document).on("click", ".cancel-row", function (e) {
+                e.preventDefault();
+                
+                let row = $(this).closest("tr");
+
+                // Restaurer les valeurs initiales
+                row.find(".code-sgi").text(row.find(".code-sgi input").val());
+                row.find(".placements-id").text(row.find(".placements-id input").val());
+                row.find(".sgis-id").text(row.find(".sgis-id input").val());
+                row.find(".nbre-titre").text(row.find(".nbre-titre input").val());
+                row.find(".valeur-titre").text(row.find(".valeur-titre input").val());
+                row.find(".valeur-acq-titre").text(row.find(".valeur-acq-titre input").val());
+                row.find(".gain").text(row.find(".gain input").val());
+
+                // Restaurer l'affichage des boutons
+                row.find(".edit-row").show();
+                row.find(".save-row, .cancel-row").addClass("hidden");
+            });
+
+            $(document).on("click", ".save-row", function (e) {
+                e.preventDefault();
+                
+                let row = $(this).closest("tr");
+
+                // Récupérer les valeurs modifiées
+                let placementId = row.find(".placements-id input").val(); // ID du placement
+                let sgisId = row.find(".sgis-id input").val(); // ID de la Sgi
+                let codeSGI = row.find(".code-sgi input").val();
+                let nbreTitre = row.find(".nbre-titre input").val();
+                let valeurTitre = row.find(".valeur-titre input").val();
+                let valeurAcqTitre = row.find(".valeur-acq-titre input").val();
+                let gain = row.find(".gain input").val();
+
+                console.log(placementId);
+                console.log(sgisId);
+
+                // Envoyer les données via AJAX (Fetch API avec jQuery)
+                $.ajax({
+                    url: "/home/liste-des-placements/update-sgi", // URL de l'action dans PlacementController
+                    method: "POST",
+                    data: {
+                        placement_id: placementId,
+                        sgi_id: sgisId,
+                        nbre_titre: nbreTitre,
+                        valeur_titre: valeurTitre,
+                        valeur_acq_titre: valeurAcqTitre,
+                        gain: gain,
+                        _token: '{{ csrf_token() }}'  // Récupérer le token CSRF
+                    },
+                    dataType: "json",
+                    success: function (response) {
+                        if (response.success) {
+                            Swal.fire({
+                                title: "Succès",
+                                text: response.message,
+                                type: "success",
+                                showConfirmButton: true
+                            });
+
+                            // Mettre à jour les valeurs affichées
+                            row.find(".code-sgi").text(codeSGI);
+                            row.find(".nbre-titre").text(nbreTitre);
+                            row.find(".valeur-titre").text(valeurTitre);
+                            row.find(".valeur-acq-titre").text(valeurAcqTitre);
+                            row.find(".gain").text(gain);
+
+                            // Restaurer les boutons
+                            row.find(".edit-row").show();
+                            row.find(".save-row, .cancel-row").addClass("hidden");
+                        }
+                    },
+                    error: function (xhr) {
+                        let errors = xhr.responseJSON.errors;
+                        let errorMessage = "Veuillez corriger les erreurs suivantes :\n";
+                        $.each(errors, function (key, value) {
+                            errorMessage += `- ${value[0]}\n`;
+                        });
+
+                        Swal.fire({
+                            title: "Erreur",
+                            text: errorMessage,
+                            type: "error",
+                            confirmButtonText: "OK"
+                        });
+                    }
+                });
             });
         </script>
 

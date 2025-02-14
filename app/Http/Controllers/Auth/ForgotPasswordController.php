@@ -256,10 +256,10 @@ class ForgotPasswordController extends Controller
 
          // Envoi de l'OTP
         if ($isEmail) {
-            $this->notif($user->email, $otp);
+            // $this->notif($user->email, $otp);
             return redirect()->back()->with('success', 'Un nouveau code de verification a été renvoyé par email.');
         } elseif($identifier) {
-            $this->sendSMS($identifier, "Votre code de vérification est : $otp");
+            // $this->sendSMS($identifier, "Votre code de vérification est : $otp");
             return redirect()->back()->with('success', 'Un nouveau code de verification a été renvoyé par SMS.');
         }
 

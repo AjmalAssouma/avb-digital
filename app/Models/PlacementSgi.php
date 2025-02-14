@@ -14,4 +14,8 @@ class PlacementSgi extends Model
         return $this->belongsTo(Sgi::class, 'sgis_id');
     }
 
+    public function placement()
+    {
+        return $this->belongsTo(Placement::class, 'placements_id');
+    }
 }

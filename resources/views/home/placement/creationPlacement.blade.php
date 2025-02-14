@@ -262,7 +262,7 @@
                                                                                         </div>
 
                                                                                         <div class="form-group">
-                                                                                            <label for="valeur_titre_0">Valeur du titre <span class="text-danger">*</span></label>
+                                                                                            <label for="valeur_titre_0">Valeur nominale du titre <span class="text-danger">*</span></label>
                                                                                             <input type="text" class="form-control valeur_titre" name="sgis[0][valeur_titre]" id="valeur_titre_0"
                                                                                                 placeholder="La valeur du titre." data-parsley-type="number" value="{{old('sgis.0.valeur_titre')}}" required>
                                                                                             @error('sgis.0.valeur_titre')
@@ -273,12 +273,14 @@
                                                                                         <div class="form-group">
                                                                                             <label for="gain_0">Gain total <span class="text-danger">*</span></label>
                                                                                             <input type="text" id="gain_0" class="form-control gain" name="sgis[0][gain]"
-                                                                                                placeholder="(Valeur du titre - Valeur d'acquisition du titre)" data-parsley-type="number" value="{{old('sgis.0.gain')}}" readonly required>
+                                                                                                placeholder="(Valeur du titre - Valeur d'acquisition du titre)*Nombre de titre" data-parsley-type="number" value="{{old('sgis.0.gain')}}" readonly required>
                                                                                             @error('sgis.0.gain')
                                                                                                 <div class="text-danger">{{ $message }}</div>
                                                                                             @enderror
                                                                                         </div>
                                                                                     </div>
+
+                                                                                    
 
                                                                                     <div class="col-lg-6">
                                                                                         <div class="form-group">
@@ -1088,15 +1090,17 @@
                         $('.valeur_titre').each(function (index) {
                             const $valeurTitreInput = $(this); // Champ valeur_titre courant
                             const $valeurAcquisitionInput = $('.vacq_titre').eq(index); // Champ vacq_titre correspondant
+                            const $nbreTitreInput = $('.nbre_titre').eq(index); // Champ nombre titre correspondant
                             const $gainInput = $('.gain').eq(index); // Champ gain correspondant
 
                             // Récupération des valeurs et conversion en float
                             const valeurTitre = parseFloat($valeurTitreInput.val());
                             const valeurAcquisition = parseFloat($valeurAcquisitionInput.val());
+                            const nbreTitre = parseFloat($nbreTitreInput.val());
 
                             // Vérification des valeurs numériques
-                            if (!isNaN(valeurTitre) && !isNaN(valeurAcquisition)) {
-                                const gain = valeurTitre - valeurAcquisition; // Calcul du gain
+                            if (!isNaN(valeurTitre) && !isNaN(valeurAcquisition) && !isNaN(nbreTitre)) {
+                                const gain = (valeurTitre - valeurAcquisition) * nbreTitre; // Calcul du gain
 
                                 // Affichage du gain formaté (sans .00 si entier)
                                 $gainInput.val(Number.isInteger(gain) ? gain : gain.toFixed(3).replace(/\.00$/, ''));
@@ -1107,7 +1111,7 @@
                     }
 
                     // Ajout des gestionnaires d'événements
-                    $(document).on('input', '.valeur_titre, .vacq_titre', calculateGain);
+                    $(document).on('input', '.valeur_titre, .vacq_titre, .nbre_titre', calculateGain);
                 });
 
             // -----------------------------------------------------------------------

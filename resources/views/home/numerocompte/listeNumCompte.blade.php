@@ -70,6 +70,49 @@
                         <div class="row">
 
                             <div class="col-sm-12">
+                                <a href="#custom-modal" data-animation="fadein" data-plugin="custommodal" data-overlaySpeed="200" data-overlayColor="#36404a">
+                                    <button type="button" class="btn btn-importsgi waves-effect waves-light"><i class="fa fa-plus"></i>Importer</button>
+                                </a>
+ 
+                                <!-- Modal -->
+                                <div id="custom-modal" class="modal-demo">
+                                    <button type="button" class="close" onclick="Custombox.modal.close();">
+                                        <span>&times;</span><span class="sr-only">Close</span>
+                                    </button>
+                                    <h4 class="custom-modal-title">Importer les numéros de compte à partir d'un fichier Excel</h4>
+                                    <div class="custom-modal-text">
+                                        <!-- Formulaire d'importation -->
+                                        <form id="import-sgi-form" action="/import-sgi" method="POST" enctype="multipart/form-data">
+                                            @csrf
+                                            <div class="file-upload-area">
+                                                <input 
+                                                    type="file" 
+                                                    id="excelFileInput" 
+                                                    name="excel_file" 
+                                                    accept=".xls, .xlsx, .csv" 
+                                                    class="file-input" 
+                                                    onchange="handleFileUpload(this)"
+                                                    required 
+                                                />
+                                                <label for="excelFileInput" class="upload-label">
+                                                    <i class="fa fa-cloud-upload fa-3x"></i>
+                                                    <p>Glissez et déposez votre fichier ici ou <span class="highlight">cliquez pour sélectionner</span>.</p>
+                                                    <p class="file-info">Formats acceptés : .xls, .xlsx, .csv</p>
+                                                </label>
+                                            </div>
+
+                                            <!-- Boutons -->
+                                            <div class="form-actions">
+                                                <button type="submit" class="btns btn-primport waves-effect waves-light">
+                                                    <i class="fa fa-upload"></i> Importer
+                                                </button>
+                                                <button type="button" class="btns btn-secann waves-effect" onclick="Custombox.modal.close();">
+                                                    <i class="fa fa-times"></i> Annuler
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
 
                                 <div class="card">
 									<div class="card-body" style="margin: 0 auto; width: 95%;">
@@ -280,6 +323,23 @@
         <script>
 			$('#mainTable').editableTableWidget().numericInputExample().find('td:first').focus();
 		</script>
+
+        <script>
+            // Fonction pour afficher le nom du fichier sélectionné
+            function handleFileUpload(input) {
+                const fileName = input.files[0]?.name || '';
+                const label = input.nextElementSibling; // Le label associé à l'input
+                const fileInfo = label.querySelector('.file-info');
+                
+                if (fileName) {
+                    fileInfo.textContent = `Fichier sélectionné : ${fileName}`;
+                    fileInfo.style.color = '#28a745'; // Mettre en évidence le fichier sélectionné
+                } else {
+                    fileInfo.textContent = 'Formats acceptés : .xls, .xlsx, .csv';
+                    fileInfo.style.color = '#999';
+                }
+            }
+        </script>
 
         <script>
             $(document).ready(function() {  

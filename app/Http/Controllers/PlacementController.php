@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Validator;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Log;
 use PhpOffice\PhpSpreadsheet\Shared\Date;
+use Carbon\Carbon;
+use Exception;
 
 class PlacementController extends Controller
 {
@@ -487,7 +489,7 @@ class PlacementController extends Controller
     public function allPlacement()
     {
         $sgis = Sgi::all();
-        $placements = Placement::with('sgi', 'numCompte')->get();
+        $placements = Placement::with('numCompte', 'placementSgis')->get();
         $numcomptes = NumeroCompte::all();
         return view('home.placement.listPlacement', compact('placements', 'sgis', 'numcomptes'));
     }
@@ -499,34 +501,294 @@ class PlacementController extends Controller
 
         // Récupérer les SGI associés au placement
         $placementSGIs = $placement->placementSgis()->with('sgi')->get();
+
+        // Vérification si aucune SGI n'est associée
+        if ($placementSGIs->isEmpty()) {
+            return response('<tr><td colspan="6" class="text-center">Aucune SGI trouvée pour ce placement.</td></tr>');
+        }
         
         // Retourner les lignes de tableau en HTML
         $html = '';
         foreach ($placementSGIs as $placementSGI) {
             $html .= '
                 <tr>
-                    <td>' . $placementSGI->sgi->code_sgi . '</td>
-                    <td>' . $placementSGI->nbre_titre . '</td>
-                    <td>' . $placementSGI->valeur_titre . '</td>
-                    <td>' . $placementSGI->valeur_acq_titre . '</td>
-                    <td>' . $placementSGI->gain . '</td>
-                    <td>
-
-                        <a href="#custom-modal" data-animation="fadein" data-plugin="custommodal" data-overlaySpeed="200" data-overlayColor="#36404a">
-                            <button type="button" class="btn btn-modif waves-effect waves-light edit-btn">
-                                <i class="fa fa-pencil"></i>
-                            </button>
-                        </a>
-
-                        <a href="{{ route (details.placement, [id => Crypt::encrypt($placement->id)]) }}" class="btn waves-effect waves-light btn-success">
-                            <i class="fa fa-info-circle"></i>
-                        </a>
+                    <td class="code-sgi">' . e($placementSGI->sgi->code_sgi) . '</td>
+                    <td hidden class="placements-id" data-value="' . e($placementSGI->placements_id) . '">' . e(number_format($placementSGI->placements_id, 0, ',', ' ')) . '</td>
+                    <td hidden class="sgis-id" data-value="'. e($placementSGI->sgis_id) . '">' . e(number_format($placementSGI->sgis_id, 0, ',', ' ')) . '</td>
+                    <td class="nbre-titre" data-value="'. e($placementSGI->nbre_titre) . '">' . e(number_format($placementSGI->nbre_titre, 0, ',', ' ')) . '</td>
+                    <td class="valeur-titre" data-value="' . e($placementSGI->valeur_titre) . '">' . e(number_format($placementSGI->valeur_titre, 0, ',', ' ')) . '</td>
+                    <td class="valeur-acq-titre" data-value="' . e($placementSGI->valeur_acq_titre) . '">' . e(number_format($placementSGI->valeur_acq_titre, 0, ',', ' ')) . '</td>
+                    <td class="gain" data-value="'. e($placementSGI->gain) . '">' . e(number_format($placementSGI->gain, 0, ',', ' ')) . '</td>
+                    <td class="actions">
+                        <a href="#" class="on-default edit-row"><i class="fa fa-pencil" style="font-size: 17px; width: 25px;"></i></a>
+                        <a href="#" class="hidden on-editing save-row"><i class="fa fa-save" style="color: green; font-size: 17px; width: 25px;"></i></a>
+                        <a href="#" class="hidden cancel-row"><i class="fa fa-times" style="color: red; font-size: 17px;"></i></a>
                     </td>
                 </tr>
             ';
         }
 
         return response($html);
+    }
+
+
+    public function getTableauAmortissement($id)
+    {
+        // Vérifier si l'ID est un entier valide
+        if (!ctype_digit($id)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'ID invalide.',
+            ]);
+        }
+
+        // Récupérer le placement avec les SGI associées
+        $placement = Placement::find($id);
+
+        if (!$placement) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Placement introuvable.',
+            ]);
+        }
+
+        // Récupérer les SGI liées à ce placement
+        $placementSGIs = PlacementSgi::where('placements_id', $id)->with('sgi')->get();
+
+        if ($placementSGIs->isEmpty()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Aucune SGI trouvée pour ce placement.',
+            ]);
+        }
+
+        function calculerEcheances($dateDebut, $dateFin, $periodicite) {
+            $dateDebut = Carbon::parse($dateDebut);
+            $dateFin = Carbon::parse($dateFin);
+            
+            // Calcul de la durée en années
+            $dureeAnnees = $dateDebut->diffInYears($dateFin);
+
+            // Initialisation des échéances
+            $echeances = [];
+
+            // Définition de l'intervalle selon la périodicité
+            switch (strtolower($periodicite)) {
+                case 'annuel':
+                    $interval = 12; // 12 mois (1 an)
+                    break;
+                case 'semestre':
+                    $interval = 6; // 6 mois
+                    break;
+                case 'trimestre':
+                    $interval = 3; // 3 mois
+                    break;
+                default:
+                    throw new Exception("Périodicité invalide !");
+            }
+
+            // Génération des échéances
+            // Clone pour ne pas modifier la date d'origine
+            // $currentDate = $dateDebut->copy(); 
+
+            // La première échéance commence après une période complète
+            $currentDate = $dateDebut->copy()->addMonths($interval);
+
+            while ($currentDate <= $dateFin) {
+                $echeances[] = $currentDate->format('d M y'); // Stocke la date formatée
+                $currentDate->addMonths($interval); // Ajoute l'intervalle
+            }
+
+            return $echeances;
+        }
+
+        function calculerTitresAmortis($dateDebut, $dateFin, $periodicite, $nbreTitres) {
+            $dateDebut = Carbon::parse($dateDebut);
+            $dateFin = Carbon::parse($dateFin);
+        
+            // Calcul de la durée en années
+            $dureeAnnees = $dateDebut->diffInYears($dateFin);
+        
+            // Détermination du nombre de périodes en fonction de la périodicité
+            switch (strtolower($periodicite)) {
+                case 'annuel':
+                    $nbPeriodes = $dureeAnnees; // 1 paiement par an
+                    break;
+                case 'semestre':
+                    $nbPeriodes = $dureeAnnees * 2; // 2 paiements par an
+                    break;
+                case 'trimestre':
+                    $nbPeriodes = $dureeAnnees * 4; // 4 paiements par an
+                    break;
+                default:
+                    throw new Exception("Périodicité invalide !");
+            }
+        
+            if ($nbPeriodes <= 0) {
+                throw new Exception("Nombre de périodes invalide !");
+            }
+        
+            // Calcul du nombre de titres amortis par période
+            $titresAmortis = floor($nbreTitres / $nbPeriodes);
+        
+            return $titresAmortis;
+        }
+
+        function calculerCapitalRembourse($titresAmortis, $valeurTitre) {
+            return $titresAmortis * $valeurTitre;
+        }
+
+        function calculerEncoursDebut($placementSGI) {
+            $echeances = calculerEcheances($placementSGI->placement->date_debut, $placementSGI->placement->date_fin, $placementSGI->placement->periodicite);
+            $titresAmortis = calculerTitresAmortis($placementSGI->placement->date_debut, $placementSGI->placement->date_fin, $placementSGI->placement->periodicite, $placementSGI->nbre_titre);
+            $capitalRembourseParPeriode = calculerCapitalRembourse($titresAmortis, $placementSGI->valeur_titre);
+        
+            $montantTotal = $placementSGI->nbre_titre * $placementSGI->valeur_titre; // Montant total de l'emprunt
+            $encoursDebut = $montantTotal; // Initialisation pour la première période
+            $encoursPeriodes = []; // Stockage des résultats
+        
+            foreach ($echeances as $index => $echeance) {
+                // Stocker l'encours début de période
+                $encoursPeriodes[$echeance] = [
+                    'encours_debut' => $encoursDebut,
+                    'capital_rembourse' => $capitalRembourseParPeriode,
+                    'encours_fin' => max(0, $encoursDebut - $capitalRembourseParPeriode) // Assurer que l'encours ne soit pas négatif
+                ];
+        
+                // Mettre à jour l'encours début pour la prochaine période
+                $encoursDebut = $encoursPeriodes[$echeance]['encours_fin'];
+            }
+        
+            return $encoursPeriodes;
+        }
+        
+
+        // Générer le HTML des tableaux
+        $html = '';
+
+        foreach ($placementSGIs as $placementSGI) {
+            $sgiName = e($placementSGI->sgi->code_sgi); // Nom de la SGI
+            $dateDebut = $placementSGI->placement->date_debut;
+            $dateFin = $placementSGI->placement->date_fin;
+            $periodicite = $placementSGI->placement->periodicite;
+            $nbreTitres = $placementSGI->nbre_titre;
+            $valeurTitre = $placementSGI->valeur_titre;
+        
+            // Calcul des échéances
+            $echeances = calculerEcheances($dateDebut, $dateFin, $periodicite);
+
+            // Calcul de l'encours début de période pour chaque échéance
+            $encoursPeriodes = calculerEncoursDebut($placementSGI);
+
+            $html .= "
+                <h3 style='text-align:center; margin-top:20px;'>$sgiName</h3>
+                <table class='table table-bordered'>
+                    <thead>
+                        <tr>
+                            <th>Echéance</th>
+                            <th>Nombre de Titres</th>
+                            <th>Valeur Nominale</th>
+                            <th>Encours début de période</th>
+                            <th>Intérêts Brut</th>
+                            <th>Intérêts net</th>
+                            <th>Titres amortis</th>
+                            <th>Capital remboursé</th>
+                            <th>Annuités totales</th>
+                            <th>Encours fin de période</th>
+                        </tr>
+                    </thead>
+                    <tbody>";
+
+            // Génération des lignes du tableau
+            foreach ($echeances as $echeance) {
+
+                $encoursDebut = isset($encoursPeriodes[$echeance]) ? $encoursPeriodes[$echeance]['encours_debut'] : 0;
+                $capitalRembourse = isset($encoursPeriodes[$echeance]) ? $encoursPeriodes[$echeance]['capital_rembourse'] : 0;
+                $encoursFin = isset($encoursPeriodes[$echeance]) ? $encoursPeriodes[$echeance]['encours_fin'] : 0;
+
+                $titresAmortis = calculerTitresAmortis($dateDebut, $dateFin, $periodicite, $nbreTitres);
+                // $capitalRembourse = calculerCapitalRembourse($titresAmortis, $valeurTitre);
+
+                $html .= "
+                    <tr>
+                        <td>$echeance</td>
+                        <td>" . number_format($placementSGI->nbre_titre, 0, ',', ' ') . "</td>
+                        <td>" . number_format($placementSGI->valeur_titre, 0, ',', ' ') . "</td>
+                        <td>" . number_format($encoursDebut, 0, ',', ' ') . "</td> <!-- Placeholder pour les calculs futurs -->
+                        <td>0</td>
+                        <td>0</td>
+                        <td>" . number_format($titresAmortis, 0, ',', ' ') . "</td>
+                        <td>" . number_format($capitalRembourse, 0, ',', ' ') . "</td>
+                        <td>0</td>
+                        <td>" . number_format($encoursFin, 0, ',', ' ') . "</td>
+                    </tr>";
+            }
+
+            $html .= "</tbody></table>";
+        }
+
+        return response()->json([
+            'success' => true,
+            'html' => $html,
+        ]);
+    }
+
+
+    public function updateSGI(Request $request)
+    {
+        // Validation des données
+        $validator = Validator::make($request->all(), [
+            'placement_id' => 'required|exists:placements,id',
+            'sgi_id' => 'required|exists:sgis,id',
+            'nbre_titre' => 'required|integer|min:0',
+            'valeur_titre' => 'required|numeric|min:0',
+            'valeur_acq_titre' => 'required|numeric|min:0',
+            'gain' => 'required|numeric|min:0'
+        ], [
+            'nbre_titre.required' => 'Le nombre de titre est requis',
+            'nbre_titre.integer' => 'Le nombre de titre doit etre un entier',
+            'nbre_titre.min' => 'Le nombre de titre doit etre supérieure ou égal a zéro (0)',
+            'valeur_titre.required' => 'La valeur du titre est requis',
+            'valeur_titre.numeric' => 'La valeur du titre doit etre un nombre',
+            'valeur_titre.min' => 'La valeur du titre doit etre supérieure ou égal a zéro (0)',
+            'valeur_acq_titre.required' => 'La valeur d\'acquisition du titre est requis',
+            'valeur_acq_titre.numeric' => 'La valeur d\'acquisition du titre doit etre un nombre',
+            'valeur_acq_titre.min' => 'La valeur d\'acquisition du titre doit etre supérieure ou égal a zéro (0)',
+            'gain.required' => 'Le gain est requis',
+            'gain.numeric' => 'Le gain doit etre un nombre',
+            'gain.min' => 'Le gain doit etre supérieure ou égal a zéro (0)'
+        ]);
+
+        // Si la validation échoue, retourner les erreurs
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        // Récupérer l'enregistrement correspondant
+        $placementSGI = PlacementSgi::where('placements_id', $request->placement_id)
+            ->whereHas('sgi', function ($query) use ($request) {
+                $query->where('sgis_id', $request->sgi_id);
+            })
+            ->first();
+
+        if (!$placementSGI) {
+            return response()->json([
+                'success' => false,
+                'message' => "Données introuvables pour ce placement."
+            ], 404);
+        }
+
+        // Mise à jour des valeurs
+        $placementSGI->nbre_titre = $request->nbre_titre;
+        $placementSGI->valeur_titre = $request->valeur_titre;
+        $placementSGI->valeur_acq_titre = $request->valeur_acq_titre;
+        $placementSGI->gain = $request->gain;
+        $placementSGI->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => "Les informations ont été mises à jour avec succès !"
+        ]);
     }
 
 
@@ -589,6 +851,7 @@ class PlacementController extends Controller
                 'success' => true, 
                 'message' => 'Placement(OBLIGATIONS) modifié avec succès'
             ]);
+
         } catch (\Exception $e) {
             // Gestion des erreurs : retourner un message et logger l'erreur
             \Log::error('Erreur lors de la mise à jour du placement : ' . $e->getMessage());

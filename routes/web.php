@@ -99,6 +99,10 @@ Route::get('/home/creer-un-placement/{numCompteId}', [PlacementController::class
 
 Route::get('/home/liste-des-placements/{id}/sgis', [PlacementController::class, 'getSGIsForPlacement']);
 
+Route::post('/home/liste-des-placements/update-sgi', [PlacementController::class, 'updateSGI'])->name('placements.updateSGI');
+
+Route::get('/home/liste-des-placements/{id}/ta', [PlacementController::class, 'getTableauAmortissement']);
+
 Route::post('/home/creer-un-placement/obligation', [PlacementController::class, 'createdPlacementObligation'])->name('creation.placement.obligation');
 
 Route::post('/home/creer-un-placement/action', [PlacementController::class, 'createdPlacementAction'])->name('creation.placement.action');
